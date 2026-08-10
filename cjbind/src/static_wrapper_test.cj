@@ -72,12 +72,6 @@ static inline int read_array_factory(int (*(*factory)(void))[4]) {
     return (*factory())[0];
 }
 
-static inline int call_vector(
-    int (__attribute__((vectorcall)) *callback)(int), int value
-) {
-    return callback(value);
-}
-
 static inline int call_preserve_most(
     int (__attribute__((preserve_most)) *callback)(int), int value
 ) {
@@ -142,8 +136,6 @@ static int unsupported_variadic(const char *format, ...) {
             @Expect(sourceCode.contains("named_record pointer_alias_round_trip__extern(named_record value)"), true)
             @Expect(sourceCode.contains("int (*array_pointer_round_trip__extern(int (*value)[4]))[4]"), true)
             @Expect(sourceCode.contains("int (*(*factory) (void))[4]"), true)
-            @Expect(sourceCode.contains("__attribute__((vectorcall)) *callback"), true)
-            @Expect(binding.contains("foreign func call_vector__extern"), true)
             @Expect(binding.contains("call_preserve_most"), false)
             @Expect(binding.contains("external_inline_c"), false)
             @Expect(sourceCode.contains("call_preserve_most"), false)
@@ -168,6 +160,35 @@ static int unsupported_variadic(const char *format, ...) {
                 ["-std=c11", "-fsyntax-only", source.toString()]
             )
             @Expect(exitCode, 0)
+        } finally {
+            remove(directory, recursive: true)
+        }
+    }
+
+    @TestCase
+    func preservesVectorcallInWindowsBridgeSource(): Unit {
+        let directory = Directory.createTemp(getTempDirectory())
+        try {
+            let header = directory.join("vectorcall_functions.h")
+            File.writeTo(header, """
+static inline int call_vector(
+    int (__attribute__((vectorcall)) *callback)(int), int value
+) {
+    return callback(value);
+}
+""".toArray())
+
+            let base = directory.join("bridge.generated")
+            let options = staticWrapperOptions(header.toString(), base.toString())
+            options.clangArgs.add(all: [
+                "-x", "c", "-std=c11", "--target=x86_64-pc-windows-msvc"
+            ])
+            let binding = generate(options)
+            let source = directory.join("bridge.c")
+            let sourceCode = String.fromUtf8(File.readFrom(source))
+
+            @Expect(sourceCode.contains("__attribute__((vectorcall)) *callback"), true)
+            @Expect(binding.contains("foreign func call_vector__extern"), true)
         } finally {
             remove(directory, recursive: true)
         }
