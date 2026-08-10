@@ -30,12 +30,8 @@ typedef int (*old_style_callback_t)();
 typedef struct { int value; } anonymous_record_t;
 typedef enum { ANONYMOUS_ZERO = 0, ANONYMOUS_ONE = 1 } anonymous_enum_t;
 typedef struct { float _Complex value; } complex_record_t;
-typedef struct { _Float16 value; } half_record_t;
-typedef struct { half_record_t nested; } nested_half_record_t;
 typedef union { double value; } double_union_t;
 typedef struct { unsigned value : 3; } bitfield_record_t;
-
-static const _Float16 unsupported_half_constant = 1.0;
 
 struct named_record { int value; };
 typedef struct named_record *named_record;
@@ -82,12 +78,6 @@ inline int external_inline_c(int value) {
     return value;
 }
 
-static inline _Float16 unsupported_half(_Float16 value) {
-    return value;
-}
-
-_Float16 unsupported_external_half(_Float16 value);
-
 static inline complex_record_t unsupported_complex_record(complex_record_t value) {
     return value;
 }
@@ -97,19 +87,7 @@ complex_record_t unsupported_external_complex_record(complex_record_t value);
 double_union_t unsupported_external_union(double_union_t value);
 bitfield_record_t unsupported_external_bitfield(bitfield_record_t value);
 
-static inline half_record_t unsupported_half_record(half_record_t value) {
-    return value;
-}
-
-static inline nested_half_record_t unsupported_nested_half_record(nested_half_record_t value) {
-    return value;
-}
-
 static inline complex_record_t *supported_complex_record_pointer(complex_record_t *value) {
-    return value;
-}
-
-static inline _Float16 *supported_half_pointer(_Float16 *value) {
     return value;
 }
 
@@ -140,19 +118,12 @@ static int unsupported_variadic(const char *format, ...) {
             @Expect(binding.contains("external_inline_c"), false)
             @Expect(sourceCode.contains("call_preserve_most"), false)
             @Expect(sourceCode.contains("external_inline_c"), false)
-            @Expect(binding.contains("unsupported_half"), false)
-            @Expect(binding.contains("unsupported_external_half"), false)
             @Expect(binding.contains("unsupported_complex_record"), false)
             @Expect(binding.contains("unsupported_external_complex_record"), false)
             @Expect(binding.contains("unsupported_external_union"), false)
             @Expect(binding.contains("unsupported_external_bitfield"), false)
-            @Expect(binding.contains("unsupported_half_constant"), false)
-            @Expect(binding.contains("unsupported_half_record"), false)
-            @Expect(binding.contains("unsupported_nested_half_record"), false)
             @Expect(binding.contains("foreign func supported_complex_record_pointer__extern"), true)
             @Expect(sourceCode.contains("complex_record_t *supported_complex_record_pointer__extern"), true)
-            @Expect(binding.contains("foreign func supported_half_pointer__extern"), true)
-            @Expect(sourceCode.contains("_Float16 *supported_half_pointer__extern"), true)
             @Expect(sourceCode.contains("unsupported_variadic"), false)
 
             let (exitCode, _, _) = executeWithOutput(
@@ -189,6 +160,57 @@ static inline int call_vector(
 
             @Expect(sourceCode.contains("__attribute__((vectorcall)) *callback"), true)
             @Expect(binding.contains("foreign func call_vector__extern"), true)
+        } finally {
+            remove(directory, recursive: true)
+        }
+    }
+
+    @TestCase
+    func handlesFloat16WrapperBoundaries(): Unit {
+        let directory = Directory.createTemp(getTempDirectory())
+        try {
+            let header = directory.join("float16_functions.h")
+            File.writeTo(header, """
+typedef struct { _Float16 value; } half_record_t;
+typedef struct { half_record_t nested; } nested_half_record_t;
+
+static const _Float16 unsupported_half_constant = 1.0;
+
+static inline _Float16 unsupported_half(_Float16 value) {
+    return value;
+}
+
+_Float16 unsupported_external_half(_Float16 value);
+
+static inline half_record_t unsupported_half_record(half_record_t value) {
+    return value;
+}
+
+static inline nested_half_record_t unsupported_nested_half_record(nested_half_record_t value) {
+    return value;
+}
+
+static inline _Float16 *supported_half_pointer(_Float16 *value) {
+    return value;
+}
+""".toArray())
+
+            let base = directory.join("bridge.generated")
+            let options = staticWrapperOptions(header.toString(), base.toString())
+            options.clangArgs.add(all: [
+                "-x", "c", "-std=c11", "--target=x86_64-unknown-linux-gnu"
+            ])
+            let binding = generate(options)
+            let source = directory.join("bridge.c")
+            let sourceCode = String.fromUtf8(File.readFrom(source))
+
+            @Expect(binding.contains("unsupported_half"), false)
+            @Expect(binding.contains("unsupported_external_half"), false)
+            @Expect(binding.contains("unsupported_half_constant"), false)
+            @Expect(binding.contains("unsupported_half_record"), false)
+            @Expect(binding.contains("unsupported_nested_half_record"), false)
+            @Expect(binding.contains("foreign func supported_half_pointer__extern"), true)
+            @Expect(sourceCode.contains("_Float16 *supported_half_pointer__extern"), true)
         } finally {
             remove(directory, recursive: true)
         }
