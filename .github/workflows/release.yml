@@ -151,20 +151,14 @@ jobs:
         run: |
           gh run download "$GITHUB_RUN_ID" --pattern 'cjbind-*' --dir dist
 
-      - name: Create draft, upload every asset, and publish
+      - name: Create or update release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: |
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            is_draft=$(gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft')
-            if [ "$is_draft" != "true" ]; then
-              echo "error: release $RELEASE_TAG is already published" >&2
-              exit 1
-            fi
-          else
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             release_flags=(--verify-tag --draft --generate-notes)
             if [[ "$RELEASE_TAG" == *-* ]]; then
               release_flags+=(--prerelease)
@@ -179,4 +173,7 @@ jobs:
           fi
 
           gh release upload "$RELEASE_TAG" "${assets[@]}" --clobber
-          gh release edit "$RELEASE_TAG" --draft=false
+          is_draft=$(gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft')
+          if [ "$is_draft" = "true" ]; then
+            gh release edit "$RELEASE_TAG" --draft=false
+          fi
