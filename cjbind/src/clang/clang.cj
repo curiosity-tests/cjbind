@@ -3,7 +3,6 @@ package cjbind.clang
 import std.fs.{File as FSFile, remove}
 import std.collection.{HashMap, ArrayList}
 import std.convert.*
-
 import cjbind.result.Result
 
 func cxstringToString(x: CXString): String {
@@ -64,14 +63,11 @@ func validateClangVersion(version: String): Unit {
             if (major < MINIMUM_SUPPORTED_CLANG_MAJOR) {
                 throw UnsupportedException(
                     "Unsupported libclang version '${version}'. " +
-                    "cjbind requires libclang ${MINIMUM_SUPPORTED_CLANG_MAJOR} or newer."
-                )
+                        "cjbind requires libclang ${MINIMUM_SUPPORTED_CLANG_MAJOR} or newer.")
             }
-        case None =>
-            throw UnsupportedException(
-                "Unable to determine libclang version from '${version}'. " +
-                "cjbind requires libclang ${MINIMUM_SUPPORTED_CLANG_MAJOR} or newer."
-            )
+        case None => throw UnsupportedException(
+            "Unable to determine libclang version from '${version}'. " +
+                "cjbind requires libclang ${MINIMUM_SUPPORTED_CLANG_MAJOR} or newer.")
     }
 }
 
@@ -475,9 +471,9 @@ public class Cursor <: ToString & Hashable & Equatable<Cursor> {
 
     public func isTemplateLike(): Bool {
         let cursorKind = this.kind()
-        return cursorKind == CXCursorKind_CXCursor_ClassTemplate ||
-            cursorKind == CXCursorKind_CXCursor_ClassTemplatePartialSpecialization ||
-            cursorKind == CXCursorKind_CXCursor_TypeAliasTemplateDecl
+        return cursorKind == CXCursorKind_CXCursor_ClassTemplate || cursorKind ==
+            CXCursorKind_CXCursor_ClassTemplatePartialSpecialization || cursorKind ==
+            CXCursorKind_CXCursor_TypeAliasTemplateDecl
     }
 
     public func isTemplateSpecialization(): Bool {
@@ -485,8 +481,7 @@ public class Cursor <: ToString & Hashable & Equatable<Cursor> {
     }
 
     public func isFullySpecializedTemplate(): Bool {
-        return this.isTemplateSpecialization() &&
-            this.kind() != CXCursorKind_CXCursor_ClassTemplatePartialSpecialization &&
+        return this.isTemplateSpecialization() && this.kind() != CXCursorKind_CXCursor_ClassTemplatePartialSpecialization &&
             this.numTemplateArgs().getOrDefault({=> 0u32}) > 0
     }
 
@@ -496,8 +491,7 @@ public class Cursor <: ToString & Hashable & Equatable<Cursor> {
         var parent = this.fallibleSemanticParent()
         while (let Some(parentCursor) <- parent) {
             let parentKind = parentCursor.kind()
-            if (parentKind != CXCursorKind_CXCursor_Namespace &&
-                parentKind != CXCursorKind_CXCursor_NamespaceAlias &&
+            if (parentKind != CXCursorKind_CXCursor_Namespace && parentKind != CXCursorKind_CXCursor_NamespaceAlias &&
                 parentKind != CXCursorKind_CXCursor_NamespaceRef) {
                 break
             }
@@ -528,9 +522,8 @@ public class Cursor <: ToString & Hashable & Equatable<Cursor> {
 
     public func isTemplateParameter(): Bool {
         let cursorKind = this.kind()
-        return cursorKind == CXCursorKind_CXCursor_TemplateTemplateParameter ||
-            cursorKind == CXCursorKind_CXCursor_TemplateTypeParameter ||
-            cursorKind == CXCursorKind_CXCursor_NonTypeTemplateParameter
+        return cursorKind == CXCursorKind_CXCursor_TemplateTemplateParameter || cursorKind ==
+            CXCursorKind_CXCursor_TemplateTypeParameter || cursorKind == CXCursorKind_CXCursor_NonTypeTemplateParameter
     }
 
     /// Return whether this declaration's type or value refers to a template
@@ -652,8 +645,8 @@ public class Cursor <: ToString & Hashable & Equatable<Cursor> {
     /// namespace scope and are treated as public here.
     public func isPublic(): Bool {
         let access = this.accessSpecifier()
-        return access == CX_CXXAccessSpecifier_CX_CXXPublic ||
-            access == CX_CXXAccessSpecifier_CX_CXXInvalidAccessSpecifier
+        return access == CX_CXXAccessSpecifier_CX_CXXPublic || access ==
+            CX_CXXAccessSpecifier_CX_CXXInvalidAccessSpecifier
     }
 
     public func isMutableField(): Bool {
@@ -852,8 +845,8 @@ public class Cursor <: ToString & Hashable & Equatable<Cursor> {
     public func visitContinue(visitor: (Cursor) -> Unit): Unit {
         this.visit {
             c =>
-            visitor(c)
-            return CXChildVisitResult_CXChildVisit_Continue
+                visitor(c)
+                return CXChildVisitResult_CXChildVisit_Continue
         }
     }
 
@@ -886,8 +879,8 @@ public class Cursor <: ToString & Hashable & Equatable<Cursor> {
         let children = ArrayList<Cursor>()
         this.visit {
             c =>
-            children.add(c)
-            return CXChildVisitResult_CXChildVisit_Continue
+                children.add(c)
+                return CXChildVisitResult_CXChildVisit_Continue
         }
         return children
     }
@@ -1078,16 +1071,16 @@ public class Type <: Equatable<Type> {
     public func isFullyInstantiatedTemplate(): Bool {
         let hasTemplateArguments = this
             .templateArgs()
-            .map({ arguments => !arguments.isEmpty() })
+            .map({arguments => !arguments.isEmpty()})
             .getOrDefault({=> false})
         if (!hasTemplateArguments) {
             return false
         }
 
         let declarationKind = this.declaration().kind()
-        return declarationKind != CXCursorKind_CXCursor_ClassTemplatePartialSpecialization &&
-            declarationKind != CXCursorKind_CXCursor_TypeAliasTemplateDecl &&
-            declarationKind != CXCursorKind_CXCursor_TemplateTemplateParameter
+        return declarationKind != CXCursorKind_CXCursor_ClassTemplatePartialSpecialization && declarationKind !=
+            CXCursorKind_CXCursor_TypeAliasTemplateDecl && declarationKind !=
+            CXCursorKind_CXCursor_TemplateTemplateParameter
     }
 
     public func elemType(): ?Type {
@@ -1274,8 +1267,9 @@ public class Type <: Equatable<Type> {
 
     public func pointeeType(): ?Type {
         let k = this.kind()
-        if (k == CXTypeKind_CXType_Pointer || k == CXTypeKind_CXType_RValueReference || k == CXTypeKind_CXType_LValueReference || k ==
-            CXTypeKind_CXType_MemberPointer || k == CXTypeKind_CXType_BlockPointer || k == CXTypeKind_CXType_ObjCObjectPointer) {
+        if (k == CXTypeKind_CXType_Pointer || k == CXTypeKind_CXType_RValueReference || k ==
+            CXTypeKind_CXType_LValueReference || k == CXTypeKind_CXType_MemberPointer || k ==
+            CXTypeKind_CXType_BlockPointer || k == CXTypeKind_CXType_ObjCObjectPointer) {
             unsafe {
                 let p = Type(clang_getPointeeType(x))
                 if (!p.isValid()) {
@@ -1310,8 +1304,8 @@ public class Type <: Equatable<Type> {
 
     public func isNullable(): Bool {
         let n = this.nullability()
-        return n == CXTypeNullabilityKind_CXTypeNullability_Nullable ||
-            n == CXTypeNullabilityKind_CXTypeNullability_NullableResult
+        return n == CXTypeNullabilityKind_CXTypeNullability_Nullable || n ==
+            CXTypeNullabilityKind_CXTypeNullability_NullableResult
     }
 
     /// Get ObjC type encoding string
@@ -1389,8 +1383,7 @@ public class Comment {
 
     public func tagName(): ?String {
         let commentKind = this.kind()
-        if (commentKind != CXCommentKind_CXComment_HTMLStartTag &&
-            commentKind != CXCommentKind_CXComment_HTMLEndTag) {
+        if (commentKind != CXCommentKind_CXComment_HTMLStartTag && commentKind != CXCommentKind_CXComment_HTMLEndTag) {
             return None
         }
         unsafe {
@@ -1408,10 +1401,12 @@ public class Comment {
             let count = clang_HTMLStartTag_getNumAttrs(this.x)
             var index = UInt32(0)
             while (index < count) {
-                attributes.add(CommentAttribute(
-                    cxstringToString(clang_HTMLStartTag_getAttrName(this.x, index)),
-                    cxstringToString(clang_HTMLStartTag_getAttrValue(this.x, index))
-                ))
+                attributes.add(
+                    CommentAttribute(
+                        cxstringToString(clang_HTMLStartTag_getAttrName(this.x, index)),
+                        cxstringToString(clang_HTMLStartTag_getAttrValue(this.x, index))
+                    )
+                )
                 index += 1
             }
         }
@@ -1481,7 +1476,9 @@ public class Index <: Resource {
     let x: CXIndex
     var _released: Bool = false
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     public func close(): Unit {
         if (!_released) {
@@ -1506,7 +1503,6 @@ public class Index <: Resource {
             this.x = clang_createIndex(pch_c, diag_c)
         }
     }
-
 }
 
 extend CString {
@@ -1519,7 +1515,9 @@ public class TranslationUnit <: Resource {
     var x: CXTranslationUnit
     var _released: Bool = false
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     public func close(): Unit {
         if (!_released) {
@@ -1527,7 +1525,6 @@ public class TranslationUnit <: Resource {
             unsafe { clang_disposeTranslationUnit(x) }
         }
     }
-
 
     public init(
         ix: Index,
@@ -1572,7 +1569,7 @@ public class TranslationUnit <: Resource {
 
             this.x = tu
 
-            for(v in releaser) {
+            for (v in releaser) {
                 v()
             }
         }
@@ -1616,7 +1613,6 @@ public class TranslationUnit <: Resource {
             fs.close()
         }
     }
-
 }
 
 public class UnsavedFile {
@@ -1637,7 +1633,6 @@ public class UnsavedFile {
             )
         }
     }
-
 }
 
 public class FallbackTranslationUnit <: Resource {
@@ -1673,7 +1668,9 @@ public class FallbackTranslationUnit <: Resource {
         this.tu = fTranslationUnit
     }
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     public func close(): Unit {
         if (!_released) {
@@ -1686,15 +1683,16 @@ public class FallbackTranslationUnit <: Resource {
             }
             this.tu.close()
             this.idx.close()
-            try { remove(this.filePath) } catch (_: Exception) {}
-            try { remove(this.pchPath) } catch (_: Exception) {}
+            try {
+                remove(this.filePath)
+            } catch (_: Exception) {}
+            try {
+                remove(this.pchPath)
+            } catch (_: Exception) {}
         }
     }
 
-
-    public func reparse(
-        unsavedContents: String
-    ): Result<Unit, CXErrorCode> {
+    public func reparse(unsavedContents: String): Result<Unit, CXErrorCode> {
         let content = CStringOwned(unsavedContents)
         try {
             unsafe {
@@ -1748,8 +1746,7 @@ public class FallbackTranslationUnit <: Resource {
         }
 
         for (declaration in probeTranslationUnit.cursor().collectChildren()) {
-            if (declaration.kind() != CXCursorKind_CXCursor_StructDecl ||
-                declaration.spelling() != probeName) {
+            if (declaration.kind() != CXCursorKind_CXCursor_StructDecl || declaration.spelling() != probeName) {
                 continue
             }
             for (field in declaration.collectChildren()) {
@@ -1800,7 +1797,9 @@ public class Diagnostic <: ToString & Resource {
         this.x = x
     }
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     public func close(): Unit {
         if (!_released) {
@@ -1859,7 +1858,9 @@ public class RawTokens <: Iterable<ClangToken> & Resource {
         }
     }
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     public func close(): Unit {
         if (!_released) {
@@ -1870,17 +1871,23 @@ public class RawTokens <: Iterable<ClangToken> & Resource {
 
     // The translation unit that owns the token array (non-owning reference).
     public prop tu: CXTranslationUnit {
-        get() { return _owned.tu }
+        get() {
+            return _owned.tu
+        }
     }
 
     // Pointer to the token array.
     public prop tokens: CPointer<CXToken> {
-        get() { return _owned.tokens }
+        get() {
+            return _owned.tokens
+        }
     }
 
     // Number of tokens in the array.
     public prop tokenCount: UInt32 {
-        get() { return _owned.count }
+        get() {
+            return _owned.count
+        }
     }
 
     public func iterator(): ClangTokenIterator {
@@ -1937,8 +1944,8 @@ public class ClangTokenIterator <: Iterator<ClangToken> {
 }
 
 public enum EvalResultInt {
-    Int(Int64) |
-    UInt(UInt64)
+    Int(Int64)
+    | UInt(UInt64)
 }
 
 public class EvalResult <: Resource {
@@ -1953,7 +1960,9 @@ public class EvalResult <: Resource {
         }
     }
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     public func close(): Unit {
         if (!_released) {
@@ -2009,11 +2018,8 @@ public class EvalResult <: Resource {
         }
         let charTy = charTyO.getOrThrow()
         let k = charTy.kind()
-        if (k == CXTypeKind_CXType_Char_S ||
-        k == CXTypeKind_CXType_SChar ||
-        k == CXTypeKind_CXType_Char_U ||
-        k == CXTypeKind_CXType_UChar
-        ) {
+        if (k == CXTypeKind_CXType_Char_S || k == CXTypeKind_CXType_SChar || k == CXTypeKind_CXType_Char_U || k ==
+            CXTypeKind_CXType_UChar) {
             unsafe {
                 let ret = clang_EvalResult_getAsStr(x)
                 // Copy the string to prevent use-after-free when EvalResult is disposed.

@@ -48,11 +48,15 @@ public class NamePatternSet {
     }
 
     public prop size: Int64 {
-        get() { this.patterns.size }
+        get() {
+            this.patterns.size
+        }
     }
 
     public prop isEmpty: Bool {
-        get() { this.patterns.isEmpty() }
+        get() {
+            this.patterns.isEmpty()
+        }
     }
 
     public func toArray(): Array<String> {
@@ -105,8 +109,7 @@ public enum DefaultAliasStyle <: Equatable<DefaultAliasStyle> {
 
     public operator func ==(rhs: DefaultAliasStyle): Bool {
         match ((this, rhs)) {
-            case (TypeAlias, TypeAlias) | (NewType, NewType) |
-                (NewTypeDeref, NewTypeDeref) => true
+            case (TypeAlias, TypeAlias) | (NewType, NewType) | (NewTypeDeref, NewTypeDeref) => true
             case _ => false
         }
     }
@@ -129,7 +132,7 @@ public class FieldInfo {
 public class CjbindOptions {
     public let headers: ArrayList<String> = ArrayList()
     public let clangArgs: ArrayList<String> = ArrayList()
-    
+
     public var packageName: String = "cjbind_ffi"
     public var noEnumPrefix: Bool = false
     public var noDetectIncludePath: Bool = false

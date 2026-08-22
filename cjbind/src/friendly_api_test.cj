@@ -4,7 +4,6 @@ import std.env.getTempDirectory
 import std.fs.{Directory, File, remove}
 import std.unittest.*
 import std.unittest.testmacro.*
-
 import cjbind.options.{CjbindOptions, DefaultAliasStyle}
 
 @Test
@@ -14,7 +13,8 @@ public class FriendlyApiGenerationTest {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("friendly_api.h")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 typedef int IntAlias;
 typedef const int ConstIntAlias;
 
@@ -44,14 +44,20 @@ typedef struct Record {
     int values[2];
     Child child;
 } Record;
-""".toArray())
+"""
+                    .toArray())
 
             let options = CjbindOptions()
             options.headers.add(header.toString())
             options.noDetectIncludePath = true
-            options.clangArgs.add(all: [
-                "-x", "c", "-std=gnu11", "--target=x86_64-w64-mingw32"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c",
+                    "-std=gnu11",
+                    "--target=x86_64-w64-mingw32"
+                ]
+            )
 
             let binding = generate(options)
 
@@ -90,7 +96,8 @@ typedef struct Record {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("friendly_api.hpp")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 struct NonAssignable {
     int value;
     NonAssignable& operator=(const NonAssignable&) = delete;
@@ -117,15 +124,21 @@ union UnionOwnDestructor {
 };
 
 using NonTrivialAlias = NonAssignable;
-""".toArray())
+"""
+                    .toArray())
 
             let options = CjbindOptions()
             options.headers.add(header.toString())
             options.noDetectIncludePath = true
             options.defaultAliasStyle = DefaultAliasStyle.NewType
-            options.clangArgs.add(all: [
-                "-x", "c++", "-std=gnu++14", "--target=x86_64-w64-mingw32"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c++",
+                    "-std=gnu++14",
+                    "--target=x86_64-w64-mingw32"
+                ]
+            )
 
             let binding = generate(options)
 

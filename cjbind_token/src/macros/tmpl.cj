@@ -13,15 +13,23 @@ func countLeading(s: String): Int64 {
 
 func compileTrimIndent(s: String): String {
     let lines = s.split("\n")
-    if (lines.size == 0) { return s }
+    if (lines.size == 0) {
+        return s
+    }
 
     var minIndent: Int64 = -1
     for (line in lines) {
-        if (line.trimAscii().isEmpty()) { continue }
+        if (line.trimAscii().isEmpty()) {
+            continue
+        }
         let indent = countLeading(line)
-        if (minIndent < 0 || minIndent > indent) { minIndent = indent }
+        if (minIndent < 0 || minIndent > indent) {
+            minIndent = indent
+        }
     }
-    if (minIndent < 0) { minIndent = 0 }
+    if (minIndent < 0) {
+        minIndent = 0
+    }
 
     let processed = ArrayList<String>()
     for (line in lines) {
@@ -36,21 +44,33 @@ func compileTrimIndent(s: String): String {
 
     let arr = processed.toArray()
     var start: Int64 = 0
-    while (start < arr.size && arr[start].isEmpty()) { start++ }
+    while (start < arr.size && arr[start].isEmpty()) {
+        start++
+    }
     var end: Int64 = arr.size
-    while (end > start && arr[end - 1].isEmpty()) { end-- }
-    if (start >= end) { return "" }
+    while (end > start && arr[end - 1].isEmpty()) {
+        end--
+    }
+    if (start >= end) {
+        return ""
+    }
 
     var joined = arr[start]
     var idx = start + 1
-    while (idx < end) { joined += "\n" + arr[idx]; idx++ }
+    while (idx < end) {
+        joined += "\n" + arr[idx]
+        idx++
+    }
     return joined
 }
 
 func repeat(ch: String, n: Int64): String {
     var result = ""
     var i: Int64 = 0
-    while (i < n) { result += ch; i++ }
+    while (i < n) {
+        result += ch
+        i++
+    }
     return result
 }
 
@@ -73,20 +93,29 @@ func extractExpr(input: Tokens, start: Int64, end: Int64): String {
     var exprParts = ArrayList<String>()
     var k = start
     while (k < end) {
-        if (input[k].kind == TokenKind.NL) { k++; continue }
+        if (input[k].kind == TokenKind.NL) {
+            k++;
+            continue
+        }
         if (input[k].kind == TokenKind.DOLLAR && k + 1 < end && input[k + 1].kind == TokenKind.LCURL) {
             k += 2
             var eCurCol2 = Int64(input[k].pos.column)
             var braceDepth: Int64 = 1
             while (k < end && braceDepth > 0) {
-                if (input[k].kind == TokenKind.LCURL) { braceDepth++ }
+                if (input[k].kind == TokenKind.LCURL) {
+                    braceDepth++
+                }
                 if (input[k].kind == TokenKind.RCURL) {
                     braceDepth--
-                    if (braceDepth == 0) { break }
+                    if (braceDepth == 0) {
+                        break
+                    }
                 }
                 let eCol2 = Int64(input[k].pos.column)
                 let eGap2 = eCol2 - eCurCol2
-                if (eGap2 > 0) { exprParts.add(repeat(" ", eGap2)) }
+                if (eGap2 > 0) {
+                    exprParts.add(repeat(" ", eGap2))
+                }
                 exprParts.add(input[k].value)
                 eCurCol2 = eCol2 + Int64(input[k].value.size)
                 k++
@@ -104,7 +133,9 @@ func sepForToken(tk: Token): String {
         case TokenKind.COMMA => ", "
         case TokenKind.NL => "\\n"
         case _ =>
-            if (tk.value == ";") { return "; " }
+            if (tk.value == ";") {
+                return "; "
+            }
             tk.value
     }
 }
@@ -133,10 +164,14 @@ func reconstruct(input: Tokens): String {
             let repInnerStart = i
             var parenDepth: Int64 = 1
             while (i < input.size && parenDepth > 0) {
-                if (input[i].kind == TokenKind.LPAREN) { parenDepth++ }
+                if (input[i].kind == TokenKind.LPAREN) {
+                    parenDepth++
+                }
                 if (input[i].kind == TokenKind.RPAREN) {
                     parenDepth--
-                    if (parenDepth == 0) { break }
+                    if (parenDepth == 0) {
+                        break
+                    }
                 }
                 i++
             }
@@ -154,8 +189,7 @@ func reconstruct(input: Tokens): String {
                 i += 2
             } else {
                 diagReport(DiagReportLevel.ERROR, input[repInnerStart..repInnerEnd],
-                    "Expected * after repetition pattern",
-                    "Missing *")
+                    "Expected * after repetition pattern", "Missing *")
             }
 
             let escapedSep = sepStr.replace("\\", "\\\\").replace("\"", "\\\"")
@@ -178,14 +212,20 @@ func reconstruct(input: Tokens): String {
             var eCurCol = lcurlCol + 1
             var depth: Int64 = 1
             while (i < input.size && depth > 0) {
-                if (input[i].kind == TokenKind.LCURL) { depth++ }
+                if (input[i].kind == TokenKind.LCURL) {
+                    depth++
+                }
                 if (input[i].kind == TokenKind.RCURL) {
                     depth--
-                    if (depth == 0) { break }
+                    if (depth == 0) {
+                        break
+                    }
                 }
                 let eCol = Int64(input[i].pos.column)
                 let eGap = eCol - eCurCol
-                if (eGap > 0) { exprParts.add(repeat(" ", eGap)) }
+                if (eGap > 0) {
+                    exprParts.add(repeat(" ", eGap))
+                }
                 exprParts.add(input[i].value)
                 eCurCol = eCol + Int64(input[i].value.size)
                 i++

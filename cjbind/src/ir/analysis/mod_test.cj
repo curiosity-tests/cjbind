@@ -61,7 +61,6 @@ public class MonotoneFrameworkTest {
         @Expect(facts.contains(2), true)
         @Expect(facts.contains(3), true)
     }
-
 }
 
 @Test

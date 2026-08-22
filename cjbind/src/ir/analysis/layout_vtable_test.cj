@@ -61,9 +61,15 @@ public class SizednessAnalysisRulesTest {
                 Layout(16, 8),
                 TypeKind.TypeKindComp(opaqueComp)
             )
-            let items = analysisTestItems([
-                parameter, emptyArray, populatedArray, virtualRecord, opaqueRecord
-            ])
+            let items = analysisTestItems(
+                [
+                    parameter,
+                    emptyArray,
+                    populatedArray,
+                    virtualRecord,
+                    opaqueRecord
+                ]
+            )
             let vtables = computeHasVtable(ctx, items)
             let results = computeSizedness(ctx, items, vtables)
 
@@ -98,10 +104,12 @@ public class HasVtableAnalysisRulesTest {
             let instantiation = addAnalysisTestType(
                 ctx,
                 "BaseInt",
-                TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-                    base,
-                    [argument]
-                ))
+                TypeKind.TypeKindTemplateInstantiation(
+                    TemplateInstantiation(
+                        base,
+                        [argument]
+                    )
+                )
             )
             let items = analysisTestItems([base, alias, derived, argument, instantiation])
             let results = computeHasVtable(ctx, items)

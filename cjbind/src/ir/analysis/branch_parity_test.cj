@@ -18,13 +18,15 @@ func analysisFunctionType(
     return addAnalysisTestType(
         ctx,
         name,
-        TypeKind.TypeKindFunction(FunctionSig(
-            name,
-            result,
-            parameters.toArray(),
-            false,
-            ClangAbi.Known(Abi.C)
-        ))
+        TypeKind.TypeKindFunction(
+            FunctionSig(
+                name,
+                result,
+                parameters.toArray(),
+                false,
+                ClangAbi.Known(Abi.C)
+            )
+        )
     )
 }
 
@@ -37,10 +39,12 @@ func analysisInstantiation(
     return addAnalysisTestType(
         ctx,
         name,
-        TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-            definition,
-            arguments
-        ))
+        TypeKind.TypeKindTemplateInstantiation(
+            TemplateInstantiation(
+                definition,
+                arguments
+            )
+        )
     )
 }
 
@@ -178,19 +182,23 @@ public class SizednessAnalysisBranchParityTest {
                 ctx,
                 "OrdinaryInstance",
                 Layout(16, 8),
-                TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-                    empty,
-                    [integer]
-                ))
+                TypeKind.TypeKindTemplateInstantiation(
+                    TemplateInstantiation(
+                        empty,
+                        [integer]
+                    )
+                )
             )
             let opaqueInstance = addAnalysisTestTypeWithLayout(
                 ctx,
                 "OpaqueInstance",
                 Layout(16, 8),
-                TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-                    opaqueZero,
-                    [integer]
-                ))
+                TypeKind.TypeKindTemplateInstantiation(
+                    TemplateInstantiation(
+                        opaqueZero,
+                        [integer]
+                    )
+                )
             )
             let parameter = addAnalysisTestType(ctx, "T", TypeKind.TypeKindTypeParam)
             let joinedComp = analysisTestRecord(Array<TypeId>())

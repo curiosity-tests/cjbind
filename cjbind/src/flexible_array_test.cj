@@ -4,7 +4,6 @@ import std.env.getTempDirectory
 import std.fs.{Directory, File, remove}
 import std.unittest.*
 import std.unittest.testmacro.*
-
 import cjbind.options.CjbindOptions
 
 @Test
@@ -14,7 +13,8 @@ public class FlexibleArrayTest {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("template_alias_zero_array.hpp")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 template <typename T>
 using ZeroArray = T[0];
 
@@ -22,14 +22,20 @@ struct Packet {
     int size;
     ZeroArray<unsigned short> payload;
 };
-""".toArray())
+"""
+                    .toArray())
 
             let options = CjbindOptions()
             options.headers.add(header.toString())
             options.noDetectIncludePath = true
-            options.clangArgs.add(all: [
-                "-x", "c++", "-std=gnu++14", "--target=x86_64-unknown-linux-gnu"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c++",
+                    "-std=gnu++14",
+                    "--target=x86_64-unknown-linux-gnu"
+                ]
+            )
 
             let binding = generate(options)
 
@@ -58,7 +64,8 @@ struct Packet {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("const_flexible_array.h")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 typedef struct ConstPacket {
     int size;
     const unsigned short payload[];
@@ -68,14 +75,20 @@ typedef union ConstZero {
     const int values[0];
     int scalar;
 } ConstZero;
-""".toArray())
+"""
+                    .toArray())
 
             let options = CjbindOptions()
             options.headers.add(header.toString())
             options.noDetectIncludePath = true
-            options.clangArgs.add(all: [
-                "-x", "c", "-std=gnu11", "--target=x86_64-w64-mingw32"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c",
+                    "-std=gnu11",
+                    "--target=x86_64-w64-mingw32"
+                ]
+            )
 
             let binding = generate(options)
 

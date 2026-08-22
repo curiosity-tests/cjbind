@@ -5,8 +5,7 @@ import std.collection.{ArrayList, HashMap, HashSet}
 import std.unittest.*
 import std.unittest.testmacro.*
 
-class ReachabilityGraphAnalysis <:
-    MonotoneFramework<UIntNative, HashMap<UIntNative, HashSet<UIntNative>>> {
+class ReachabilityGraphAnalysis <: MonotoneFramework<UIntNative, HashMap<UIntNative, HashSet<UIntNative>>> {
     let graph: HashMap<UIntNative, Array<UIntNative>>
     let reverse: HashMap<UIntNative, ArrayList<UIntNative>> = HashMap()
     let reachable: HashMap<UIntNative, HashSet<UIntNative>> = HashMap()

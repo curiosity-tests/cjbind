@@ -3,7 +3,6 @@ package cjbind.codegen
 import std.collection.ArrayList
 import std.env.getTempDirectory
 import std.fs.{Directory, File, Path, canonicalize, exists}
-
 import cjbind.ir.*
 import cjbind.result.Result
 
@@ -28,30 +27,22 @@ func sourceTypeHasIncompleteTemplateIdentity(
     }
     let ty = ctx.resolveType(typeId)
     return match (ty.kind) {
-        case TypeKind.TypeKindTemplateInstantiation(instantiation) =>
-            !instantiation.argumentsComplete || instantiation.arguments.any {
-                argument => sourceTypeHasIncompleteTemplateIdentity(ctx, argument, visiting)
-            }
-        case TypeKind.TypeKindPointer(inner) =>
-            sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
-        case TypeKind.TypeKindReference(inner) =>
-            sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
-        case TypeKind.TypeKindArray(inner, _) =>
-            sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
-        case TypeKind.TypeKindVector(inner, _) =>
-            sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
-        case TypeKind.TypeKindAlias(inner) =>
-            sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
-        case TypeKind.TypeKindTemplateAlias(inner, _) =>
-            sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
-        case TypeKind.ResolvedTypeRef(inner) =>
-            sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
-        case TypeKind.TypeKindFunction(signature) =>
-            staticWrapperSignatureHasIncompleteTemplateIdentity(
-                ctx,
-                signature,
-                visiting: visiting
-            )
+        case TypeKind.TypeKindTemplateInstantiation(instantiation) => !instantiation.argumentsComplete ||
+            instantiation.arguments.any {
+            argument => sourceTypeHasIncompleteTemplateIdentity(ctx, argument, visiting)
+        }
+        case TypeKind.TypeKindPointer(inner) => sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
+        case TypeKind.TypeKindReference(inner) => sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
+        case TypeKind.TypeKindArray(inner, _) => sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
+        case TypeKind.TypeKindVector(inner, _) => sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
+        case TypeKind.TypeKindAlias(inner) => sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
+        case TypeKind.TypeKindTemplateAlias(inner, _) => sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
+        case TypeKind.ResolvedTypeRef(inner) => sourceTypeHasIncompleteTemplateIdentity(ctx, inner, visiting)
+        case TypeKind.TypeKindFunction(signature) => staticWrapperSignatureHasIncompleteTemplateIdentity(
+            ctx,
+            signature,
+            visiting: visiting
+        )
         case _ => false
     }
 }
@@ -133,7 +124,12 @@ func sourceNamespaces(ctx: CjbindContext, item: Item): Array<String> {
 
 func intSourceName(kind: TypeKindIntKind, isCxx: Bool): String {
     return match (kind) {
-        case TypeKindIntKind.IntKindBool => if (isCxx) { "bool" } else { "_Bool" }
+        case TypeKindIntKind.IntKindBool =>
+            if (isCxx) {
+                "bool"
+            } else {
+                "_Bool"
+            }
         case TypeKindIntKind.IntKindSChar | TypeKindIntKind.IntKindI8 => "signed char"
         case TypeKindIntKind.IntKindUChar | TypeKindIntKind.IntKindU8 => "unsigned char"
         case TypeKindIntKind.IntKindWChar(_) => "wchar_t"
@@ -176,14 +172,18 @@ func sourceCallingConvention(abi: ClangAbi): String {
         case ClangAbi.Known(Abi.Vectorcall) => "__attribute__((vectorcall))"
         case ClangAbi.Known(Abi.Aapcs) => "__attribute__((pcs(\"aapcs\")))"
         case ClangAbi.Known(Abi.Win64) => "__attribute__((ms_abi))"
-        case ClangAbi.Unknown(value) =>
-            throw Exception("calling convention '${value}' cannot be serialized in a static wrapper")
+        case ClangAbi.Unknown(value) => throw Exception(
+            "calling convention '${value}' cannot be serialized in a static wrapper")
     }
 }
 
 func serializeNonTypeTemplateArgument(argument: NonTypeTemplateArgument): String {
     if (argument.isBoolean) {
-        return if (argument.unsignedValue == 0) { "false" } else { "true" }
+        return if (argument.unsignedValue == 0) {
+            "false"
+        } else {
+            "true"
+        }
     }
     let literal = if (argument.isUnsigned) {
         "${argument.unsignedValue}ULL"
@@ -226,12 +226,14 @@ func serializeTemplateArguments(
         if (typeArgumentIndex >= instantiation.arguments.size) {
             throw Exception("invalid C++ template argument positions")
         }
-        rendered.add(serializeSourceType(
-            ctx,
-            instantiation.arguments[typeArgumentIndex],
-            ArrayList<String>(),
-            isCxx
-        ))
+        rendered.add(
+            serializeSourceType(
+                ctx,
+                instantiation.arguments[typeArgumentIndex],
+                ArrayList<String>(),
+                isCxx
+            )
+        )
         typeArgumentIndex += 1
     }
     if (typeArgumentIndex != instantiation.arguments.size) {
@@ -262,12 +264,14 @@ func serializeFunctionType(
                 unnamed += 1
                 "arg_${unnamed}"
         }
-        arguments.add(serializeSourceType(
-            ctx,
-            typeId,
-            ArrayList<String>([argumentName]),
-            isCxx
-        ))
+        arguments.add(
+            serializeSourceType(
+                ctx,
+                typeId,
+                ArrayList<String>([argumentName]),
+                isCxx
+            )
+        )
     }
     // Clang classifies both an ellipsis-only C++ prototype and an old-style
     // C `foo()` declaration as variadic.  The former must retain its ellipsis,
@@ -316,7 +320,11 @@ func serializeSourceType(
 
     let item = ctx.resolveItem(typeId)
     let ty = item.kind.expectType()
-    let qualifier = if (ty.isConst) { "const " } else { "" }
+    let qualifier = if (ty.isConst) {
+        "const "
+    } else {
+        ""
+    }
     var output = match (ty.kind) {
         case TypeKind.TypeKindVoid => qualifier + "void"
         case TypeKind.TypeKindNullPtr =>
@@ -338,8 +346,7 @@ func serializeSourceType(
             } else {
                 return serializeSourceType(ctx, inner, stack, isCxx)
             }
-        case TypeKind.TypeKindTemplateAlias(inner, _) =>
-            return serializeSourceType(ctx, inner, stack, isCxx)
+        case TypeKind.TypeKindTemplateAlias(inner, _) => return serializeSourceType(ctx, inner, stack, isCxx)
         case TypeKind.TypeKindArray(inner, length) =>
             let current = drainDeclarator(stack)
             // Postfix array binding is tighter than a pointer/reference prefix.
@@ -357,10 +364,13 @@ func serializeSourceType(
                 ArrayList<String>(["${arrayBase}[${length}]"]),
                 isCxx
             )
-        case TypeKind.TypeKindFunction(signature) =>
-            return serializeFunctionType(ctx, signature, stack, isCxx)
+        case TypeKind.TypeKindFunction(signature) => return serializeFunctionType(ctx, signature, stack, isCxx)
         case TypeKind.TypeKindPointer(inner) =>
-            stack.add(if (ty.isConst) { "* const " } else { "*" })
+            stack.add(if (ty.isConst) {
+                "* const "
+            } else {
+                "*"
+            })
             return serializeSourceType(ctx, inner, stack, isCxx)
         case TypeKind.TypeKindReference(inner) =>
             if (!isCxx) {
@@ -377,23 +387,21 @@ func serializeSourceType(
                 "struct "
             }
             qualifier + tag + sourceItemName(ctx, item)
-        case TypeKind.TypeKindEnum(_) =>
-            qualifier + (if (isCxx) { "" } else { "enum " }) + sourceItemName(ctx, item)
+        case TypeKind.TypeKindEnum(_) => qualifier + (if (isCxx) {
+            ""
+        } else {
+            "enum "
+        }) + sourceItemName(ctx, item)
         case TypeKind.TypeKindTemplateInstantiation(instantiation) =>
             if (!isCxx) {
                 throw Exception("C++ template instantiation encountered in C mode")
             }
             if (!instantiation.argumentsComplete) {
-                throw Exception(
-                    "incomplete C++ template argument identity encountered in a static wrapper"
-                )
+                throw Exception("incomplete C++ template argument identity encountered in a static wrapper")
             }
-            let definition = instantiation.definition
-                .intoResolver()
-                .throughTypeRefs()
-                .resolve(ctx)
-            qualifier + sourceItemName(ctx, definition) +
-                "<" + serializeTemplateArguments(ctx, instantiation, true) + ">"
+            let definition = instantiation.definition.intoResolver().throughTypeRefs().resolve(ctx)
+            qualifier + sourceItemName(ctx, definition) + "<" + serializeTemplateArguments(ctx, instantiation, true) +
+                ">"
         case TypeKind.ResolvedTypeRef(inner) =>
             let rendered = serializeSourceType(ctx, inner, stack, isCxx)
             return if (ty.isConst && !rendered.startsWith("const ")) {
@@ -404,16 +412,14 @@ func serializeSourceType(
         case TypeKind.TypeKindObjCId => qualifier + "id"
         case TypeKind.TypeKindObjCSel => qualifier + "SEL"
         case TypeKind.TypeKindObjCInterface(iface) => qualifier + iface.name
-        case TypeKind.TypeKindObjCBlockPointer(_) =>
-            throw Exception("Objective-C block pointers cannot be serialized as static wrappers")
-        case TypeKind.TypeKindVector(_, _) =>
-            throw Exception("vector types cannot be serialized as static wrappers")
-        case TypeKind.TypeKindOpaque =>
-            throw Exception("opaque types cannot be serialized as static wrappers")
-        case TypeKind.TypeKindTypeParam =>
-            throw Exception("template parameters cannot be serialized as static wrappers")
-        case TypeKind.UnresolvedTypeRef(_, _, _) =>
-            throw Exception("unresolved types cannot be serialized as static wrappers")
+        case TypeKind.TypeKindObjCBlockPointer(_) => throw Exception(
+            "Objective-C block pointers cannot be serialized as static wrappers")
+        case TypeKind.TypeKindVector(_, _) => throw Exception("vector types cannot be serialized as static wrappers")
+        case TypeKind.TypeKindOpaque => throw Exception("opaque types cannot be serialized as static wrappers")
+        case TypeKind.TypeKindTypeParam => throw Exception(
+            "template parameters cannot be serialized as static wrappers")
+        case TypeKind.UnresolvedTypeRef(_, _, _) => throw Exception(
+            "unresolved types cannot be serialized as static wrappers")
     }
 
     if (!stack.isEmpty()) {
@@ -451,29 +457,34 @@ func serializeStaticWrapper(
                 unnamed += 1
                 "arg_${unnamed}"
         }
-        declarations.add(serializeSourceType(
-            ctx,
-            typeId,
-            ArrayList<String>([argumentName]),
-            isCxx
-        ))
+        declarations.add(
+            serializeSourceType(
+                ctx,
+                typeId,
+                ArrayList<String>([argumentName]),
+                isCxx
+            )
+        )
         callArguments.add(argumentName)
     }
     if (declarations.isEmpty()) {
         declarations.add("void")
     }
 
-    let functionDeclarator = wrapper.symbolName + "(" +
-        String.join(declarations.toArray(), delimiter: ", ") + ")"
+    let functionDeclarator = wrapper.symbolName + "(" + String.join(declarations.toArray(), delimiter: ", ") + ")"
     let declaration = serializeSourceType(
         ctx,
         signature.returnType,
         ArrayList<String>([functionDeclarator]),
         isCxx
     )
-    let returnPrefix = if (isVoidReturn(ctx, signature.returnType)) { "" } else { "return " }
-    let body = "${declaration} { ${returnPrefix}${function.sourceName}(" +
-        String.join(callArguments.toArray(), delimiter: ", ") + "); }"
+    let returnPrefix = if (isVoidReturn(ctx, signature.returnType)) {
+        ""
+    } else {
+        "return "
+    }
+    let body = "${declaration} { ${returnPrefix}${function.sourceName}(" + String.join(callArguments.toArray(),
+        delimiter: ", ") + "); }"
 
     if (!isCxx) {
         return body
@@ -503,9 +514,17 @@ func wrapperSourcePath(ctx: CjbindContext, isCxx: Bool): Path {
     } else {
         base.fileNameWithoutExtension
     }
-    let extension = if (isCxx) { "cpp" } else { "c" }
+    let extension = if (isCxx) {
+        "cpp"
+    } else {
+        "c"
+    }
     let fileName = "${stem}.${extension}"
-    return if (base.parent.isEmpty()) { Path(fileName) } else { base.parent.join(fileName) }
+    return if (base.parent.isEmpty()) {
+        Path(fileName)
+    } else {
+        base.parent.join(fileName)
+    }
 }
 
 func includePath(header: String): String {
@@ -540,10 +559,14 @@ public func serializeStaticWrappers(
             code.append(serializeStaticWrapper(ctx, wrapper, isCxx))
             code.append("\n")
         } catch (error: Exception) {
-            return Err<Unit, CodegenError>(CodegenError.Serialize(CodegenSerializeError(
-                error.message,
-                item.canonicalName(ctx)
-            )))
+            return Err<Unit, CodegenError>(
+                CodegenError.Serialize(
+                    CodegenSerializeError(
+                        error.message,
+                        item.canonicalName(ctx)
+                    )
+                )
+            )
         }
     }
 

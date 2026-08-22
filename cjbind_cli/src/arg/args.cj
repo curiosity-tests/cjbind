@@ -38,7 +38,8 @@ public abstract class Flag {
 public class StringFlag <: Flag {
     public var value: ?String = None
 
-    public init(shortArg: ?String, longArg: String, name: String, description: String, optSuffix: ?String, defaultValue: ?String) {
+    public init(shortArg: ?String, longArg: String, name: String, description: String, optSuffix: ?String,
+        defaultValue: ?String) {
         super(shortArg, longArg, name, description, optSuffix)
         this.value = defaultValue
     }
@@ -49,7 +50,6 @@ public class StringFlag <: Flag {
             case None => throw Exception("选项 ${this.name} 需要一个参数")
         }
     }
-
 }
 
 public class StringListFlag <: Flag {
@@ -109,8 +109,10 @@ public class ArgsParser {
         let it = input.iterator()
 
         // remove bin (argv[0]); guard against empty input
-        if (it.next().isNone()) { return ([], []) }
-        
+        if (it.next().isNone()) {
+            return ([], [])
+        }
+
         let headers = ArrayList<String>()
         var collectingClangArgs = false
         let clangArgs = ArrayList<String>()

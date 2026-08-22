@@ -15,21 +15,21 @@ public class Utils {
 
         let args = argsIter.map {
             v =>
-            let name = v[0]
-            let ty = v[1]
+                let name = v[0]
+                let ty = v[1]
 
-            let argTy = fnsigArgumentType(ctx, ty)
+                let argTy = fnsigArgumentType(ctx, ty)
 
-            let argName = if (let Some(n) <- name) {
-                ctx.cjMangle(n)
-            } else {
-                unnamedArguments.value += 1
-                "arg${unnamedArguments.value}"
-            }
+                let argName = if (let Some(n) <- name) {
+                    ctx.cjMangle(n)
+                } else {
+                    unnamedArguments.value += 1
+                    "arg${unnamedArguments.value}"
+                }
 
-            let argIdent = ctx.cjIdent(argName)
+                let argIdent = ctx.cjIdent(argName)
 
-            return tokenStreamFromTemplate("${argIdent}: ${argTy}")
+                return tokenStreamFromTemplate("${argIdent}: ${argTy}")
         } |> collectArrayList
 
         return args
@@ -45,17 +45,17 @@ public class Utils {
 
         let args = argsIter.map {
             v =>
-            let name = v[0]
-            let argName = if (let Some(n) <- name) {
-                ctx.cjMangle(n)
-            } else {
-                unnamedArguments.value += 1
-                "arg${unnamedArguments.value}"
-            }
+                let name = v[0]
+                let argName = if (let Some(n) <- name) {
+                    ctx.cjMangle(n)
+                } else {
+                    unnamedArguments.value += 1
+                    "arg${unnamedArguments.value}"
+                }
 
-            let argIdent = ctx.cjIdent(argName)
+                let argIdent = ctx.cjIdent(argName)
 
-            return tokenStreamFromTemplate(argIdent)
+                return tokenStreamFromTemplate(argIdent)
         } |> collectArrayList
 
         return args
@@ -119,18 +119,20 @@ public class Utils {
             case "int64_t" => primitiveTy(ctx, "Int64")
             case "uint64_t" => primitiveTy(ctx, "UInt64")
 
-            case "size_t" => if (ctx.options.sizeTIsUsize) {
-                primitiveTy(ctx, "UIntNative")
-            } else {
-                None
-            }
+            case "size_t" =>
+                if (ctx.options.sizeTIsUsize) {
+                    primitiveTy(ctx, "UIntNative")
+                } else {
+                    None
+                }
             case "uintptr_t" => primitiveTy(ctx, "UIntNative")
 
-            case "ssize_t" => if (ctx.options.sizeTIsUsize) {
-                primitiveTy(ctx, "IntNative")
-            } else {
-                None
-            }
+            case "ssize_t" =>
+                if (ctx.options.sizeTIsUsize) {
+                    primitiveTy(ctx, "IntNative")
+                } else {
+                    None
+                }
             case "intptr_t" | "ptrdiff_t" => primitiveTy(ctx, "IntNative")
 
             // ObjC type mappings

@@ -16,11 +16,13 @@ func parsedAnnotationAttributes(attributes: Array<CommentAttribute>): Annotation
 public class AnnotationParsingTest {
     @TestCase
     func parsesCangjieBindingControlAttributes(): Unit {
-        let annotations = parsedAnnotationAttributes([
-            annotationAttribute("cjbind"),
-            annotationAttribute("opaque"),
-            annotationAttribute("hide")
-        ])
+        let annotations = parsedAnnotationAttributes(
+            [
+                annotationAttribute("cjbind"),
+                annotationAttribute("opaque"),
+                annotationAttribute("hide")
+            ]
+        )
 
         @Expect(annotations.opaque(), true)
         @Expect(annotations.hide(), true)
@@ -28,10 +30,12 @@ public class AnnotationParsingTest {
 
     @TestCase
     func parsesEnumVariantHideAttribute(): Unit {
-        let annotations = parsedAnnotationAttributes([
-            annotationAttribute("cjbind"),
-            annotationAttribute("hide")
-        ])
+        let annotations = parsedAnnotationAttributes(
+            [
+                annotationAttribute("cjbind"),
+                annotationAttribute("hide")
+            ]
+        )
 
         @Expect(annotations.hide(), true)
         @Expect(annotations.opaque(), false)
@@ -45,5 +49,4 @@ public class AnnotationParsingTest {
         ]).isNone(), true)
         @Expect(parseAnnotationAttributes(Array<CommentAttribute>()).isNone(), true)
     }
-
 }

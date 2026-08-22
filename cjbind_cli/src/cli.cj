@@ -16,8 +16,10 @@ public func processArgs(): (CjbindOptions, (String) -> Unit) {
     let noComment = BoolFlag(None, "no-comment", "no-comment", "不尝试生成代码中的注释")
     let noLayoutTests = BoolFlag(None, "no-layout-test", "no-layout-test", "不生成布局测试代码")
     let builtins = BoolFlag(None, "builtins", "builtins", "生成内置定义的 bindings，如 __builtin_va_list")
-    let makeFuncWrapperFlag = BoolFlag(None, "make-func-wrapper", "make-func-wrapper", "生成 foreign 函数包装器以允许包外调用")
-    let funcWrapperSuffixFlag = StringFlag(None, "func-wrapper-suffix", "func-wrapper-suffix", "生成函数包装器时使用的后缀，默认为 _cjbindwrapper", "SUFFIX", "_cjbindwrapper")
+    let makeFuncWrapperFlag = BoolFlag(None, "make-func-wrapper", "make-func-wrapper",
+        "生成 foreign 函数包装器以允许包外调用")
+    let funcWrapperSuffixFlag = StringFlag(None, "func-wrapper-suffix", "func-wrapper-suffix",
+        "生成函数包装器时使用的后缀，默认为 _cjbindwrapper", "SUFFIX", "_cjbindwrapper")
     let wrapStaticFnsFlag = BoolFlag(None, "wrap-static-fns", "wrap-static-fns",
         "为 static/static inline 函数生成可编译的 C/C++ 外部桥接函数")
     let wrapStaticFnsSuffixFlag = StringFlag(None, "wrap-static-fns-suffix", "wrap-static-fns-suffix",
@@ -25,11 +27,15 @@ public func processArgs(): (CjbindOptions, (String) -> Unit) {
     let wrapStaticFnsPathFlag = StringFlag(None, "wrap-static-fns-path", "wrap-static-fns-path",
         "static 函数桥接源文件的基础路径（自动使用 .c 或 .cpp 扩展名）", "PATH", None)
     let autoCString = BoolFlag(None, "auto-cstring", "auto-cstring", "把 char* 转换为 CString 而不是 CPointer<UInt8>")
-    let arrayPointersInArgs = BoolFlag(None, "array-pointers-in-args", "array-pointers-in-args", "把数组 T arr[size] 转换为 VArray<T, $size> 而不是 CPointer<T>")
-    let makeCjString = BoolFlag(None, "make-cjstring", "make-cjstring", "把 C 字符串转换为仓颉的 String 而不是 VArray<UInt8>，这可能会导致二进制表示不一致")
+    let arrayPointersInArgs = BoolFlag(None, "array-pointers-in-args", "array-pointers-in-args",
+        "把数组 T arr[size] 转换为 VArray<T, $size> 而不是 CPointer<T>")
+    let makeCjString = BoolFlag(None, "make-cjstring", "make-cjstring",
+        "把 C 字符串转换为仓颉的 String 而不是 VArray<UInt8>，这可能会导致二进制表示不一致")
     let objcFlag = BoolFlag(None, "objc", "objc", "启用 Objective-C 绑定生成模式")
-    let objcCodegenModeFlag = StringFlag(None, "objc-codegen-mode", "objc-codegen-mode", "ObjC 代码生成模式: runtime (默认) 或 compiler", "MODE", "runtime")
-    let objcGenerateDefinitions = BoolFlag(None, "objc-generate-definitions", "objc-generate-definitions", "在 compiler 模式下生成带默认返回值的方法桩体")
+    let objcCodegenModeFlag = StringFlag(None, "objc-codegen-mode", "objc-codegen-mode",
+        "ObjC 代码生成模式: runtime (默认) 或 compiler", "MODE", "runtime")
+    let objcGenerateDefinitions = BoolFlag(None, "objc-generate-definitions", "objc-generate-definitions",
+        "在 compiler 模式下生成带默认返回值的方法桩体")
     let defaultEnumStyleFlag = StringFlag(None, "default-enum-style", "default-enum-style",
         "默认枚举生成风格: consts (默认) 或 newtype", "STYLE", "consts")
     let defaultAliasStyleFlag = StringFlag(None, "default-alias-style", "default-alias-style",
@@ -42,8 +48,8 @@ public func processArgs(): (CjbindOptions, (String) -> Unit) {
         "把名称匹配正则表达式的 typedef 生成为带 wrap/unwrap 的强类型包装", "REGEX")
     let fitMacroConstantsFlag = BoolFlag(None, "fit-macro-constants", "fit-macro-constants",
         "根据值范围选择最小适配整数类型")
-    let noUnionAccessorWorkaroundFlag = BoolFlag(None, "no-union-accessor-workaround",
-        "no-union-accessor-workaround", "禁用 union accessor 的编译器 verifier workaround")
+    let noUnionAccessorWorkaroundFlag = BoolFlag(None, "no-union-accessor-workaround", "no-union-accessor-workaround",
+        "禁用 union accessor 的编译器 verifier workaround")
     let enableCxxNamespacesFlag = BoolFlag(None, "enable-cxx-namespaces", "enable-cxx-namespaces",
         "启用 C++ namespace 命名规则（默认折叠内联 namespace）")
     let conservativeInlineNamespacesFlag = BoolFlag(None, "conservative-inline-namespaces",
@@ -65,20 +71,19 @@ public func processArgs(): (CjbindOptions, (String) -> Unit) {
         "generate-pure-virtual-functions", "保留纯虚函数绑定")
     let generatePrivateFunctionsFlag = BoolFlag(None, "generate-private-functions", "generate-private-functions",
         "保留私有 C++ 函数绑定")
-    let vtableGenerationFlag = BoolFlag(None, "vtable-generation", "vtable-generation",
-        "生成 C++ 虚函数表定义")
-    let blocklistTypeFlag = StringListFlag(None, "blocklist-type", "blocklist-type",
-        "不生成名称匹配正则表达式的类型", "REGEX")
+    let vtableGenerationFlag = BoolFlag(None, "vtable-generation", "vtable-generation", "生成 C++ 虚函数表定义")
+    let blocklistTypeFlag = StringListFlag(None, "blocklist-type", "blocklist-type", "不生成名称匹配正则表达式的类型",
+        "REGEX")
     let blocklistFunctionFlag = StringListFlag(None, "blocklist-function", "blocklist-function",
         "不生成名称匹配正则表达式的函数", "REGEX")
     let blocklistItemFlag = StringListFlag(None, "blocklist-item", "blocklist-item",
         "不生成名称匹配正则表达式的任意项目", "REGEX")
-    let blocklistVarFlag = StringListFlag(None, "blocklist-var", "blocklist-var",
-        "不生成名称匹配正则表达式的变量", "REGEX")
+    let blocklistVarFlag = StringListFlag(None, "blocklist-var", "blocklist-var", "不生成名称匹配正则表达式的变量",
+        "REGEX")
     let blocklistFileFlag = StringListFlag(None, "blocklist-file", "blocklist-file",
         "不生成完整路径匹配正则表达式的文件内容", "REGEX")
-    let opaqueTypeFlag = StringListFlag(None, "opaque-type", "opaque-type",
-        "把名称匹配正则表达式的类型生成为不透明布局", "REGEX")
+    let opaqueTypeFlag = StringListFlag(None, "opaque-type", "opaque-type", "把名称匹配正则表达式的类型生成为不透明布局",
+        "REGEX")
     let allowlistTypeFlag = StringListFlag(None, "allowlist-type", "allowlist-type",
         "只选择名称匹配正则表达式的类型及其依赖", "REGEX")
     let allowlistFunctionFlag = StringListFlag(None, "allowlist-function", "allowlist-function",
@@ -91,8 +96,7 @@ public func processArgs(): (CjbindOptions, (String) -> Unit) {
         "只选择完整路径匹配正则表达式的文件内容及其依赖", "REGEX")
     let noRecursiveAllowlistFlag = BoolFlag(None, "no-recursive-allowlist", "no-recursive-allowlist",
         "不递归选择显式 allowlist 项目的依赖")
-    let noRecordMatchesFlag = BoolFlag(None, "no-record-matches", "no-record-matches",
-        "不记录或报告未匹配的正则表达式")
+    let noRecordMatchesFlag = BoolFlag(None, "no-record-matches", "no-record-matches", "不记录或报告未匹配的正则表达式")
     let disableUntaggedUnionFlag = BoolFlag(None, "disable-untagged-union", "disable-untagged-union",
         "禁用无标签 union 的原生分析规则")
     let noSizeTIsUsizeFlag = BoolFlag(None, "no-size_t-is-usize", "no-size_t-is-usize",
@@ -207,9 +211,7 @@ public func processArgs(): (CjbindOptions, (String) -> Unit) {
         case "new_type" => DefaultAliasStyle.NewType
         case "new_type_deref" => DefaultAliasStyle.NewTypeDeref
         case v =>
-            eprintln(
-                "Error: --default-alias-style must be 'type_alias', 'new_type', or 'new_type_deref', got: ${v}"
-            )
+            eprintln("Error: --default-alias-style must be 'type_alias', 'new_type', or 'new_type_deref', got: ${v}")
             env.exit(1)
     }
     opt.typeAliases.add(typeAliasFlag.values)

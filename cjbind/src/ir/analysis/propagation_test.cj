@@ -8,9 +8,14 @@ import cjbind.options.CjbindOptions
 
 func analysisTestContext(): CjbindContext {
     let options = CjbindOptions()
-    options.clangArgs.add(all: [
-        "-x", "c++", "-std=c++14", "cjbind_test/testdata/headers/support/ir/analysis_test_input.hpp"
-    ])
+    options.clangArgs.add(
+        all: [
+            "-x",
+            "c++",
+            "-std=c++14",
+            "cjbind_test/testdata/headers/support/ir/analysis_test_input.hpp"
+        ]
+    )
     return CjbindContext(options)
 }
 
@@ -68,10 +73,12 @@ public class UsedTemplateParametersPropagationTest {
             let unusedInstantiation = addAnalysisTestType(
                 ctx,
                 "UnusedU",
-                TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-                    unusedDefinition,
-                    [argument]
-                ))
+                TypeKind.TypeKindTemplateInstantiation(
+                    TemplateInstantiation(
+                        unusedDefinition,
+                        [argument]
+                    )
+                )
             )
 
             let usedComp = analysisTestRecord([parameter])
@@ -80,15 +87,24 @@ public class UsedTemplateParametersPropagationTest {
             let usedInstantiation = addAnalysisTestType(
                 ctx,
                 "UsedU",
-                TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-                    usedDefinition,
-                    [argument]
-                ))
+                TypeKind.TypeKindTemplateInstantiation(
+                    TemplateInstantiation(
+                        usedDefinition,
+                        [argument]
+                    )
+                )
             )
 
-            let allowlisted = analysisTestItems([
-                parameter, argument, unusedDefinition, unusedInstantiation, usedDefinition, usedInstantiation
-            ])
+            let allowlisted = analysisTestItems(
+                [
+                    parameter,
+                    argument,
+                    unusedDefinition,
+                    unusedInstantiation,
+                    usedDefinition,
+                    usedInstantiation
+                ]
+            )
             let used = analyzeUsedTemplateParameters(ctx, allowlisted)
             @Expect(used.get(unusedInstantiation).getOrThrow().contains(argument), false)
             @Expect(used.get(usedInstantiation).getOrThrow().contains(argument), true)

@@ -11,9 +11,7 @@ enum HasVtableResult <: Equatable<HasVtableResult> {
 
     public operator func ==(rhs: HasVtableResult): Bool {
         return match ((this, rhs)) {
-            case (No, No) |
-                (SelfHasVtable, SelfHasVtable) |
-                (BaseHasVtable, BaseHasVtable) => true
+            case (No, No) | (SelfHasVtable, SelfHasVtable) | (BaseHasVtable, BaseHasVtable) => true
             case _ => false
         }
     }
@@ -140,9 +138,7 @@ class HasVtableAnalysis <: MonotoneFramework<ItemId, HashMap<ItemId, HasVtableRe
 
 func considerHasVtableEdge(kind: EdgeKind): Bool {
     return match (kind) {
-        case EdgeKind.TypeReferenceEdge |
-            EdgeKind.BaseMemberEdge |
-            EdgeKind.TemplateDeclarationEdge => true
+        case EdgeKind.TypeReferenceEdge | EdgeKind.BaseMemberEdge | EdgeKind.TemplateDeclarationEdge => true
         case _ => false
     }
 }

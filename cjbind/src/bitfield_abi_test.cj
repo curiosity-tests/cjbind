@@ -4,7 +4,6 @@ import std.env.getTempDirectory
 import std.fs.{Directory, File, remove}
 import std.unittest.*
 import std.unittest.testmacro.*
-
 import cjbind.options.CjbindOptions
 
 func generateBitfieldLayoutFixture(header: String, target: String): String {
@@ -26,7 +25,8 @@ func generateBitfieldLayoutFixture(header: String, target: String): String {
 public class BitfieldAbiGenerationTest {
     @TestCase
     func followsAbsoluteClangOffsetsAcrossDifferentAllocationUnits(): Unit {
-        let binding = generateBitfieldLayoutFixture("""
+        let binding = generateBitfieldLayoutFixture(
+            """
 typedef unsigned int U32;
 typedef long long I64;
 struct CrossUnits {
@@ -34,7 +34,8 @@ struct CrossUnits {
     I64 second : 5;
     int third : 4;
 };
-""", "x86_64-w64-mingw32")
+""",
+            "x86_64-w64-mingw32")
 
         @Expect(binding.contains("VArray<UInt64, $3>"), true)
         @Expect(binding.contains("CPointer<UInt8>(inout s), 64, 5"), true)

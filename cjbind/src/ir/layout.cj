@@ -1,7 +1,6 @@
 package cjbind.ir
 
 import cjbind_token.*
-
 import cjbind.clang
 
 public open class Layout {
@@ -10,7 +9,7 @@ public open class Layout {
     public let packed: Bool = false
 
     public init(
-        size: Int32, 
+        size: Int32,
         align: Int32
     ) {
         this.size = size
@@ -50,7 +49,7 @@ public open class Layout {
 
 public class Opaque <: Layout {
     public init(
-        size: Int32, 
+        size: Int32,
         align: Int32
     ) {
         super(size, align)
@@ -62,7 +61,7 @@ public class Opaque <: Layout {
     ): Type {
         let ptrSize = UIntNative(ctx.pointerWidth())
         let layout = Layout(Int32(ty.size(ptrSize)), Int32(ty.align(ptrSize)))
-        return Type(None, layout, TypeKind.TypeKindOpaque, ty.isConst())   
+        return Type(None, layout, TypeKind.TypeKindOpaque, ty.isConst())
     }
 
     public func knownCjTypeForArray(): ?TokenStream {
@@ -79,13 +78,13 @@ public class Opaque <: Layout {
 }
 
 public enum LayoutError {
-    LayoutErrorInvalid |
-    LayoutErrorIncomplete |
-    LayoutErrorDependent |
-    LayoutErrorNotConstantSize |
-    LayoutErrorInvalidFieldName |
-    LayoutErrorUndeduced |
-    LayoutErrorUnknown
+    LayoutErrorInvalid
+    | LayoutErrorIncomplete
+    | LayoutErrorDependent
+    | LayoutErrorNotConstantSize
+    | LayoutErrorInvalidFieldName
+    | LayoutErrorUndeduced
+    | LayoutErrorUnknown
 
     public static func from(val: Int32): LayoutError {
         if (val == clang.CXTypeLayoutError_CXTypeLayoutError_Invalid) {

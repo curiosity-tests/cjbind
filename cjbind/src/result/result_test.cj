@@ -68,14 +68,14 @@ public class ResultTransformTest {
     @TestCase
     func mapOk(): Unit {
         let r: Result<Int64, String> = Ok(2)
-        let mapped = r.map { v: Int64 => v * 3 }
+        let mapped = r.map {v: Int64 => v * 3}
         @Expect(mapped.unwrap(), 6)
     }
 
     @TestCase
     func mapErr(): Unit {
         let r: Result<Int64, String> = Err("fail")
-        let mapped = r.map { v: Int64 => v * 3 }
+        let mapped = r.map {v: Int64 => v * 3}
         @Expect(mapped.isErr(), true)
         @Expect(mapped.err().getOrThrow(), "fail")
     }
@@ -103,14 +103,14 @@ public class ResultTransformTest {
     @TestCase
     func mapErrTransform(): Unit {
         let r: Result<Int64, String> = Err("fail")
-        let mapped = r.mapErr { e: String => e.size }
+        let mapped = r.mapErr {e: String => e.size}
         @Expect(mapped.unwrapErr(), 4)
     }
 
     @TestCase
     func mapErrOnOk(): Unit {
         let r: Result<Int64, String> = Ok(42)
-        let mapped = r.mapErr { e: String => e.size }
+        let mapped = r.mapErr {e: String => e.size}
         @Expect(mapped.unwrap(), 42)
     }
 }
@@ -200,14 +200,14 @@ public class ResultChainTest {
     @TestCase
     func andThenOnOk(): Unit {
         let r: Result<Int64, String> = Ok(2)
-        let result = r.andThen { v: Int64 => Result<Int64, String>.Ok(v * 3) }
+        let result = r.andThen {v: Int64 => Result<Int64, String>.Ok(v * 3)}
         @Expect(result.unwrap(), 6)
     }
 
     @TestCase
     func andThenOnErr(): Unit {
         let r: Result<Int64, String> = Err("fail")
-        let result = r.andThen { v: Int64 => Result<Int64, String>.Ok(v * 3) }
+        let result = r.andThen {v: Int64 => Result<Int64, String>.Ok(v * 3)}
         @Expect(result.unwrapErr(), "fail")
     }
 
@@ -230,7 +230,7 @@ public class ResultChainTest {
     @TestCase
     func orElseOnErr(): Unit {
         let r: Result<Int64, String> = Err("fail")
-        let result = r.orElse { e: String => Result<Int64, Int64>.Ok(Int64(e.size)) }
+        let result = r.orElse {e: String => Result<Int64, Int64>.Ok(Int64(e.size))}
         @Expect(result.unwrap(), 4)
     }
 }
@@ -240,28 +240,28 @@ public class ResultInspectTest {
     @TestCase
     func inspectOk(): Unit {
         let r: Result<Int64, String> = Ok(42)
-        let same = r.inspect { _: Int64 => () }
+        let same = r.inspect {_: Int64 => ()}
         @Expect(same.unwrap(), 42)
     }
 
     @TestCase
     func inspectSkipsErr(): Unit {
         let r: Result<Int64, String> = Err("fail")
-        let same = r.inspect { _: Int64 => () }
+        let same = r.inspect {_: Int64 => ()}
         @Expect(same.isErr(), true)
     }
 
     @TestCase
     func inspectErrOnErr(): Unit {
         let r: Result<Int64, String> = Err("fail")
-        let same = r.inspectErr { _: String => () }
+        let same = r.inspectErr {_: String => ()}
         @Expect(same.isErr(), true)
     }
 
     @TestCase
     func inspectErrSkipsOk(): Unit {
         let r: Result<Int64, String> = Ok(42)
-        let same = r.inspectErr { _: String => () }
+        let same = r.inspectErr {_: String => ()}
         @Expect(same.unwrap(), 42)
     }
 }

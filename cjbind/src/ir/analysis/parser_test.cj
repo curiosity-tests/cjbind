@@ -75,20 +75,18 @@ func recordInfo(ctx: CjbindContext, id: TypeId): CompInfo {
 func fieldType(ctx: CjbindContext, record: TypeId, name: String): TypeId {
     let fields = recordInfo(ctx, record).fields
     match (fields) {
-        case CompFields.CompFieldsBefore(rawFields) =>
-            for (field in rawFields) {
-                if (field.name == Some(name)) {
-                    return field.ty
+        case CompFields.CompFieldsBefore(rawFields) => for (field in rawFields) {
+            if (field.name == Some(name)) {
+                return field.ty
+            }
+        }
+        case CompFields.CompFieldsAfter(value) => for (field in value.fields) {
+            if (let Field.DataMember(data) <- field) {
+                if (data.name == Some(name)) {
+                    return data.ty
                 }
             }
-        case CompFields.CompFieldsAfter(value) =>
-            for (field in value.fields) {
-                if (let Field.DataMember(data) <- field) {
-                    if (data.name == Some(name)) {
-                        return data.ty
-                    }
-                }
-            }
+        }
         case CompFields.CompFieldsError => ()
     }
     throw Exception("missing parsed field ${name}")
@@ -138,24 +136,22 @@ func concreteTemplateFieldType(
     instantiation: TemplateInstantiation,
     name: String
 ): TypeId {
-    let concrete = instantiation.concrete.getOrThrow({=>
-        Exception("template instantiation has no concrete record")
+    let concrete = instantiation.concrete.getOrThrow({
+        => Exception("template instantiation has no concrete record")
     })
     match (concrete.fields) {
-        case CompFields.CompFieldsBefore(rawFields) =>
-            for (field in rawFields) {
-                if (field.name == Some(name)) {
-                    return field.ty
+        case CompFields.CompFieldsBefore(rawFields) => for (field in rawFields) {
+            if (field.name == Some(name)) {
+                return field.ty
+            }
+        }
+        case CompFields.CompFieldsAfter(value) => for (field in value.fields) {
+            if (let Field.DataMember(data) <- field) {
+                if (data.name == Some(name)) {
+                    return data.ty
                 }
             }
-        case CompFields.CompFieldsAfter(value) =>
-            for (field in value.fields) {
-                if (let Field.DataMember(data) <- field) {
-                    if (data.name == Some(name)) {
-                        return data.ty
-                    }
-                }
-            }
+        }
         case CompFields.CompFieldsError => ()
     }
     throw Exception("missing concrete template field ${name}")
@@ -423,9 +419,7 @@ public class ParsedTemplateParameterAnalysisTest {
 
     @TestCase
     func usage7FiltersOnlyTheUnusedMiddleArgument(): Unit {
-        let ctx = parsedAnalysisTestContext(
-            testHeader("cxx-analysis-template-param-usage-7")
-        )
+        let ctx = parsedAnalysisTestContext(testHeader("cxx-analysis-template-param-usage-7"))
         try {
             let definition = namedType(ctx, "DoesNotUseU")
             let parameters = selfTemplateParams(definition, ctx)

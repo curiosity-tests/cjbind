@@ -5,7 +5,6 @@ import std.fs.{Directory, File, remove}
 import std.process.executeWithOutput
 import std.unittest.*
 import std.unittest.testmacro.*
-
 import cjbind.options.CjbindOptions
 
 func staticWrapperOptions(header: String, output: String): CjbindOptions {
@@ -24,7 +23,8 @@ public class StaticFunctionWrapperTest {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("static_functions.h")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 typedef int (*callback_t)(int);
 typedef int (*old_style_callback_t)();
 typedef struct { int value; } anonymous_record_t;
@@ -94,7 +94,8 @@ static inline complex_record_t *supported_complex_record_pointer(complex_record_
 static int unsupported_variadic(const char *format, ...) {
     return format != 0;
 }
-""".toArray())
+"""
+                    .toArray())
 
             let base = directory.join("bridge.generated")
             let binding = generate(staticWrapperOptions(header.toString(), base.toString()))
@@ -141,19 +142,26 @@ static int unsupported_variadic(const char *format, ...) {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("vectorcall_functions.h")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 static inline int call_vector(
     int (__attribute__((vectorcall)) *callback)(int), int value
 ) {
     return callback(value);
 }
-""".toArray())
+"""
+                    .toArray())
 
             let base = directory.join("bridge.generated")
             let options = staticWrapperOptions(header.toString(), base.toString())
-            options.clangArgs.add(all: [
-                "-x", "c", "-std=c11", "--target=x86_64-pc-windows-msvc"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c",
+                    "-std=c11",
+                    "--target=x86_64-pc-windows-msvc"
+                ]
+            )
             let binding = generate(options)
             let source = directory.join("bridge.c")
             let sourceCode = String.fromUtf8(File.readFrom(source))
@@ -170,7 +178,8 @@ static inline int call_vector(
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("float16_functions.h")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 typedef struct { _Float16 value; } half_record_t;
 typedef struct { half_record_t nested; } nested_half_record_t;
 
@@ -193,13 +202,19 @@ static inline nested_half_record_t unsupported_nested_half_record(nested_half_re
 static inline _Float16 *supported_half_pointer(_Float16 *value) {
     return value;
 }
-""".toArray())
+"""
+                    .toArray())
 
             let base = directory.join("bridge.generated")
             let options = staticWrapperOptions(header.toString(), base.toString())
-            options.clangArgs.add(all: [
-                "-x", "c", "-std=c11", "--target=x86_64-unknown-linux-gnu"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c",
+                    "-std=c11",
+                    "--target=x86_64-unknown-linux-gnu"
+                ]
+            )
             let binding = generate(options)
             let source = directory.join("bridge.c")
             let sourceCode = String.fromUtf8(File.readFrom(source))
@@ -221,7 +236,8 @@ static inline _Float16 *supported_half_pointer(_Float16 *value) {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("static_functions.hpp")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 namespace math {
 struct Point { int value; };
 typedef int (*ellipsis_callback_t)(...);
@@ -259,7 +275,8 @@ static int anonymousFreeFunction() {
     return 3;
 }
 }
-""".toArray())
+"""
+                    .toArray())
 
             let base = directory.join("bridge.c")
             let options = staticWrapperOptions(header.toString(), base.toString())
@@ -306,7 +323,8 @@ static int anonymousFreeFunction() {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("static_template_functions.hpp")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 namespace templates {
 template <int N, typename T, signed char Marker, unsigned long long Mask>
 struct Tagged {
@@ -344,7 +362,8 @@ static inline AutoTagged<1> *unsupported_auto_round_trip(AutoTagged<1> *value) {
     return value;
 }
 }
-""".toArray())
+"""
+                    .toArray())
 
             let base = directory.join("template_bridge.cpp")
             let options = staticWrapperOptions(header.toString(), base.toString())

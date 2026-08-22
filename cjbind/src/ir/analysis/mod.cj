@@ -45,7 +45,8 @@ public class AnalysisResults <: AnalysisQueries {
             return true
         }
         let canonicalParameter = canonicalItemId(ctx, parameter)
-        return this.usedTemplateParameters
+        return this
+            .usedTemplateParameters
             .getOrThrow({=> Exception("template parameter usage analysis has not been computed")})
             .get(id)
             .map({parameters => parameters.contains(canonicalParameter)})
@@ -57,7 +58,8 @@ public class AnalysisResults <: AnalysisQueries {
             return allTemplateParams(id, ctx)
         }
         let result = ArrayList<TypeId>()
-        let used = this.usedTemplateParameters
+        let used = this
+            .usedTemplateParameters
             .getOrThrow({=> Exception("template parameter usage analysis has not been computed")})
             .get(id)
             .getOrDefault({=> ItemSet()})
@@ -71,7 +73,8 @@ public class AnalysisResults <: AnalysisQueries {
     }
 
     public func usesAnyTemplateParameters(_: CjbindContext, id: ItemId): Bool {
-        return this.usedTemplateParameters
+        return this
+            .usedTemplateParameters
             .getOrThrow({=> Exception("template parameter usage analysis has not been computed")})
             .get(id)
             .map({parameters => !parameters.isEmpty()})
@@ -79,19 +82,19 @@ public class AnalysisResults <: AnalysisQueries {
     }
 
     public func hasVtablePointer(_: CjbindContext, id: ItemId): Bool {
-        return this.haveVtable
+        return this
+            .haveVtable
             .getOrThrow({=> Exception("vtable analysis has not been computed")})
             .get(id)
-            .getOrDefault({=> HasVtableResult.No}) ==
-            HasVtableResult.SelfHasVtable
+            .getOrDefault({=> HasVtableResult.No}) == HasVtableResult.SelfHasVtable
     }
 
     public func isZeroSized(_: CjbindContext, id: TypeId): Bool {
-        return this.sizednessResults
+        return this
+            .sizednessResults
             .getOrThrow({=> Exception("sizedness analysis has not been computed")})
             .get(id)
-            .getOrDefault({=> SizednessResult.ZeroSized}) ==
-            SizednessResult.ZeroSized
+            .getOrDefault({=> SizednessResult.ZeroSized}) == SizednessResult.ZeroSized
     }
 }
 

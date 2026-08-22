@@ -42,21 +42,11 @@ class UsedTemplateParametersAnalysis <: MonotoneFramework<ItemId, HashMap<ItemId
 
     static func considerEdge(kind: EdgeKind): Bool {
         return match (kind) {
-            case EdgeKind.TemplateArgumentEdge |
-                EdgeKind.BaseMemberEdge |
-                EdgeKind.FieldEdge |
-                EdgeKind.ConstructorEdge |
-                EdgeKind.DestructorEdge |
-                EdgeKind.VarTypeEdge |
-                EdgeKind.FunctionReturnEdge |
-                EdgeKind.FunctionParameterEdge |
-                EdgeKind.TypeReferenceEdge => true
-            case EdgeKind.InnerVarEdge |
-                EdgeKind.InnerTypeEdge |
-                EdgeKind.MethodEdge |
-                EdgeKind.TemplateDeclarationEdge |
-                EdgeKind.TemplateParameterDefinitionEdge |
-                EdgeKind.GenericEdge => false
+            case EdgeKind.TemplateArgumentEdge | EdgeKind.BaseMemberEdge | EdgeKind.FieldEdge | EdgeKind.ConstructorEdge
+                | EdgeKind.DestructorEdge | EdgeKind.VarTypeEdge | EdgeKind.FunctionReturnEdge
+                | EdgeKind.FunctionParameterEdge | EdgeKind.TypeReferenceEdge => true
+            case EdgeKind.InnerVarEdge | EdgeKind.InnerTypeEdge | EdgeKind.MethodEdge | EdgeKind.TemplateDeclarationEdge
+                | EdgeKind.TemplateParameterDefinitionEdge | EdgeKind.GenericEdge => false
         }
     }
 
@@ -144,9 +134,7 @@ func analyzeUsedTemplateParameters(
     ctx: CjbindContext,
     allowlistedItems: ItemSet
 ): HashMap<ItemId, ItemSet> {
-    return analyze<ItemId, HashMap<ItemId, ItemSet>>(
-        UsedTemplateParametersAnalysis(ctx, allowlistedItems)
-    )
+    return analyze<ItemId, HashMap<ItemId, ItemSet>>(UsedTemplateParametersAnalysis(ctx, allowlistedItems))
 }
 
 func extendSet(target: ItemSet, source: ItemSet): Unit {

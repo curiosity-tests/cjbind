@@ -69,7 +69,11 @@ func find(directory: String, patterns: Array<String>): ?Path {
 func extractCCSearchPaths(path: String, args: Array<String>): ?Array<String> {
     let ccArgs = ArrayList<String>(["-E", "-x", "c"])
     ccArgs.add(all: args)
-    ccArgs.add(if (OS == "Windows") { "NUL" } else { "/dev/null" })
+    ccArgs.add(if (OS == "Windows") {
+        "NUL"
+    } else {
+        "/dev/null"
+    })
     ccArgs.add("-v")
 
     let env = HashMap(("LC_ALL", "C"))

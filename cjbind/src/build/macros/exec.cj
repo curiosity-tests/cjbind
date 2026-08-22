@@ -32,7 +32,8 @@ public macro exec(input: Tokens): Tokens {
     // Outside CI, return "exec-placeholder" so builds succeed without git.
     var stdout = Array<UInt8>()
     try {
-        let (code, out, stderr) = executeWithOutput(args[0], args[1..], stdOut: ProcessRedirect.Pipe, stdErr: ProcessRedirect.Pipe)
+        let (code, out, stderr) = executeWithOutput(args[0], args[1..], stdOut: ProcessRedirect.Pipe,
+            stdErr: ProcessRedirect.Pipe)
         if (code != 0) {
             throw Exception("exec failed: ${token.value}\nstderr: ${String.fromUtf8(stderr)}")
         }

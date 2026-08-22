@@ -30,8 +30,7 @@ public func selfTemplateParameterCount(id: ItemId, ctx: CjbindContext): Int64 {
         case None => return 0
     }
     return match (ty.kind) {
-        case TypeKind.TypeKindComp(comp) =>
-            comp.templateParams.size + comp.nonTypeTemplateParams.size
+        case TypeKind.TypeKindComp(comp) => comp.templateParams.size + comp.nonTypeTemplateParams.size
         case TypeKind.TypeKindTemplateAlias(_, parameters) => parameters.size
         case TypeKind.ResolvedTypeRef(inner) => selfTemplateParameterCount(inner, ctx)
         case _ => 0
@@ -86,11 +85,8 @@ public class NonTypeTemplateArgument {
     }
 
     public func sameIdentity(other: NonTypeTemplateArgument): Bool {
-        return this.position == other.position &&
-            this.signedValue == other.signedValue &&
-            this.unsignedValue == other.unsignedValue &&
-            this.isUnsigned == other.isUnsigned &&
-            this.isBoolean == other.isBoolean &&
+        return this.position == other.position && this.signedValue == other.signedValue && this.unsignedValue == other
+            .unsignedValue && this.isUnsigned == other.isUnsigned && this.isBoolean == other.isBoolean &&
             this.enumTypeSpelling == other.enumTypeSpelling
     }
 }
@@ -130,21 +126,12 @@ func hasConcreteIntegralTemplateParameterType(parameter: clang.Cursor): Bool {
         }
     }
     let kind = parameterType.kind()
-    return kind == clang.CXTypeKind_CXType_Bool ||
-        kind == clang.CXTypeKind_CXType_Char_U ||
-        kind == clang.CXTypeKind_CXType_UChar ||
-        kind == clang.CXTypeKind_CXType_Char16 ||
-        kind == clang.CXTypeKind_CXType_Char32 ||
-        kind == clang.CXTypeKind_CXType_UShort ||
-        kind == clang.CXTypeKind_CXType_UInt ||
-        kind == clang.CXTypeKind_CXType_ULong ||
-        kind == clang.CXTypeKind_CXType_ULongLong ||
-        kind == clang.CXTypeKind_CXType_Char_S ||
-        kind == clang.CXTypeKind_CXType_SChar ||
-        kind == clang.CXTypeKind_CXType_WChar ||
-        kind == clang.CXTypeKind_CXType_Short ||
-        kind == clang.CXTypeKind_CXType_Int ||
-        kind == clang.CXTypeKind_CXType_Long ||
+    return kind == clang.CXTypeKind_CXType_Bool || kind == clang.CXTypeKind_CXType_Char_U || kind == clang
+        .CXTypeKind_CXType_UChar || kind == clang.CXTypeKind_CXType_Char16 || kind == clang.CXTypeKind_CXType_Char32 ||
+        kind == clang.CXTypeKind_CXType_UShort || kind == clang.CXTypeKind_CXType_UInt || kind == clang
+        .CXTypeKind_CXType_ULong || kind == clang.CXTypeKind_CXType_ULongLong || kind == clang.CXTypeKind_CXType_Char_S ||
+        kind == clang.CXTypeKind_CXType_SChar || kind == clang.CXTypeKind_CXType_WChar || kind == clang
+        .CXTypeKind_CXType_Short || kind == clang.CXTypeKind_CXType_Int || kind == clang.CXTypeKind_CXType_Long ||
         kind == clang.CXTypeKind_CXType_LongLong
 }
 
@@ -156,16 +143,10 @@ func isUnsignedIntegralTemplateParameter(parameter: clang.Cursor): Bool {
         }
     }
     let kind = ty.kind()
-    return kind == clang.CXTypeKind_CXType_Bool ||
-        kind == clang.CXTypeKind_CXType_Char_U ||
-        kind == clang.CXTypeKind_CXType_UChar ||
-        kind == clang.CXTypeKind_CXType_Char16 ||
-        kind == clang.CXTypeKind_CXType_Char32 ||
-        kind == clang.CXTypeKind_CXType_UShort ||
-        kind == clang.CXTypeKind_CXType_UInt ||
-        kind == clang.CXTypeKind_CXType_ULong ||
-        kind == clang.CXTypeKind_CXType_ULongLong ||
-        kind == clang.CXTypeKind_CXType_UInt128
+    return kind == clang.CXTypeKind_CXType_Bool || kind == clang.CXTypeKind_CXType_Char_U || kind == clang
+        .CXTypeKind_CXType_UChar || kind == clang.CXTypeKind_CXType_Char16 || kind == clang.CXTypeKind_CXType_Char32 ||
+        kind == clang.CXTypeKind_CXType_UShort || kind == clang.CXTypeKind_CXType_UInt || kind == clang
+        .CXTypeKind_CXType_ULong || kind == clang.CXTypeKind_CXType_ULongLong || kind == clang.CXTypeKind_CXType_UInt128
 }
 
 func templateParameterIsPackOrUninspectable(parameter: clang.Cursor): Bool {
@@ -189,14 +170,13 @@ func templateDefinitionHasParameterPackOrUnknown(definition: clang.Cursor): Bool
     let result = Box(false)
     definition.visit {
         parameter =>
-        let kind = parameter.kind()
-        if ((kind == clang.CXCursorKind_CXCursor_TemplateTypeParameter ||
-            kind == clang.CXCursorKind_CXCursor_NonTypeTemplateParameter ||
-            kind == clang.CXCursorKind_CXCursor_TemplateTemplateParameter) &&
-            templateParameterIsPackOrUninspectable(parameter)) {
-            result.value = true
-        }
-        return clang.CXChildVisitResult_CXChildVisit_Continue
+            let kind = parameter.kind()
+            if ((kind == clang.CXCursorKind_CXCursor_TemplateTypeParameter || kind == clang
+                .CXCursorKind_CXCursor_NonTypeTemplateParameter || kind == clang
+                .CXCursorKind_CXCursor_TemplateTemplateParameter) && templateParameterIsPackOrUninspectable(parameter)) {
+                result.value = true
+            }
+            return clang.CXChildVisitResult_CXChildVisit_Continue
     }
     return result.value
 }
@@ -212,53 +192,58 @@ func templateDefinitionHasExactlyFixedTypeParameters(
     let onlyTypeParameters = Box(true)
     definition.visit {
         parameter =>
-        let kind = parameter.kind()
-        if (kind == clang.CXCursorKind_CXCursor_TemplateTypeParameter) {
-            parameterCount.value += 1
-            if (templateParameterIsPackOrUninspectable(parameter)) {
+            let kind = parameter.kind()
+            if (kind == clang.CXCursorKind_CXCursor_TemplateTypeParameter) {
+                parameterCount.value += 1
+                if (templateParameterIsPackOrUninspectable(parameter)) {
+                    onlyTypeParameters.value = false
+                }
+            } else if (kind == clang.CXCursorKind_CXCursor_NonTypeTemplateParameter || kind == clang
+                .CXCursorKind_CXCursor_TemplateTemplateParameter) {
+                parameterCount.value += 1
                 onlyTypeParameters.value = false
             }
-        } else if (kind == clang.CXCursorKind_CXCursor_NonTypeTemplateParameter ||
-            kind == clang.CXCursorKind_CXCursor_TemplateTemplateParameter) {
-            parameterCount.value += 1
-            onlyTypeParameters.value = false
-        }
-        return clang.CXChildVisitResult_CXChildVisit_Continue
+            return clang.CXChildVisitResult_CXChildVisit_Continue
     }
     return onlyTypeParameters.value && parameterCount.value == expectedCount
 }
 
-func nonTypeTemplateParameterMetadata(
-    specialization: clang.Cursor
-): HashMap<UInt32, NonTypeTemplateParameterMetadata> {
+func nonTypeTemplateParameterMetadata(specialization: clang.Cursor): HashMap<UInt32, NonTypeTemplateParameterMetadata> {
     let result = HashMap<UInt32, NonTypeTemplateParameterMetadata>()
     let definition = specialization.specialized().getOrDefault({=> specialization})
     let position = Box(0u32)
     definition.visit {
         parameter =>
-        let kind = parameter.kind()
-        if (kind == clang.CXCursorKind_CXCursor_TemplateTypeParameter ||
-            kind == clang.CXCursorKind_CXCursor_TemplateTemplateParameter) {
-            position.value += 1
-        } else if (kind == clang.CXCursorKind_CXCursor_NonTypeTemplateParameter) {
-            let parameterType = parameter.curType().canonicalType()
-            let isEnum = parameterType.kind() == clang.CXTypeKind_CXType_Enum
-            let enumTypeSpelling: ?String = if (isEnum) {
-                let spelling = parameterType.spelling()
-                if (spelling.isEmpty()) { None } else { Some(spelling) }
-            } else {
-                None
+            let kind = parameter.kind()
+            if (kind == clang.CXCursorKind_CXCursor_TemplateTypeParameter || kind == clang
+                .CXCursorKind_CXCursor_TemplateTemplateParameter) {
+                position.value += 1
+            } else if (kind == clang.CXCursorKind_CXCursor_NonTypeTemplateParameter) {
+                let parameterType = parameter.curType().canonicalType()
+                let isEnum = parameterType.kind() == clang.CXTypeKind_CXType_Enum
+                let enumTypeSpelling: ?String = if (isEnum) {
+                    let spelling = parameterType.spelling()
+                    if (spelling.isEmpty()) {
+                        None
+                    } else {
+                        Some(spelling)
+                    }
+                } else {
+                    None
+                }
+                result.add(
+                    position.value,
+                    NonTypeTemplateParameterMetadata(
+                        isUnsignedIntegralTemplateParameter(parameter),
+                        parameterType.kind() == clang.CXTypeKind_CXType_Bool,
+                        isEnum,
+                        enumTypeSpelling,
+                        hasConcreteIntegralTemplateParameterType(parameter)
+                    )
+                )
+                position.value += 1
             }
-            result.add(position.value, NonTypeTemplateParameterMetadata(
-                isUnsignedIntegralTemplateParameter(parameter),
-                parameterType.kind() == clang.CXTypeKind_CXType_Bool,
-                isEnum,
-                enumTypeSpelling,
-                hasConcreteIntegralTemplateParameterType(parameter)
-            ))
-            position.value += 1
-        }
-        return clang.CXChildVisitResult_CXChildVisit_Continue
+            return clang.CXChildVisitResult_CXChildVisit_Continue
     }
     return result
 }
@@ -290,12 +275,14 @@ public func concreteTemplateArgumentsFromTy(
                 case Some(value) => value
                 case None => return None
             }
-            typeArguments.add(Item.fromTyOrRef(
-                argument,
-                argument.declaration(),
-                parentId,
-                ctx
-            ))
+            typeArguments.add(
+                Item.fromTyOrRef(
+                    argument,
+                    argument.declaration(),
+                    parentId,
+                    ctx
+                )
+            )
         } else if (kind == clang.CXTemplateArgumentKind_CXTemplateArgumentKind_Integral) {
             let metadata = match (parameterMetadata.get(index)) {
                 case Some(value) => value
@@ -315,14 +302,16 @@ public func concreteTemplateArgumentsFromTy(
                 case Some(value) => value
                 case None => return None
             }
-            nonTypeArguments.add(NonTypeTemplateArgument(
-                index,
-                signedValue,
-                unsignedValue,
-                metadata.isUnsigned,
-                isBoolean: metadata.isBoolean,
-                enumTypeSpelling: metadata.enumTypeSpelling
-            ))
+            nonTypeArguments.add(
+                NonTypeTemplateArgument(
+                    index,
+                    signedValue,
+                    unsignedValue,
+                    metadata.isUnsigned,
+                    isBoolean: metadata.isBoolean,
+                    enumTypeSpelling: metadata.enumTypeSpelling
+                )
+            )
         } else {
             return None
         }
@@ -344,9 +333,10 @@ public func hasUnsupportedConcreteTemplateArgument(ty: clang.Type): Bool {
             // for non-type positions. An all-valid list is therefore
             // safe to send through the type-only fallback; any invalid entry
             // still denotes an identity we cannot reconstruct losslessly.
-            return ty.templateArgs()
-                .map({arguments => arguments.any {argument => !argument.isValid()}})
-                .getOrDefault({=> false})
+            return ty
+            .templateArgs()
+            .map({arguments => arguments.any {argument => !argument.isValid()}})
+            .getOrDefault({=> false})
     }
     let parameterMetadata = nonTypeTemplateParameterMetadata(specialization)
     let definition = specialization.specialized().getOrDefault({=> specialization})
@@ -363,8 +353,7 @@ public func hasUnsupportedConcreteTemplateArgument(ty: clang.Type): Bool {
                 case Some(value) => value
                 case None => return true
             }
-            if (!metadata.identityComplete ||
-                (metadata.isEnum && metadata.enumTypeSpelling.isNone())) {
+            if (!metadata.identityComplete || (metadata.isEnum && metadata.enumTypeSpelling.isNone())) {
                 return true
             }
         } else if (kind != clang.CXTemplateArgumentKind_CXTemplateArgumentKind_Type) {
@@ -437,12 +426,14 @@ public class TemplateInstantiation <: Trace<Tracer, Unit> {
             fallbackContainsOnlyTypes = true
             for (argument in directArguments) {
                 if (argument.isValid()) {
-                    arguments.add(Item.fromTyOrRef(
-                        argument,
-                        argument.declaration(),
-                        None,
-                        ctx
-                    ))
+                    arguments.add(
+                        Item.fromTyOrRef(
+                            argument,
+                            argument.declaration(),
+                            None,
+                            ctx
+                        )
+                    )
                 } else {
                     fallbackContainsOnlyTypes = false
                 }
@@ -453,12 +444,14 @@ public class TemplateInstantiation <: Trace<Tracer, Unit> {
                     for (index in directArguments.size..canonicalArguments.size) {
                         let argument = canonicalArguments[index]
                         if (argument.isValid()) {
-                            arguments.add(Item.fromTyOrRef(
-                                argument,
-                                argument.declaration(),
-                                None,
-                                ctx
-                            ))
+                            arguments.add(
+                                Item.fromTyOrRef(
+                                    argument,
+                                    argument.declaration(),
+                                    None,
+                                    ctx
+                                )
+                            )
                         } else {
                             fallbackContainsOnlyTypes = false
                         }
@@ -468,8 +461,7 @@ public class TemplateInstantiation <: Trace<Tracer, Unit> {
         }
 
         let declaration = ty.declaration()
-        var definition: ?clang.Cursor = if (declaration.kind() ==
-            clang.CXCursorKind_CXCursor_TypeAliasTemplateDecl) {
+        var definition: ?clang.Cursor = if (declaration.kind() == clang.CXCursorKind_CXCursor_TypeAliasTemplateDecl) {
             Some(declaration)
         } else {
             declaration.specialized()
@@ -479,11 +471,11 @@ public class TemplateInstantiation <: Trace<Tracer, Unit> {
             let templateReference: Box<?clang.Cursor> = Box(None)
             declaration.visit {
                 child =>
-                if (child.kind() == clang.CXCursorKind_CXCursor_TemplateRef) {
-                    templateReference.value = child.referenced()
-                    return clang.CXChildVisitResult_CXChildVisit_Break
-                }
-                return clang.CXChildVisitResult_CXChildVisit_Recurse
+                    if (child.kind() == clang.CXCursorKind_CXCursor_TemplateRef) {
+                        templateReference.value = child.referenced()
+                        return clang.CXChildVisitResult_CXChildVisit_Break
+                    }
+                    return clang.CXChildVisitResult_CXChildVisit_Recurse
             }
             definition = templateReference.value
         }
@@ -505,27 +497,29 @@ public class TemplateInstantiation <: Trace<Tracer, Unit> {
         if (!argumentsComplete && fallbackContainsOnlyTypes) {
             argumentsComplete = fallbackTypePositions == arguments.size &&
                 templateDefinitionHasExactlyFixedTypeParameters(
-                    definitionCursor,
-                    fallbackTypePositions
-                )
+                definitionCursor,
+                fallbackTypePositions
+            )
         }
         if (definitionCursor.kind() == clang.CXCursorKind_CXCursor_TypeAliasTemplateDecl &&
             !templateDefinitionHasExactlyFixedTypeParameters(
-                definitionCursor,
-                arguments.size
-            )) {
+            definitionCursor,
+            arguments.size
+        )) {
             // Alias-template IR currently maps type parameters only. Do not
             // pretend that an NTTP, template-template argument, or pack has a
             // lossless substitution identity.
             argumentsComplete = false
         }
-        return Some(TemplateInstantiation(
-            templateDefinition,
-            arguments.toArray(),
-            nonTypeArguments: nonTypeArguments,
-            concrete: ctx.concreteTemplateComp(withId, ty),
-            argumentsComplete: argumentsComplete
-        ))
+        return Some(
+            TemplateInstantiation(
+                templateDefinition,
+                arguments.toArray(),
+                nonTypeArguments: nonTypeArguments,
+                concrete: ctx.concreteTemplateComp(withId, ty),
+                argumentsComplete: argumentsComplete
+            )
+        )
     }
 
     public func trace(_: CjbindContext, tracer: Tracer, _: Unit): Unit {

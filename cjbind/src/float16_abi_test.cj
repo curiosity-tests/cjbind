@@ -4,7 +4,6 @@ import std.env.getTempDirectory
 import std.fs.{Directory, File, remove}
 import std.unittest.*
 import std.unittest.testmacro.*
-
 import cjbind.options.CjbindOptions
 
 @Test
@@ -14,7 +13,8 @@ public class Float16AbiTest {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("float16_abi.h")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 typedef _Float16 half_t;
 
 struct HalfStorage {
@@ -25,14 +25,20 @@ struct HalfStorage {
 half_t round_trip_half(half_t value);
 struct HalfStorage round_trip_storage(struct HalfStorage value);
 half_t *round_trip_half_pointer(half_t *value);
-""".toArray())
+"""
+                    .toArray())
 
             let options = CjbindOptions()
             options.headers.add(header.toString())
             options.noDetectIncludePath = true
-            options.clangArgs.add(all: [
-                "-x", "c", "-std=gnu11", "--target=x86_64-unknown-linux-gnu"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c",
+                    "-std=gnu11",
+                    "--target=x86_64-unknown-linux-gnu"
+                ]
+            )
 
             let binding = generate(options)
 

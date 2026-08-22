@@ -3,7 +3,6 @@ package cjbind.codegen
 import cjbind_token.*
 import cjbind_token.macros.*
 import std.collection.collectArray
-
 import cjbind.ir.*
 import cjbind.result.Result
 
@@ -35,9 +34,9 @@ public class Helpers {
         let output = TokenStream()
         output.appendLiteral(
             "// ABI storage for C _Float16 / __fp16 values. The value property is " +
-            "a local bit view; Cangjie Float16 is still not a CType.\n"
-        )
-        output.`extend`(@tmpl(
+                "a local bit view; Cangjie Float16 is still not a CType.\n")
+        output.`extend`(
+            @tmpl(
             @C
             public struct __CjbindFloat16 {
                 public var bits: UInt16
@@ -67,9 +66,9 @@ public class Helpers {
         let output = TokenStream()
         output.appendLiteral(
             "// ABI-only memory carriers for C complex objects. Direct complex " +
-            "parameters and return values are intentionally not generated.\n"
-        )
-        output.`extend`(@tmpl(
+                "parameters and return values are intentionally not generated.\n")
+        output.`extend`(
+            @tmpl(
             @C
             public struct __CjbindComplexFloat16 {
                 public var reBits: UInt16
@@ -171,9 +170,9 @@ public class Helpers {
         let outOfBoundsError = tokenStreamFromTemplate("\"array view index out of bounds\"")
         output.appendLiteral(
             "// A bounded view over a C flexible or zero-length array. Construction " +
-            "from an owning pointer and indexing stay unsafe because pointer validity and lifetime are caller contracts.\n"
-        )
-        output.`extend`(@tmpl(
+                "from an owning pointer and indexing stay unsafe because pointer validity and lifetime are caller contracts.\n")
+        output.`extend`(
+            @tmpl(
             public struct __CjbindArrayView<T> where T <: CType {
                 let _pointer: CPointer<T>
                 let _size: Int64
@@ -270,12 +269,8 @@ public class Helpers {
         let output = TokenStream()
         output.appendLiteral(
             "// ABI-only opaque pointer for a C variadic callback. The generic " +
-            "arguments document the source signature; this alias is not callable " +
-            "from Cangjie.\n"
-        )
-        output.`extend`(tokenStreamFromTemplate(
-            "public type ${name}<${parameters}> = CPointer<Unit>"
-        ))
+                "arguments document the source signature; this alias is not callable " + "from Cangjie.\n")
+        output.`extend`(tokenStreamFromTemplate("public type ${name}<${parameters}> = CPointer<Unit>"))
         return output
     }
 
@@ -287,8 +282,8 @@ public class Helpers {
 
         let ty = opaque.knownCjTypeForArray().getOrDefault {
             =>
-            eprintln("Found unknown alignment on codegen")
-            return tokenStreamFromTemplate("UInt8")
+                eprintln("Found unknown alignment on codegen")
+                return tokenStreamFromTemplate("UInt8")
         }
 
         let dataLen = opaque.arraySize().getOrDefault {=> layout.size}
@@ -445,23 +440,19 @@ public class AstTy {
         layout: ?Layout
     ): ?TokenStream {
         return match (fk) {
-            case TypeKindFloatKind.FloatKindFloat16 =>
-                Some(tokenStreamFromTemplate("__CjbindComplexFloat16"))
-            case TypeKindFloatKind.FloatKindFloat =>
-                Some(tokenStreamFromTemplate("__CjbindComplexFloat32"))
-            case TypeKindFloatKind.FloatKindDouble =>
-                Some(tokenStreamFromTemplate("__CjbindComplexFloat64"))
-            case TypeKindFloatKind.FloatKindLongDouble =>
-                match (layout) {
-                    case Some(value) =>
-                        let componentSize = value.size / 2
-                        match (componentSize) {
-                            case 4 => Some(tokenStreamFromTemplate("__CjbindComplexFloat32"))
-                            case 8 => Some(tokenStreamFromTemplate("__CjbindComplexFloat64"))
-                            case _ => None
-                        }
-                    case None => None
-                }
+            case TypeKindFloatKind.FloatKindFloat16 => Some(tokenStreamFromTemplate("__CjbindComplexFloat16"))
+            case TypeKindFloatKind.FloatKindFloat => Some(tokenStreamFromTemplate("__CjbindComplexFloat32"))
+            case TypeKindFloatKind.FloatKindDouble => Some(tokenStreamFromTemplate("__CjbindComplexFloat64"))
+            case TypeKindFloatKind.FloatKindLongDouble => match (layout) {
+                case Some(value) =>
+                    let componentSize = value.size / 2
+                    match (componentSize) {
+                        case 4 => Some(tokenStreamFromTemplate("__CjbindComplexFloat32"))
+                        case 8 => Some(tokenStreamFromTemplate("__CjbindComplexFloat64"))
+                        case _ => None
+                    }
+                case None => None
+            }
             case TypeKindFloatKind.FloatKindFloat128 => None
         }
     }
@@ -531,12 +522,9 @@ public class AstTy {
             case TypeKindIntKind.IntKindU32 => tokenStreamFromTemplate("UInt32")
             case TypeKindIntKind.IntKindI64 => tokenStreamFromTemplate("Int64")
             case TypeKindIntKind.IntKindU64 => tokenStreamFromTemplate("UInt64")
-            case TypeKindIntKind.IntKindCustom(val) =>
-                tokenStreamFromTemplate(val.name)
-            case TypeKindIntKind.IntKindI128 =>
-                tokenStreamFromTemplate("VArray<Int64, \$2>")
-            case TypeKindIntKind.IntKindU128 =>
-                tokenStreamFromTemplate("VArray<UInt64, \$2>")
+            case TypeKindIntKind.IntKindCustom(val) => tokenStreamFromTemplate(val.name)
+            case TypeKindIntKind.IntKindI128 => tokenStreamFromTemplate("VArray<Int64, \$2>")
+            case TypeKindIntKind.IntKindU128 => tokenStreamFromTemplate("VArray<UInt64, \$2>")
         }
     }
 
@@ -546,8 +534,7 @@ public class AstTy {
         layout: ?Layout
     ): TokenStream {
         return match (fk) {
-            case TypeKindFloatKind.FloatKindFloat16 =>
-                tokenStreamFromTemplate("__CjbindFloat16")
+            case TypeKindFloatKind.FloatKindFloat16 => tokenStreamFromTemplate("__CjbindFloat16")
             case TypeKindFloatKind.FloatKindFloat => tokenStreamFromTemplate("Float32")
             case TypeKindFloatKind.FloatKindDouble => tokenStreamFromTemplate("Float64")
             case TypeKindFloatKind.FloatKindLongDouble =>
@@ -556,12 +543,10 @@ public class AstTy {
                     case 4 => tokenStreamFromTemplate("Float32")
                     case 8 => tokenStreamFromTemplate("Float64")
                     case _ => Layout.knownCjTypeForSize(l.size).getOrDefault {
-                        =>
-                        tokenStreamFromTemplate("Float64")
+                        => tokenStreamFromTemplate("Float64")
                     }
                 }
-            case TypeKindFloatKind.FloatKindFloat128 =>
-                tokenStreamFromTemplate("VArray<UInt64, \$2>")
+            case TypeKindFloatKind.FloatKindFloat128 => tokenStreamFromTemplate("VArray<UInt64, \$2>")
         }
     }
 

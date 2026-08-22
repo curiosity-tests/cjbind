@@ -4,7 +4,6 @@ import std.env.getTempDirectory
 import std.fs.{Directory, File, remove}
 import std.unittest.*
 import std.unittest.testmacro.*
-
 import cjbind.options.{CjbindOptions, DefaultAliasStyle, DefaultEnumStyle}
 
 @Test
@@ -14,22 +13,29 @@ public class AliasAbiTest {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("enum_abi.h")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 enum Mode { MODE_ZERO, MODE_ONE };
 typedef enum Mode ModeAlias;
 typedef enum Mode (*ModeCallback)(enum Mode value);
 enum Mode mode_round_trip(enum Mode value);
 ModeAlias mode_alias_round_trip(ModeAlias value);
-""".toArray())
+"""
+                    .toArray())
 
             let options = CjbindOptions()
             options.headers.add(header.toString())
             options.noDetectIncludePath = true
             options.defaultAliasStyle = DefaultAliasStyle.NewType
             options.defaultEnumStyle = DefaultEnumStyle.NewType
-            options.clangArgs.add(all: [
-                "-x", "c", "-std=gnu11", "--target=x86_64-w64-mingw32"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c",
+                    "-std=gnu11",
+                    "--target=x86_64-w64-mingw32"
+                ]
+            )
 
             let binding = generate(options)
 
@@ -50,21 +56,28 @@ ModeAlias mode_alias_round_trip(ModeAlias value);
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("alias_abi.h")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 typedef __int128 WideAlias;
 typedef int BareFunction(int);
 struct Incomplete;
 typedef struct Incomplete OpaqueAlias;
 typedef int (*CallbackAlias)(int);
-""".toArray())
+"""
+                    .toArray())
 
             let options = CjbindOptions()
             options.headers.add(header.toString())
             options.noDetectIncludePath = true
             options.defaultAliasStyle = DefaultAliasStyle.NewType
-            options.clangArgs.add(all: [
-                "-x", "c", "-std=gnu11", "--target=x86_64-w64-mingw32"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c",
+                    "-std=gnu11",
+                    "--target=x86_64-w64-mingw32"
+                ]
+            )
 
             let binding = generate(options)
 

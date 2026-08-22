@@ -2,7 +2,6 @@ package cjbind.codegen
 
 import std.unittest.*
 import std.unittest.testmacro.*
-
 import cjbind_token.{tokenStreamFromTemplate, TokenStream}
 import cjbind.ir.*
 
@@ -188,7 +187,8 @@ public class UnionHelperTest {
 
     @TestCase
     func writeHelperContainsFuncDecl(): Unit {
-        let ts = Helpers.unionWriteHelper("myField", tokenStreamFromTemplate("UInt64"), tokenStreamFromTemplate("Float64"))
+        let ts = Helpers.unionWriteHelper("myField", tokenStreamFromTemplate("UInt64"),
+            tokenStreamFromTemplate("Float64"))
         let result = ts.toString()
         @Expect(result.contains("@C"), false)
         @Expect(result.contains("func __cjbind_write_myField"), true)

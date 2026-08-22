@@ -47,14 +47,14 @@ public struct CXString {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXString>()
-    if (size != 16) {
-        throw Exception("Size of CXString is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXString>()
-    if (align != 8) {
-        throw Exception("Alignment of CXString is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXString>()
+        if (size != 16) {
+            throw Exception("Size of CXString is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXString>()
+        if (align != 8) {
+            throw Exception("Alignment of CXString is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -71,14 +71,14 @@ public struct CXStringSet {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXStringSet>()
-    if (size != 16) {
-        throw Exception("Size of CXStringSet is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXStringSet>()
-    if (align != 8) {
-        throw Exception("Alignment of CXStringSet is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXStringSet>()
+        if (size != 16) {
+            throw Exception("Size of CXStringSet is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXStringSet>()
+        if (align != 8) {
+            throw Exception("Alignment of CXStringSet is not 8 but ${align} bytes")
+        }
 }
 
 // Retrieve the character data associated with the given string.
@@ -201,14 +201,14 @@ public struct CXFileUniqueID {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXFileUniqueID>()
-    if (size != 24) {
-        throw Exception("Size of CXFileUniqueID is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXFileUniqueID>()
-    if (align != 8) {
-        throw Exception("Alignment of CXFileUniqueID is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXFileUniqueID>()
+        if (size != 24) {
+            throw Exception("Size of CXFileUniqueID is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXFileUniqueID>()
+        if (align != 8) {
+            throw Exception("Alignment of CXFileUniqueID is not 8 but ${align} bytes")
+        }
 }
 
 // Retrieve the unique ID for the given \c file.
@@ -247,14 +247,14 @@ public struct CXSourceLocation {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXSourceLocation>()
-    if (size != 24) {
-        throw Exception("Size of CXSourceLocation is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXSourceLocation>()
-    if (align != 8) {
-        throw Exception("Alignment of CXSourceLocation is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXSourceLocation>()
+        if (size != 24) {
+            throw Exception("Size of CXSourceLocation is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXSourceLocation>()
+        if (align != 8) {
+            throw Exception("Alignment of CXSourceLocation is not 8 but ${align} bytes")
+        }
 }
 
 // Identifies a half-open character range in the source code.
@@ -277,14 +277,14 @@ public struct CXSourceRange {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXSourceRange>()
-    if (size != 24) {
-        throw Exception("Size of CXSourceRange is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXSourceRange>()
-    if (align != 8) {
-        throw Exception("Alignment of CXSourceRange is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXSourceRange>()
+        if (size != 24) {
+            throw Exception("Size of CXSourceRange is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXSourceRange>()
+        if (align != 8) {
+            throw Exception("Alignment of CXSourceRange is not 8 but ${align} bytes")
+        }
 }
 
 // Retrieve a NULL (invalid) source location.
@@ -465,14 +465,14 @@ public struct CXSourceRangeList {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXSourceRangeList>()
-    if (size != 16) {
-        throw Exception("Size of CXSourceRangeList is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXSourceRangeList>()
-    if (align != 8) {
-        throw Exception("Alignment of CXSourceRangeList is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXSourceRangeList>()
+        if (size != 16) {
+            throw Exception("Size of CXSourceRangeList is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXSourceRangeList>()
+        if (align != 8) {
+            throw Exception("Alignment of CXSourceRangeList is not 8 but ${align} bytes")
+        }
 }
 
 // Destroy the given \c CXSourceRangeList.
@@ -790,14 +790,14 @@ public struct CXUnsavedFile {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXUnsavedFile>()
-    if (size != 24) {
-        throw Exception("Size of CXUnsavedFile is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXUnsavedFile>()
-    if (align != 8) {
-        throw Exception("Alignment of CXUnsavedFile is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXUnsavedFile>()
+        if (size != 24) {
+            throw Exception("Size of CXUnsavedFile is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXUnsavedFile>()
+        if (align != 8) {
+            throw Exception("Alignment of CXUnsavedFile is not 8 but ${align} bytes")
+        }
 }
 
 // The entity is available.
@@ -844,14 +844,14 @@ public struct CXVersion {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXVersion>()
-    if (size != 12) {
-        throw Exception("Size of CXVersion is not 12 but ${size} bytes")
-    }
-    let align = alignOf<CXVersion>()
-    if (align != 4) {
-        throw Exception("Alignment of CXVersion is not 4 but ${align} bytes")
-    }
+        let size = sizeOf<CXVersion>()
+        if (size != 12) {
+            throw Exception("Size of CXVersion is not 12 but ${size} bytes")
+        }
+        let align = alignOf<CXVersion>()
+        if (align != 4) {
+            throw Exception("Alignment of CXVersion is not 4 but ${align} bytes")
+        }
 }
 
 // The cursor has no exception specification.
@@ -1001,14 +1001,14 @@ public struct CXIndexOptions {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIndexOptions>()
-    if (size != 32) {
-        throw Exception("Size of CXIndexOptions is not 32 but ${size} bytes")
-    }
-    let align = alignOf<CXIndexOptions>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIndexOptions is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIndexOptions>()
+        if (size != 32) {
+            throw Exception("Size of CXIndexOptions is not 32 but ${size} bytes")
+        }
+        let align = alignOf<CXIndexOptions>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIndexOptions is not 8 but ${align} bytes")
+        }
 }
 
 // Provides a shared context for creating translation units.
@@ -1586,14 +1586,14 @@ public struct CXTUResourceUsageEntry {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXTUResourceUsageEntry>()
-    if (size != 8) {
-        throw Exception("Size of CXTUResourceUsageEntry is not 8 but ${size} bytes")
-    }
-    let align = alignOf<CXTUResourceUsageEntry>()
-    if (align != 4) {
-        throw Exception("Alignment of CXTUResourceUsageEntry is not 4 but ${align} bytes")
-    }
+        let size = sizeOf<CXTUResourceUsageEntry>()
+        if (size != 8) {
+            throw Exception("Size of CXTUResourceUsageEntry is not 8 but ${size} bytes")
+        }
+        let align = alignOf<CXTUResourceUsageEntry>()
+        if (align != 4) {
+            throw Exception("Alignment of CXTUResourceUsageEntry is not 4 but ${align} bytes")
+        }
 }
 
 // The memory usage of a CXTranslationUnit, broken into categories.
@@ -1613,14 +1613,14 @@ public struct CXTUResourceUsage {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXTUResourceUsage>()
-    if (size != 24) {
-        throw Exception("Size of CXTUResourceUsage is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXTUResourceUsage>()
-    if (align != 8) {
-        throw Exception("Alignment of CXTUResourceUsage is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXTUResourceUsage>()
+        if (size != 24) {
+            throw Exception("Size of CXTUResourceUsage is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXTUResourceUsage>()
+        if (align != 8) {
+            throw Exception("Alignment of CXTUResourceUsage is not 8 but ${align} bytes")
+        }
 }
 
 // Return the memory usage of a translation unit.  This object
@@ -2785,14 +2785,14 @@ public struct CXCursor {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXCursor>()
-    if (size != 32) {
-        throw Exception("Size of CXCursor is not 32 but ${size} bytes")
-    }
-    let align = alignOf<CXCursor>()
-    if (align != 8) {
-        throw Exception("Alignment of CXCursor is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXCursor>()
+        if (size != 32) {
+            throw Exception("Size of CXCursor is not 32 but ${size} bytes")
+        }
+        let align = alignOf<CXCursor>()
+        if (align != 8) {
+            throw Exception("Alignment of CXCursor is not 8 but ${align} bytes")
+        }
 }
 
 // Retrieve the NULL cursor, which represents no entity.
@@ -2958,14 +2958,14 @@ public struct CXPlatformAvailability {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXPlatformAvailability>()
-    if (size != 72) {
-        throw Exception("Size of CXPlatformAvailability is not 72 but ${size} bytes")
-    }
-    let align = alignOf<CXPlatformAvailability>()
-    if (align != 8) {
-        throw Exception("Alignment of CXPlatformAvailability is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXPlatformAvailability>()
+        if (size != 72) {
+            throw Exception("Size of CXPlatformAvailability is not 72 but ${size} bytes")
+        }
+        let align = alignOf<CXPlatformAvailability>()
+        if (align != 8) {
+            throw Exception("Alignment of CXPlatformAvailability is not 8 but ${align} bytes")
+        }
 }
 
 // Determine the availability of the entity that this cursor refers to
@@ -3855,14 +3855,14 @@ public struct CXType {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXType>()
-    if (size != 24) {
-        throw Exception("Size of CXType is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXType>()
-    if (align != 8) {
-        throw Exception("Alignment of CXType is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXType>()
+        if (size != 24) {
+            throw Exception("Size of CXType is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXType>()
+        if (align != 8) {
+            throw Exception("Alignment of CXType is not 8 but ${align} bytes")
+        }
 }
 
 // Retrieve the type of a CXCursor (if any).
@@ -5194,14 +5194,14 @@ public struct CXToken {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXToken>()
-    if (size != 24) {
-        throw Exception("Size of CXToken is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXToken>()
-    if (align != 8) {
-        throw Exception("Alignment of CXToken is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXToken>()
+        if (size != 24) {
+            throw Exception("Size of CXToken is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXToken>()
+        if (align != 8) {
+            throw Exception("Alignment of CXToken is not 8 but ${align} bytes")
+        }
 }
 
 // Get the raw lexical token starting with the given location.
@@ -5337,14 +5337,14 @@ public struct CXCompletionResult {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXCompletionResult>()
-    if (size != 16) {
-        throw Exception("Size of CXCompletionResult is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXCompletionResult>()
-    if (align != 8) {
-        throw Exception("Alignment of CXCompletionResult is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXCompletionResult>()
+        if (size != 16) {
+            throw Exception("Size of CXCompletionResult is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXCompletionResult>()
+        if (align != 8) {
+            throw Exception("Alignment of CXCompletionResult is not 8 but ${align} bytes")
+        }
 }
 
 // A code-completion string that describes "optional" text that
@@ -5618,14 +5618,14 @@ public struct CXCodeCompleteResults {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXCodeCompleteResults>()
-    if (size != 16) {
-        throw Exception("Size of CXCodeCompleteResults is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXCodeCompleteResults>()
-    if (align != 8) {
-        throw Exception("Alignment of CXCodeCompleteResults is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXCodeCompleteResults>()
+        if (size != 16) {
+            throw Exception("Size of CXCodeCompleteResults is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXCodeCompleteResults>()
+        if (align != 8) {
+            throw Exception("Alignment of CXCodeCompleteResults is not 8 but ${align} bytes")
+        }
 }
 
 // Retrieve the number of fix-its for the given completion index.
@@ -6091,14 +6091,14 @@ public struct CXCursorAndRangeVisitor {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXCursorAndRangeVisitor>()
-    if (size != 16) {
-        throw Exception("Size of CXCursorAndRangeVisitor is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXCursorAndRangeVisitor>()
-    if (align != 8) {
-        throw Exception("Alignment of CXCursorAndRangeVisitor is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXCursorAndRangeVisitor>()
+        if (size != 16) {
+            throw Exception("Size of CXCursorAndRangeVisitor is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXCursorAndRangeVisitor>()
+        if (align != 8) {
+            throw Exception("Alignment of CXCursorAndRangeVisitor is not 8 but ${align} bytes")
+        }
 }
 
 // Function returned successfully.
@@ -6181,14 +6181,14 @@ public struct CXIdxLoc {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxLoc>()
-    if (size != 24) {
-        throw Exception("Size of CXIdxLoc is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxLoc>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxLoc is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxLoc>()
+        if (size != 24) {
+            throw Exception("Size of CXIdxLoc is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxLoc>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxLoc is not 8 but ${align} bytes")
+        }
 }
 
 // Data for ppIncludedFile callback.
@@ -6220,14 +6220,14 @@ public struct CXIdxIncludedFileInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxIncludedFileInfo>()
-    if (size != 56) {
-        throw Exception("Size of CXIdxIncludedFileInfo is not 56 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxIncludedFileInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxIncludedFileInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxIncludedFileInfo>()
+        if (size != 56) {
+            throw Exception("Size of CXIdxIncludedFileInfo is not 56 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxIncludedFileInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxIncludedFileInfo is not 8 but ${align} bytes")
+        }
 }
 
 // Data for IndexerCallbacks#importedASTFile.
@@ -6254,14 +6254,14 @@ public struct CXIdxImportedASTFileInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxImportedASTFileInfo>()
-    if (size != 48) {
-        throw Exception("Size of CXIdxImportedASTFileInfo is not 48 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxImportedASTFileInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxImportedASTFileInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxImportedASTFileInfo>()
+        if (size != 48) {
+            throw Exception("Size of CXIdxImportedASTFileInfo is not 48 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxImportedASTFileInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxImportedASTFileInfo is not 8 but ${align} bytes")
+        }
 }
 
 public const CXIdxEntityKind_CXIdxEntity_Unexposed: CXIdxEntityKind = 0
@@ -6341,14 +6341,14 @@ public struct CXIdxAttrInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxAttrInfo>()
-    if (size != 64) {
-        throw Exception("Size of CXIdxAttrInfo is not 64 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxAttrInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxAttrInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxAttrInfo>()
+        if (size != 64) {
+            throw Exception("Size of CXIdxAttrInfo is not 64 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxAttrInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxAttrInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6379,14 +6379,14 @@ public struct CXIdxEntityInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxEntityInfo>()
-    if (size != 80) {
-        throw Exception("Size of CXIdxEntityInfo is not 80 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxEntityInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxEntityInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxEntityInfo>()
+        if (size != 80) {
+            throw Exception("Size of CXIdxEntityInfo is not 80 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxEntityInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxEntityInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6401,14 +6401,14 @@ public struct CXIdxContainerInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxContainerInfo>()
-    if (size != 32) {
-        throw Exception("Size of CXIdxContainerInfo is not 32 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxContainerInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxContainerInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxContainerInfo>()
+        if (size != 32) {
+            throw Exception("Size of CXIdxContainerInfo is not 32 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxContainerInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxContainerInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6430,14 +6430,14 @@ public struct CXIdxIBOutletCollectionAttrInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxIBOutletCollectionAttrInfo>()
-    if (size != 72) {
-        throw Exception("Size of CXIdxIBOutletCollectionAttrInfo is not 72 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxIBOutletCollectionAttrInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxIBOutletCollectionAttrInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxIBOutletCollectionAttrInfo>()
+        if (size != 72) {
+            throw Exception("Size of CXIdxIBOutletCollectionAttrInfo is not 72 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxIBOutletCollectionAttrInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxIBOutletCollectionAttrInfo is not 8 but ${align} bytes")
+        }
 }
 
 public const CXIdxDeclInfoFlags_CXIdxDeclFlag_Skipped: CXIdxDeclInfoFlags = 1
@@ -6487,14 +6487,14 @@ public struct CXIdxDeclInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxDeclInfo>()
-    if (size != 128) {
-        throw Exception("Size of CXIdxDeclInfo is not 128 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxDeclInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxDeclInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxDeclInfo>()
+        if (size != 128) {
+            throw Exception("Size of CXIdxDeclInfo is not 128 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxDeclInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxDeclInfo is not 8 but ${align} bytes")
+        }
 }
 
 public const CXIdxObjCContainerKind_CXIdxObjCContainer_ForwardRef: CXIdxObjCContainerKind = 0
@@ -6517,14 +6517,14 @@ public struct CXIdxObjCContainerDeclInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxObjCContainerDeclInfo>()
-    if (size != 16) {
-        throw Exception("Size of CXIdxObjCContainerDeclInfo is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxObjCContainerDeclInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxObjCContainerDeclInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxObjCContainerDeclInfo>()
+        if (size != 16) {
+            throw Exception("Size of CXIdxObjCContainerDeclInfo is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxObjCContainerDeclInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxObjCContainerDeclInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6543,14 +6543,14 @@ public struct CXIdxBaseClassInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxBaseClassInfo>()
-    if (size != 64) {
-        throw Exception("Size of CXIdxBaseClassInfo is not 64 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxBaseClassInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxBaseClassInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxBaseClassInfo>()
+        if (size != 64) {
+            throw Exception("Size of CXIdxBaseClassInfo is not 64 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxBaseClassInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxBaseClassInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6569,14 +6569,14 @@ public struct CXIdxObjCProtocolRefInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxObjCProtocolRefInfo>()
-    if (size != 64) {
-        throw Exception("Size of CXIdxObjCProtocolRefInfo is not 64 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxObjCProtocolRefInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxObjCProtocolRefInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxObjCProtocolRefInfo>()
+        if (size != 64) {
+            throw Exception("Size of CXIdxObjCProtocolRefInfo is not 64 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxObjCProtocolRefInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxObjCProtocolRefInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6593,14 +6593,14 @@ public struct CXIdxObjCProtocolRefListInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxObjCProtocolRefListInfo>()
-    if (size != 16) {
-        throw Exception("Size of CXIdxObjCProtocolRefListInfo is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxObjCProtocolRefListInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxObjCProtocolRefListInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxObjCProtocolRefListInfo>()
+        if (size != 16) {
+            throw Exception("Size of CXIdxObjCProtocolRefListInfo is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxObjCProtocolRefListInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxObjCProtocolRefListInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6620,14 +6620,14 @@ public struct CXIdxObjCInterfaceDeclInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxObjCInterfaceDeclInfo>()
-    if (size != 24) {
-        throw Exception("Size of CXIdxObjCInterfaceDeclInfo is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxObjCInterfaceDeclInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxObjCInterfaceDeclInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxObjCInterfaceDeclInfo>()
+        if (size != 24) {
+            throw Exception("Size of CXIdxObjCInterfaceDeclInfo is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxObjCInterfaceDeclInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxObjCInterfaceDeclInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6651,14 +6651,14 @@ public struct CXIdxObjCCategoryDeclInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxObjCCategoryDeclInfo>()
-    if (size != 80) {
-        throw Exception("Size of CXIdxObjCCategoryDeclInfo is not 80 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxObjCCategoryDeclInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxObjCCategoryDeclInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxObjCCategoryDeclInfo>()
+        if (size != 80) {
+            throw Exception("Size of CXIdxObjCCategoryDeclInfo is not 80 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxObjCCategoryDeclInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxObjCCategoryDeclInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6677,14 +6677,14 @@ public struct CXIdxObjCPropertyDeclInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxObjCPropertyDeclInfo>()
-    if (size != 24) {
-        throw Exception("Size of CXIdxObjCPropertyDeclInfo is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxObjCPropertyDeclInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxObjCPropertyDeclInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxObjCPropertyDeclInfo>()
+        if (size != 24) {
+            throw Exception("Size of CXIdxObjCPropertyDeclInfo is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxObjCPropertyDeclInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxObjCPropertyDeclInfo is not 8 but ${align} bytes")
+        }
 }
 
 @C
@@ -6703,14 +6703,14 @@ public struct CXIdxCXXClassDeclInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxCXXClassDeclInfo>()
-    if (size != 24) {
-        throw Exception("Size of CXIdxCXXClassDeclInfo is not 24 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxCXXClassDeclInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxCXXClassDeclInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxCXXClassDeclInfo>()
+        if (size != 24) {
+            throw Exception("Size of CXIdxCXXClassDeclInfo is not 24 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxCXXClassDeclInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxCXXClassDeclInfo is not 8 but ${align} bytes")
+        }
 }
 
 // The entity is referenced directly in user's code.
@@ -6782,14 +6782,14 @@ public struct CXIdxEntityRefInfo {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXIdxEntityRefInfo>()
-    if (size != 96) {
-        throw Exception("Size of CXIdxEntityRefInfo is not 96 but ${size} bytes")
-    }
-    let align = alignOf<CXIdxEntityRefInfo>()
-    if (align != 8) {
-        throw Exception("Alignment of CXIdxEntityRefInfo is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXIdxEntityRefInfo>()
+        if (size != 96) {
+            throw Exception("Size of CXIdxEntityRefInfo is not 96 but ${size} bytes")
+        }
+        let align = alignOf<CXIdxEntityRefInfo>()
+        if (align != 8) {
+            throw Exception("Alignment of CXIdxEntityRefInfo is not 8 but ${align} bytes")
+        }
 }
 
 // A group of callbacks used by #clang_indexSourceFile and
@@ -6839,14 +6839,14 @@ public struct IndexerCallbacks {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<IndexerCallbacks>()
-    if (size != 64) {
-        throw Exception("Size of IndexerCallbacks is not 64 but ${size} bytes")
-    }
-    let align = alignOf<IndexerCallbacks>()
-    if (align != 8) {
-        throw Exception("Alignment of IndexerCallbacks is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<IndexerCallbacks>()
+        if (size != 64) {
+            throw Exception("Size of IndexerCallbacks is not 64 but ${size} bytes")
+        }
+        let align = alignOf<IndexerCallbacks>()
+        if (align != 8) {
+            throw Exception("Alignment of IndexerCallbacks is not 8 but ${align} bytes")
+        }
 }
 
 foreign func clang_index_isEntityObjCContainerKind(arg1: CXIdxEntityKind): Int32
@@ -7203,14 +7203,14 @@ public struct CXComment {
 @When[debug]
 let _ = {
     =>
-    let size = sizeOf<CXComment>()
-    if (size != 16) {
-        throw Exception("Size of CXComment is not 16 but ${size} bytes")
-    }
-    let align = alignOf<CXComment>()
-    if (align != 8) {
-        throw Exception("Alignment of CXComment is not 8 but ${align} bytes")
-    }
+        let size = sizeOf<CXComment>()
+        if (size != 16) {
+            throw Exception("Size of CXComment is not 16 but ${size} bytes")
+        }
+        let align = alignOf<CXComment>()
+        if (align != 8) {
+            throw Exception("Alignment of CXComment is not 8 but ${align} bytes")
+        }
 }
 
 // Given a cursor that represents a documentable entity (e.g.,

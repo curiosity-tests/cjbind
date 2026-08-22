@@ -14,9 +14,14 @@ public class TemplateMaterializationTest {
         options.headers.add("cjbind_test/testdata/headers/cxx-analysis-template-array.hpp")
         options.noDetectIncludePath = true
         options.noLayoutTests = true
-        options.clangArgs.add(all: [
-            "-x", "c++", "-std=c++14", "--target=x86_64-unknown-linux-gnu"
-        ])
+        options.clangArgs.add(
+            all: [
+                "-x",
+                "c++",
+                "-std=c++14",
+                "--target=x86_64-unknown-linux-gnu"
+            ]
+        )
 
         let binding = generate(options)
 
@@ -31,9 +36,14 @@ public class TemplateMaterializationTest {
         let options = CjbindOptions()
         options.headers.add("cjbind_test/testdata/headers/cxx-analysis-template-array.hpp")
         options.noDetectIncludePath = true
-        options.clangArgs.add(all: [
-            "-x", "c++", "-std=c++14", "--target=x86_64-unknown-linux-gnu"
-        ])
+        options.clangArgs.add(
+            all: [
+                "-x",
+                "c++",
+                "-std=c++14",
+                "--target=x86_64-unknown-linux-gnu"
+            ]
+        )
 
         let binding = generate(options)
 
@@ -64,7 +74,8 @@ public class TemplateMaterializationTest {
         let directory = Directory.createTemp(getTempDirectory())
         try {
             let header = directory.join("auto_nttp_identity.hpp")
-            File.writeTo(header, """
+            File.writeTo(header,
+                """
 template <auto V>
 struct AutoBox {
     decltype(V) value;
@@ -104,14 +115,20 @@ struct PackIdentityHolder {
     PackBox<int> oneType;
     PackBox<int, unsigned long long> twoTypes;
 };
-""".toArray())
+"""
+                    .toArray())
 
             let options = CjbindOptions()
             options.headers.add(header.toString())
             options.noDetectIncludePath = true
-            options.clangArgs.add(all: [
-                "-x", "c++", "-std=c++17", "--target=x86_64-unknown-linux-gnu"
-            ])
+            options.clangArgs.add(
+                all: [
+                    "-x",
+                    "c++",
+                    "-std=c++17",
+                    "--target=x86_64-unknown-linux-gnu"
+                ]
+            )
 
             let binding = generate(options)
 

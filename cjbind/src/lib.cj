@@ -16,8 +16,7 @@ func parseOne(ctx: CjbindContext, cursor: clang.Cursor, parent: ?ItemId): Unit {
     // ObjC mode: handle ObjC declarations
     if (ctx.options.objc) {
         let k = cursor.kind()
-        if (k == clang.CXCursorKind_CXCursor_ObjCInterfaceDecl ||
-            k == clang.CXCursorKind_CXCursor_ObjCProtocolDecl ||
+        if (k == clang.CXCursorKind_CXCursor_ObjCInterfaceDecl || k == clang.CXCursorKind_CXCursor_ObjCProtocolDecl ||
             k == clang.CXCursorKind_CXCursor_ObjCCategoryDecl) {
             parseObjCInterface(ctx, cursor)
             return
@@ -82,27 +81,24 @@ func detectIncludePaths(options: CjbindOptions) {
 
     let clangArgsForClang = {
         =>
-        let lastWasIncludePrefix = Box(false)
-        options
-            .clangArgs
-            .iterator()
-            .filter {
+            let lastWasIncludePrefix = Box(false)
+            options.clangArgs.iterator().filter {
                 arg =>
-                if (lastWasIncludePrefix.value) {
-                    lastWasIncludePrefix.value = false
-                    return false
-                }
+                    if (lastWasIncludePrefix.value) {
+                        lastWasIncludePrefix.value = false
+                        return false
+                    }
 
-                if (arg == "-I" || arg == "--include-directory") {
-                    lastWasIncludePrefix.value = true
-                    return false
-                }
+                    if (arg == "-I" || arg == "--include-directory") {
+                        lastWasIncludePrefix.value = true
+                        return false
+                    }
 
-                if (arg.startsWith("-I") || arg.startsWith("--include-directory=")) {
-                    return false
-                }
+                    if (arg.startsWith("-I") || arg.startsWith("--include-directory=")) {
+                        return false
+                    }
 
-                return true
+                    return true
             } |> collectArrayList
     }().toArray()
 
@@ -133,10 +129,9 @@ func hasExplicitLanguage(args: Collection<String>): Bool {
 
 func hasCxxHeader(headers: Collection<String>): Bool {
     for (header in headers) {
-        if (header.endsWith(".hpp") || header.endsWith(".hxx") || header.endsWith(".hh") ||
-            header.endsWith(".h++") || header.endsWith(".HPP") || header.endsWith(".HXX") ||
-            header.endsWith(".HH") || header.endsWith(".H++") || header.endsWith(".H") ||
-            header.endsWith(".cc") || header.endsWith(".cpp") || header.endsWith(".cxx") ||
+        if (header.endsWith(".hpp") || header.endsWith(".hxx") || header.endsWith(".hh") || header.endsWith(".h++") ||
+            header.endsWith(".HPP") || header.endsWith(".HXX") || header.endsWith(".HH") || header.endsWith(".H++") ||
+            header.endsWith(".H") || header.endsWith(".cc") || header.endsWith(".cpp") || header.endsWith(".cxx") ||
             header.endsWith(".c++") || header.endsWith(".C")) {
             return true
         }
@@ -288,16 +283,18 @@ func parseObjCInterface(ctx: CjbindContext, cursor: clang.Cursor): Unit {
             className = c.spelling()
         }
         if (!hasBody) {
-            hasBody = ck == clang.CXCursorKind_CXCursor_ObjCInstanceMethodDecl ||
-                ck == clang.CXCursorKind_CXCursor_ObjCClassMethodDecl ||
-                ck == clang.CXCursorKind_CXCursor_ObjCPropertyDecl ||
-                ck == clang.CXCursorKind_CXCursor_ObjCIvarDecl ||
-                ck == clang.CXCursorKind_CXCursor_ObjCSuperClassRef ||
+            hasBody = ck == clang.CXCursorKind_CXCursor_ObjCInstanceMethodDecl || ck == clang
+                .CXCursorKind_CXCursor_ObjCClassMethodDecl || ck == clang.CXCursorKind_CXCursor_ObjCPropertyDecl ||
+                ck == clang.CXCursorKind_CXCursor_ObjCIvarDecl || ck == clang.CXCursorKind_CXCursor_ObjCSuperClassRef ||
                 ck == clang.CXCursorKind_CXCursor_ObjCProtocolRef
         }
     }
 
-    let iface = ObjCInterface(if (isCategory) { className } else { name })
+    let iface = ObjCInterface(if (isCategory) {
+        className
+    } else {
+        name
+    })
     iface.isProtocol = isProtocol
     if (isCategory) {
         iface.category = Some(name)
@@ -315,43 +312,43 @@ func parseObjCInterface(ctx: CjbindContext, cursor: clang.Cursor): Unit {
     // Visit children to populate the interface
     cursor.visitContinue {
         child =>
-        let ck = child.kind()
-        if (ck == clang.CXCursorKind_CXCursor_ObjCSuperClassRef) {
-            let superName = child.spelling()
-            if (let Some(parentId) <- ctx.objcInterfaces.get(superName)) {
-                iface.parentClass = Some(parentId)
+            let ck = child.kind()
+            if (ck == clang.CXCursorKind_CXCursor_ObjCSuperClassRef) {
+                let superName = child.spelling()
+                if (let Some(parentId) <- ctx.objcInterfaces.get(superName)) {
+                    iface.parentClass = Some(parentId)
+                }
+            } else if (ck == clang.CXCursorKind_CXCursor_ObjCProtocolRef) {
+                let protoName = child.spelling()
+                if (let Some(protoId) <- ctx.objcInterfaces.get(protoName)) {
+                    iface.conformsTo.add(protoId)
+                } else {
+                    // Protocol not yet seen — create forward declaration placeholder
+                    let protoIface = ObjCInterface(protoName)
+                    protoIface.isProtocol = true
+                    protoIface.isForwardDeclaration = true
+                    let protoId = registerObjCInterface(ctx, protoName, protoIface)
+                    iface.conformsTo.add(protoId)
+                }
+            } else if (ck == clang.CXCursorKind_CXCursor_ObjCInstanceMethodDecl) {
+                if (let Some(method) <- parseObjCMethod(ctx, child, false, name)) {
+                    iface.methods.add(method)
+                }
+            } else if (ck == clang.CXCursorKind_CXCursor_ObjCClassMethodDecl) {
+                if (let Some(method) <- parseObjCMethod(ctx, child, true, name)) {
+                    iface.classMethods.add(method)
+                }
+            } else if (ck == clang.CXCursorKind_CXCursor_ObjCPropertyDecl) {
+                if (let Some(p) <- parseObjCProperty(ctx, child)) {
+                    iface.properties.add(p)
+                }
+            } else if (ck == clang.CXCursorKind_CXCursor_TemplateTypeParameter) {
+                // Collect ObjC lightweight generic type parameters
+                let tpName = child.spelling()
+                if (!tpName.isEmpty()) {
+                    iface.templateNames.add(tpName)
+                }
             }
-        } else if (ck == clang.CXCursorKind_CXCursor_ObjCProtocolRef) {
-            let protoName = child.spelling()
-            if (let Some(protoId) <- ctx.objcInterfaces.get(protoName)) {
-                iface.conformsTo.add(protoId)
-            } else {
-                // Protocol not yet seen — create forward declaration placeholder
-                let protoIface = ObjCInterface(protoName)
-                protoIface.isProtocol = true
-                protoIface.isForwardDeclaration = true
-                let protoId = registerObjCInterface(ctx, protoName, protoIface)
-                iface.conformsTo.add(protoId)
-            }
-        } else if (ck == clang.CXCursorKind_CXCursor_ObjCInstanceMethodDecl) {
-            if (let Some(method) <- parseObjCMethod(ctx, child, false, name)) {
-                iface.methods.add(method)
-            }
-        } else if (ck == clang.CXCursorKind_CXCursor_ObjCClassMethodDecl) {
-            if (let Some(method) <- parseObjCMethod(ctx, child, true, name)) {
-                iface.classMethods.add(method)
-            }
-        } else if (ck == clang.CXCursorKind_CXCursor_ObjCPropertyDecl) {
-            if (let Some(p) <- parseObjCProperty(ctx, child)) {
-                iface.properties.add(p)
-            }
-        } else if (ck == clang.CXCursorKind_CXCursor_TemplateTypeParameter) {
-            // Collect ObjC lightweight generic type parameters
-            let tpName = child.spelling()
-            if (!tpName.isEmpty()) {
-                iface.templateNames.add(tpName)
-            }
-        }
     }
 
     // Remove duplicate methods (same selector)
@@ -362,15 +359,20 @@ func parseObjCInterface(ctx: CjbindContext, cursor: clang.Cursor): Unit {
         if (let Some(origId) <- ctx.objcInterfaces.get(className)) {
             let origItem = ctx.resolveItem(origId)
             match (origItem.kind) {
-                case ItemKind.KindType(origType) =>
-                    match (origType.kind) {
-                        case TypeKind.TypeKindObjCInterface(origIface) =>
-                            for (m in iface.methods) { origIface.methods.add(m) }
-                            for (m in iface.classMethods) { origIface.classMethods.add(m) }
-                            for (p in iface.properties) { origIface.properties.add(p) }
-                            origIface.dedupMethods()
-                        case _ => ()
-                    }
+                case ItemKind.KindType(origType) => match (origType.kind) {
+                    case TypeKind.TypeKindObjCInterface(origIface) =>
+                        for (m in iface.methods) {
+                            origIface.methods.add(m)
+                        }
+                        for (m in iface.classMethods) {
+                            origIface.classMethods.add(m)
+                        }
+                        for (p in iface.properties) {
+                            origIface.properties.add(p)
+                        }
+                        origIface.dedupMethods()
+                    case _ => ()
+                }
                 case _ => ()
             }
         } else {
@@ -385,16 +387,15 @@ func parseObjCInterface(ctx: CjbindContext, cursor: clang.Cursor): Unit {
         // Replace forward declaration with full definition
         let existingItem = ctx.resolveItem(existingId)
         match (existingItem.kind) {
-            case ItemKind.KindType(existingType) =>
-                match (existingType.kind) {
-                    case TypeKind.TypeKindObjCInterface(existingIface) =>
-                        if (existingIface.isForwardDeclaration) {
-                            // Overwrite the forward decl with the full definition
-                            existingType.kind = TypeKind.TypeKindObjCInterface(iface)
-                            return
-                        }
-                    case _ => ()
-                }
+            case ItemKind.KindType(existingType) => match (existingType.kind) {
+                case TypeKind.TypeKindObjCInterface(existingIface) =>
+                    if (existingIface.isForwardDeclaration) {
+                        // Overwrite the forward decl with the full definition
+                        existingType.kind = TypeKind.TypeKindObjCInterface(iface)
+                        return
+                    }
+                case _ => ()
+            }
             case _ => ()
         }
     }
@@ -411,7 +412,8 @@ func parseObjCMethod(ctx: CjbindContext, cursor: clang.Cursor, isClassMethod: Bo
     // Convert selector to Cangjie method name: "initWithFrame:" -> "initWithFrame"
     let cjName = selector.replace(":", "_").trimEnd([r'_'])
 
-    let isInitMethod = selector == "init" || (selector.startsWith("init") && selector.size > 4 && selector[4] >= 65 && selector[4] <= 90)  // 'A'..'Z' in ASCII
+    let isInitMethod = selector == "init" || (selector.startsWith("init") && selector.size > 4 && selector[4] >= 65 &&
+        selector[4] <= 90) // 'A'..'Z' in ASCII
 
     // Parse return type (with cursor fallback)
     let cursorType = cursor.curType()
@@ -448,12 +450,15 @@ func parseObjCMethod(ctx: CjbindContext, cursor: clang.Cursor, isClassMethod: Bo
     let args = ArrayList<(?String, TypeId)>()
     let nullableParams = ArrayList<Bool>()
     cursor.visitContinue {
-        child =>
-        if (child.kind() == clang.CXCursorKind_CXCursor_ParmDecl) {
+        child => if (child.kind() == clang.CXCursorKind_CXCursor_ParmDecl) {
             let paramName = child.spelling()
             let paramType = child.curType()
             let paramTy = Item.fromTyOrRef(paramType, child, None, ctx)
-            let pname: ?String = if (paramName.isEmpty()) { None } else { Some(paramName) }
+            let pname: ?String = if (paramName.isEmpty()) {
+                None
+            } else {
+                Some(paramName)
+            }
             args.add((pname, paramTy))
             nullableParams.add(paramType.isNullable())
         }
@@ -469,8 +474,9 @@ func parseObjCMethod(ctx: CjbindContext, cursor: clang.Cursor, isClassMethod: Bo
 
     let isOptional = cursor.isObjCOptional()
 
-    return Some(ObjCMethod(cjName, selector, sig, isClassMethod: isClassMethod, isOptional: isOptional,
-        returnsNullable: returnsNullable, nullableParams: nullableParams, isInitMethod: isInitMethod))
+    return Some(
+        ObjCMethod(cjName, selector, sig, isClassMethod: isClassMethod, isOptional: isOptional,
+            returnsNullable: returnsNullable, nullableParams: nullableParams, isInitMethod: isInitMethod))
 }
 
 func parseObjCProperty(ctx: CjbindContext, cursor: clang.Cursor): ?ObjCProperty {
@@ -506,7 +512,7 @@ func parseObjCProperty(ctx: CjbindContext, cursor: clang.Cursor): ?ObjCProperty 
     // Check nullability
     let isNullable = ty.isNullable()
 
-    return Some(ObjCProperty(name, tyId, getterName, setterName: setterName,
-                isClassProperty: isClassProp, isOptional: isOptional, isReadonly: isReadonly,
-                isNullable: isNullable))
+    return Some(
+        ObjCProperty(name, tyId, getterName, setterName: setterName, isClassProperty: isClassProp,
+            isOptional: isOptional, isReadonly: isReadonly, isNullable: isNullable))
 }

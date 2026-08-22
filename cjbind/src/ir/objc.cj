@@ -72,9 +72,8 @@ public class ObjCMethod {
     public let isInitMethod: Bool
 
     public init(name: String, selector: String, signature: FunctionSig, isClassMethod!: Bool = false,
-                isOptional!: Bool = false, returnsNullable!: Bool = false,
-                nullableParams!: ArrayList<Bool> = ArrayList<Bool>(),
-                isInitMethod!: Bool = false) {
+        isOptional!: Bool = false, returnsNullable!: Bool = false, nullableParams!: ArrayList<Bool> = ArrayList<Bool>(),
+        isInitMethod!: Bool = false) {
         this.name = name
         this.selector = selector
         this.signature = signature
@@ -86,9 +85,8 @@ public class ObjCMethod {
     }
 
     public func renamedForClassClash(): ObjCMethod {
-        ObjCMethod("class_" + this.name, this.selector, this.signature,
-            isClassMethod: this.isClassMethod, isOptional: this.isOptional,
-            returnsNullable: this.returnsNullable, nullableParams: this.nullableParams,
+        ObjCMethod("class_" + this.name, this.selector, this.signature, isClassMethod: this.isClassMethod,
+            isOptional: this.isOptional, returnsNullable: this.returnsNullable, nullableParams: this.nullableParams,
             isInitMethod: this.isInitMethod)
     }
 }
@@ -104,8 +102,7 @@ public class ObjCProperty {
     public let isNullable: Bool
 
     public init(name: String, ty: TypeId, getterName: String, setterName!: ?String = None,
-                isClassProperty!: Bool = false, isOptional!: Bool = false, isReadonly!: Bool = false,
-                isNullable!: Bool = false) {
+        isClassProperty!: Bool = false, isOptional!: Bool = false, isReadonly!: Bool = false, isNullable!: Bool = false) {
         this.name = name
         this.ty = ty
         this.getterName = getterName

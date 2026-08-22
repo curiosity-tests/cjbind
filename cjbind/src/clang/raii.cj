@@ -34,7 +34,9 @@ public class CStringOwned <: Resource {
         }
     }
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     // Frees the underlying C string immediately.
     // Safe to call multiple times; subsequent calls are no-ops.
@@ -46,7 +48,6 @@ public class CStringOwned <: Resource {
             }
         }
     }
-
 }
 
 // ---------------------------------------------------------------------------
@@ -77,7 +78,9 @@ public class OwnedTargetInfo <: Resource {
         this._released = true
     }
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     // Frees the underlying `CXTargetInfo` handle immediately.
     // Safe to call multiple times; subsequent calls are no-ops.
@@ -89,7 +92,6 @@ public class OwnedTargetInfo <: Resource {
             }
         }
     }
-
 }
 
 // ---------------------------------------------------------------------------
@@ -114,7 +116,9 @@ public class OwnedTokens <: Resource {
         this._count = count
     }
 
-    public func isClosed(): Bool { _released }
+    public func isClosed(): Bool {
+        _released
+    }
 
     // The translation unit this token array belongs to (non-owning reference).
     public prop tu: CXTranslationUnit {
@@ -147,5 +151,4 @@ public class OwnedTokens <: Resource {
             }
         }
     }
-
 }

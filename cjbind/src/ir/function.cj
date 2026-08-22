@@ -1,7 +1,6 @@
 package cjbind.ir
 
 import std.collection.{ArrayList, HashSet}
-
 import cjbind.clang
 import cjbind.result.Result
 
@@ -19,17 +18,13 @@ public enum FunctionKind {
         }
         if (kind == clang.CXCursorKind_CXCursor_Destructor) {
             if (cursor.methodIsVirtual()) {
-                return Some(FunctionKind.KindMethod(
-                    MethodKind.VirtualDestructor(cursor.methodIsPureVirtual())
-                ))
+                return Some(FunctionKind.KindMethod(MethodKind.VirtualDestructor(cursor.methodIsPureVirtual())))
             }
             return Some(FunctionKind.KindMethod(MethodKind.Destructor))
         }
         if (kind == clang.CXCursorKind_CXCursor_CXXMethod) {
             if (cursor.methodIsVirtual()) {
-                return Some(FunctionKind.KindMethod(
-                    MethodKind.Virtual(cursor.methodIsPureVirtual())
-                ))
+                return Some(FunctionKind.KindMethod(MethodKind.Virtual(cursor.methodIsPureVirtual())))
             }
             if (cursor.methodIsStatic()) {
                 return Some(FunctionKind.KindMethod(MethodKind.Static))
@@ -110,23 +105,19 @@ public class Function <: ClangSubItemParser<Function> {
 
         let linkage_c = cursor.linkage()
         let _linkage = match (linkage_c) {
-            case 3 | 4 => FunctionLinkage.LinkageExternal  // CXLinkage_UniqueExternal | CXLinkage_External
-            case 2 => FunctionLinkage.LinkageInternal  // CXLinkage_Internal
+            case 3 | 4 => FunctionLinkage.LinkageExternal // CXLinkage_UniqueExternal | CXLinkage_External
+            case 2 => FunctionLinkage.LinkageInternal // CXLinkage_Internal
             case _ => return Result.Err(ParseError.Continue)
         }
 
-        let isInline = cursor.isInlinedFunction() || cursor
-            .definition()
-            .map({
-                d => d.isInlinedFunction()
-            })
-            .getOrDefault({=> false})
+        let isInline = cursor.isInlinedFunction() || cursor.definition().map({
+            d => d.isInlinedFunction()
+        }).getOrDefault({=> false})
         if (isInline) {
             // Keep the existing C behavior: `generateInlineFunctions` controls
             // C++ inline declarations only. The static-wrapper option adds a
             // separate path for internal-linkage C/C++ definitions.
-            if (isCxx && !context.options.generateInlineFunctions &&
-                !context.options.wrapStaticFns) {
+            if (isCxx && !context.options.generateInlineFunctions && !context.options.wrapStaticFns) {
                 return Result.Err(ParseError.Continue)
             }
             // `--wrap-static-fns` is only meaningful for inline functions
@@ -147,24 +138,21 @@ public class Function <: ClangSubItemParser<Function> {
         }
         if (isInternalWrapper && hasUnserializableNestedCallingConvention(cursor.curType())) {
             eprintln(
-                "Warning: skipping static wrapper for '${cursor.displayName()}' because a nested function pointer calling convention cannot be serialized safely"
-            )
+                "Warning: skipping static wrapper for '${cursor.displayName()}' because a nested function pointer calling convention cannot be serialized safely")
             return Result.Err(ParseError.Continue)
         }
 
         let cursorKind = cursor.kind()
-        let isCxxMember = cursorKind == clang.CXCursorKind_CXCursor_Constructor ||
-            cursorKind == clang.CXCursorKind_CXCursor_Destructor ||
-            cursorKind == clang.CXCursorKind_CXCursor_CXXMethod
+        let isCxxMember = cursorKind == clang.CXCursorKind_CXCursor_Constructor || cursorKind == clang
+            .CXCursorKind_CXCursor_Destructor || cursorKind == clang.CXCursorKind_CXCursor_CXXMethod
         if (isCxxMember && cursor.lexicalParent() != cursor.semanticParent()) {
             return Result.Err(ParseError.Continue)
         }
 
-        if (cursorKind == clang.CXCursorKind_CXCursor_CXXMethod &&
-            hasOnlyAdjustingThunkManglings(cursor, context.targetInfo)) {
+        if (cursorKind == clang.CXCursorKind_CXCursor_CXXMethod && hasOnlyAdjustingThunkManglings(cursor,
+            context.targetInfo)) {
             eprintln(
-                "Error: skipping '${cursor.displayName()}' because only this-adjusting thunk ABI symbols were available"
-            )
+                "Error: skipping '${cursor.displayName()}' because only this-adjusting thunk ABI symbols were available")
             return Result.Err(ParseError.Continue)
         }
 
@@ -201,7 +189,7 @@ public class Function <: ClangSubItemParser<Function> {
             constructorCanReturnByValue: cursorKind == clang.CXCursorKind_CXCursor_Constructor &&
                 cursor.semanticParent().curType().canonicalType().isPod() &&
                 cursor.semanticParent().curType().canonicalType().align(UIntNative(context.pointerWidth())) <=
-                    UIntNative(context.pointerWidth())
+                UIntNative(context.pointerWidth())
         )
 
         Result.Ok(ParseResult.New(newFunc, cursor))
@@ -255,8 +243,7 @@ func cursorMangling(cursor: clang.Cursor, isCxx: Bool, targetInfo: clang.TargetI
     let isConstructor = cursor.kind() == clang.CXCursorKind_CXCursor_Constructor
     let isDestructor = cursor.kind() == clang.CXCursorKind_CXCursor_Destructor
     if (let Ok(manglings) <- cursor.cxxManglings()) {
-        if (!isConstructor && !isDestructor &&
-            cursor.kind() == clang.CXCursorKind_CXCursor_CXXMethod) {
+        if (!isConstructor && !isDestructor && cursor.kind() == clang.CXCursorKind_CXCursor_CXXMethod) {
             if (let Some(mangling) <- selectNonAdjustingMethodMangling(
                 manglings,
                 targetInfo.triple,
@@ -276,10 +263,9 @@ func cursorMangling(cursor: clang.Cursor, isCxx: Bool, targetInfo: clang.TargetI
             if (fallback.isNone()) {
                 fallback = Some(mangling)
             }
-            if ((isConstructor && isCompleteObjectVariant(mangling, manglings, 67u8)) ||
-                (isDestructor && isCompleteObjectVariant(mangling, manglings, 68u8)) ||
-                (!isConstructor && !isDestructor) ||
-                ((isConstructor || isDestructor) && !mangling.startsWith("_Z") && manglings.size == 1)) {
+            if ((isConstructor && isCompleteObjectVariant(mangling, manglings, 67u8)) || (isDestructor &&
+                isCompleteObjectVariant(mangling, manglings, 68u8)) || (!isConstructor && !isDestructor) || ((isConstructor ||
+                isDestructor) && !mangling.startsWith("_Z") && manglings.size == 1)) {
                 return normalizedCursorMangling(mangling, cursor, isCxx, targetInfo)
             }
         }
@@ -316,8 +302,7 @@ public func isAdjustingThunkMangling(
         targetTriple,
         pointerWidth
     )
-    return normalized.startsWith("_ZTh") || normalized.startsWith("_ZTv") ||
-        normalized.startsWith("_ZTc")
+    return normalized.startsWith("_ZTh") || normalized.startsWith("_ZTv") || normalized.startsWith("_ZTc")
 }
 
 public func selectNonAdjustingMethodMangling(
@@ -329,8 +314,7 @@ public func selectNonAdjustingMethodMangling(
     while (index > 0) {
         index -= 1
         let candidate = manglings[index]
-        if (!candidate.isEmpty() &&
-            !isAdjustingThunkMangling(candidate, targetTriple, pointerWidth)) {
+        if (!candidate.isEmpty() && !isAdjustingThunkMangling(candidate, targetTriple, pointerWidth)) {
             return Some(candidate)
         }
     }
@@ -387,11 +371,9 @@ func normalizePlatformMangling(
     pointerWidth: Int32
 ): String {
     var normalized = mangling
-    let hasPlatformPrefix = targetTriple.contains("apple") || targetTriple.contains("darwin") ||
-        targetTriple.contains("macos") || targetTriple.contains("ios") ||
-        targetTriple.contains("tvos") || targetTriple.contains("watchos") ||
-        targetTriple.contains("visionos") ||
-        (pointerWidth == 32 && (targetTriple.contains("windows") ||
+    let hasPlatformPrefix = targetTriple.contains("apple") || targetTriple.contains("darwin") || targetTriple
+        .contains("macos") || targetTriple.contains("ios") || targetTriple.contains("tvos") || targetTriple.contains(
+        "watchos") || targetTriple.contains("visionos") || (pointerWidth == 32 && (targetTriple.contains("windows") ||
         targetTriple.contains("mingw") || targetTriple.contains("win32")))
     if (hasPlatformPrefix && normalized.startsWith("_") && normalized.size > 1) {
         normalized = normalized[1..]
@@ -416,9 +398,8 @@ func isCompleteObjectVariant(candidate: String, manglings: Array<String>, prefix
                 continue
             }
             differences += 1
-            if (differences > 1 || index == 0 || candidate[index - 1] != prefix ||
-                other[index - 1] != prefix || candidate[index] != 49u8 ||
-                (other[index] != 48u8 && other[index] != 50u8)) {
+            if (differences > 1 || index == 0 || candidate[index - 1] != prefix || other[index - 1] != prefix ||
+                candidate[index] != 49u8 || (other[index] != 48u8 && other[index] != 50u8)) {
                 validVariantDifference = false
                 break
             }
@@ -477,11 +458,7 @@ func typeHasOpaqueValueAbi(
             )
         }
     }
-    let item = typeId
-        .intoResolver()
-        .throughTypeRefs()
-        .throughTypeAliases()
-        .resolve(ctx)
+    let item = typeId.intoResolver().throughTypeRefs().throughTypeAliases().resolve(ctx)
     if (let Some(replacement) <- ctx.codegenTemplateReplacement(item.id)) {
         if (replacement != item.id) {
             return typeHasOpaqueValueAbi(
@@ -509,10 +486,7 @@ func typeHasOpaqueValueAbi(
         }
     }
     if (let TypeKind.TypeKindTemplateInstantiation(instantiation) <- ty.kind) {
-        let definition = instantiation.definition
-            .intoResolver()
-            .throughTypeRefs()
-            .resolve(ctx)
+        let definition = instantiation.definition.intoResolver().throughTypeRefs().resolve(ctx)
         if (ctx.isBlocklistedItem(definition.id)) {
             return true
         }
@@ -525,12 +499,9 @@ func typeHasOpaqueValueAbi(
         }
     }
     return match (ty.kind) {
-        case TypeKind.TypeKindArray(inner, _) =>
-            typeHasOpaqueValueAbi(inner, ctx, visiting, representedTypeParams)
-        case TypeKind.TypeKindVector(_, _) |
-            TypeKind.TypeKindComplex(_) |
-            TypeKind.TypeKindTemplateInstantiation(_) |
-            TypeKind.TypeKindTypeParam => true
+        case TypeKind.TypeKindArray(inner, _) => typeHasOpaqueValueAbi(inner, ctx, visiting, representedTypeParams)
+        case TypeKind.TypeKindVector(_, _) | TypeKind.TypeKindComplex(_) | TypeKind.TypeKindTemplateInstantiation(_)
+            | TypeKind.TypeKindTypeParam => true
         case TypeKind.TypeKindComp(comp) =>
             if (comp.isUnion()) {
                 return true
@@ -617,27 +588,23 @@ func typeHasUnserializableCallingConvention(ty: clang.Type): Bool {
         return true
     }
 
-    if (kind == clang.CXTypeKind_CXType_Pointer ||
-        kind == clang.CXTypeKind_CXType_LValueReference ||
-        kind == clang.CXTypeKind_CXType_RValueReference) {
+    if (kind == clang.CXTypeKind_CXType_Pointer || kind == clang.CXTypeKind_CXType_LValueReference || kind == clang
+        .CXTypeKind_CXType_RValueReference) {
         if (let Some(pointee) <- ty.pointeeType()) {
             return typeHasUnserializableCallingConvention(pointee)
         }
         return true
     }
 
-    if (kind == clang.CXTypeKind_CXType_ConstantArray ||
-        kind == clang.CXTypeKind_CXType_IncompleteArray ||
-        kind == clang.CXTypeKind_CXType_VariableArray ||
-        kind == clang.CXTypeKind_CXType_DependentSizedArray) {
+    if (kind == clang.CXTypeKind_CXType_ConstantArray || kind == clang.CXTypeKind_CXType_IncompleteArray || kind == clang
+        .CXTypeKind_CXType_VariableArray || kind == clang.CXTypeKind_CXType_DependentSizedArray) {
         if (let Some(element) <- ty.elemType()) {
             return typeHasUnserializableCallingConvention(element)
         }
         return true
     }
 
-    if (kind == clang.CXTypeKind_CXType_FunctionProto ||
-        kind == clang.CXTypeKind_CXType_FunctionNoProto) {
+    if (kind == clang.CXTypeKind_CXType_FunctionProto || kind == clang.CXTypeKind_CXType_FunctionNoProto) {
         if (let ClangAbi.Unknown(_) <- getAbi(ty.callConv())) {
             return true
         }
@@ -651,29 +618,23 @@ func isUnsupportedValueType(ty: clang.Type, pointerWidth: UIntNative, cxx: Bool)
     let canonical = ty.canonicalType()
     let kind = canonical.kind()
     if (kind == clang.CXTypeKind_CXType_Record) {
-        return canonical.align(pointerWidth) > pointerWidth ||
-            recordHasUnsupportedValueField(canonical, pointerWidth) ||
+        return canonical.align(pointerWidth) > pointerWidth || recordHasUnsupportedValueField(canonical, pointerWidth) ||
             (cxx && (!canonical.isPod() || recordHasUnsupportedValueLayout(canonical)))
     }
     if (kind == clang.CXTypeKind_CXType_Pointer) {
         if (let Some(pointee) <- canonical.pointeeType()) {
             let pointeeKind = pointee.kind()
-            if (pointeeKind == clang.CXTypeKind_CXType_FunctionProto ||
-                pointeeKind == clang.CXTypeKind_CXType_FunctionNoProto) {
+            if (pointeeKind == clang.CXTypeKind_CXType_FunctionProto || pointeeKind == clang
+                .CXTypeKind_CXType_FunctionNoProto) {
                 return hasUnsupportedValueAbi(pointee, pointerWidth, cxx)
             }
         }
     }
-    return kind == clang.CXTypeKind_CXType_Half ||
-        kind == clang.CXTypeKind_CXType_Float16 ||
-        kind == clang.CXTypeKind_CXType_BFloat16 ||
-        kind == clang.CXTypeKind_CXType_Int128 ||
-        kind == clang.CXTypeKind_CXType_UInt128 ||
-        kind == clang.CXTypeKind_CXType_Float128 ||
-        kind == clang.CXTypeKind_CXType_Complex ||
-        kind == clang.CXTypeKind_CXType_Vector ||
-        kind == clang.CXTypeKind_CXType_ExtVector ||
-        (kind == clang.CXTypeKind_CXType_LongDouble && canonical.size(pointerWidth) > 8)
+    return kind == clang.CXTypeKind_CXType_Half || kind == clang.CXTypeKind_CXType_Float16 || kind == clang
+        .CXTypeKind_CXType_BFloat16 || kind == clang.CXTypeKind_CXType_Int128 || kind == clang
+        .CXTypeKind_CXType_UInt128 || kind == clang.CXTypeKind_CXType_Float128 || kind == clang
+        .CXTypeKind_CXType_Complex || kind == clang.CXTypeKind_CXType_Vector || kind == clang
+        .CXTypeKind_CXType_ExtVector || (kind == clang.CXTypeKind_CXType_LongDouble && canonical.size(pointerWidth) > 8)
 }
 
 /// A record passed by value uses the platform aggregate classification rules,
@@ -684,11 +645,11 @@ func recordHasUnsupportedValueField(ty: clang.Type, pointerWidth: UIntNative): B
     let unsupported = Box(false)
     ty.visitFields {
         field =>
-        if (fieldTypeHasUnsupportedValueAbi(field.curType(), pointerWidth)) {
-            unsupported.value = true
-            return clang.CXVisitorResult_CXVisit_Break
-        }
-        clang.CXVisitorResult_CXVisit_Continue
+            if (fieldTypeHasUnsupportedValueAbi(field.curType(), pointerWidth)) {
+                unsupported.value = true
+                return clang.CXVisitorResult_CXVisit_Break
+            }
+            clang.CXVisitorResult_CXVisit_Continue
     }
     return unsupported.value
 }
@@ -699,25 +660,18 @@ func fieldTypeHasUnsupportedValueAbi(ty: clang.Type, pointerWidth: UIntNative): 
     if (kind == clang.CXTypeKind_CXType_Record) {
         return recordHasUnsupportedValueField(canonical, pointerWidth)
     }
-    if (kind == clang.CXTypeKind_CXType_ConstantArray ||
-        kind == clang.CXTypeKind_CXType_IncompleteArray ||
-        kind == clang.CXTypeKind_CXType_VariableArray ||
-        kind == clang.CXTypeKind_CXType_DependentSizedArray) {
+    if (kind == clang.CXTypeKind_CXType_ConstantArray || kind == clang.CXTypeKind_CXType_IncompleteArray || kind == clang
+        .CXTypeKind_CXType_VariableArray || kind == clang.CXTypeKind_CXType_DependentSizedArray) {
         if (let Some(element) <- canonical.elemType()) {
             return fieldTypeHasUnsupportedValueAbi(element, pointerWidth)
         }
         return true
     }
-    return kind == clang.CXTypeKind_CXType_Half ||
-        kind == clang.CXTypeKind_CXType_Float16 ||
-        kind == clang.CXTypeKind_CXType_BFloat16 ||
-        kind == clang.CXTypeKind_CXType_Complex ||
-        kind == clang.CXTypeKind_CXType_Int128 ||
-        kind == clang.CXTypeKind_CXType_UInt128 ||
-        kind == clang.CXTypeKind_CXType_Float128 ||
-        kind == clang.CXTypeKind_CXType_Vector ||
-        kind == clang.CXTypeKind_CXType_ExtVector ||
-        (kind == clang.CXTypeKind_CXType_LongDouble && canonical.size(pointerWidth) > 8)
+    return kind == clang.CXTypeKind_CXType_Half || kind == clang.CXTypeKind_CXType_Float16 || kind == clang
+        .CXTypeKind_CXType_BFloat16 || kind == clang.CXTypeKind_CXType_Complex || kind == clang
+        .CXTypeKind_CXType_Int128 || kind == clang.CXTypeKind_CXType_UInt128 || kind == clang
+        .CXTypeKind_CXType_Float128 || kind == clang.CXTypeKind_CXType_Vector || kind == clang
+        .CXTypeKind_CXType_ExtVector || (kind == clang.CXTypeKind_CXType_LongDouble && canonical.size(pointerWidth) > 8)
 }
 
 func recordHasUnsupportedValueLayout(ty: clang.Type): Bool {
@@ -727,8 +681,8 @@ func recordHasUnsupportedValueLayout(ty: clang.Type): Bool {
 func recordHasUnsupportedValueLayoutInner(ty: clang.Type, requireAccessibleCopy: Bool): Bool {
     let declaration = ty.declaration()
     let definition = declaration.definition().getOrDefault({=> declaration})
-    if (declaration.kind() == clang.CXCursorKind_CXCursor_UnionDecl ||
-        definition.kind() == clang.CXCursorKind_CXCursor_UnionDecl) {
+    if (declaration.kind() == clang.CXCursorKind_CXCursor_UnionDecl || definition.kind() == clang
+        .CXCursorKind_CXCursor_UnionDecl) {
         return true
     }
     let unsupported = Box(false)
@@ -738,11 +692,11 @@ func recordHasUnsupportedValueLayoutInner(ty: clang.Type, requireAccessibleCopy:
     // nested records and bit-fields are checked after substitution as well.
     ty.visitFields {
         field =>
-        if (field.isBitField() || fieldContainsUnsupportedRecord(field.curType())) {
-            unsupported.value = true
-            return clang.CXVisitorResult_CXVisit_Break
-        }
-        clang.CXVisitorResult_CXVisit_Continue
+            if (field.isBitField() || fieldContainsUnsupportedRecord(field.curType())) {
+                unsupported.value = true
+                return clang.CXVisitorResult_CXVisit_Break
+            }
+            clang.CXVisitorResult_CXVisit_Continue
     }
     if (unsupported.value) {
         return true
@@ -752,8 +706,8 @@ func recordHasUnsupportedValueLayoutInner(ty: clang.Type, requireAccessibleCopy:
     // libclang releases. The declaration walk below remains the fallback.
     ty.visitCxxBaseClasses {
         _ =>
-        unsupported.value = true
-        clang.CXVisitorResult_CXVisit_Break
+            unsupported.value = true
+            clang.CXVisitorResult_CXVisit_Break
     }
     if (unsupported.value) {
         return true
@@ -761,20 +715,19 @@ func recordHasUnsupportedValueLayoutInner(ty: clang.Type, requireAccessibleCopy:
 
     definition.visit {
         child =>
-        let kind = child.kind()
-        let unavailableSpecialMember = kind == clang.CXCursorKind_CXCursor_Constructor &&
-            (child.constructorIsCopy() || child.constructorIsMove()) &&
-            (child.isDeletedFunction() || (requireAccessibleCopy && !child.isPublic()))
-        let unsupportedNestedRecord = kind == clang.CXCursorKind_CXCursor_FieldDecl &&
-            fieldContainsUnsupportedRecord(child.curType())
-        if (kind == clang.CXCursorKind_CXCursor_PackedAttr ||
-            kind == clang.CXCursorKind_CXCursor_CXXBaseSpecifier ||
-            (kind == clang.CXCursorKind_CXCursor_FieldDecl && child.isBitField()) ||
-            unavailableSpecialMember || unsupportedNestedRecord) {
-            unsupported.value = true
-            return clang.CXChildVisitResult_CXChildVisit_Break
-        }
-        return clang.CXChildVisitResult_CXChildVisit_Continue
+            let kind = child.kind()
+            let unavailableSpecialMember = kind == clang.CXCursorKind_CXCursor_Constructor && (child
+                .constructorIsCopy() || child.constructorIsMove()) && (child.isDeletedFunction() || (requireAccessibleCopy &&
+                !child.isPublic()))
+            let unsupportedNestedRecord = kind == clang.CXCursorKind_CXCursor_FieldDecl &&
+                fieldContainsUnsupportedRecord(child.curType())
+            if (kind == clang.CXCursorKind_CXCursor_PackedAttr || kind == clang.CXCursorKind_CXCursor_CXXBaseSpecifier ||
+                (kind == clang.CXCursorKind_CXCursor_FieldDecl && child.isBitField()) || unavailableSpecialMember ||
+                unsupportedNestedRecord) {
+                unsupported.value = true
+                return clang.CXChildVisitResult_CXChildVisit_Break
+            }
+            return clang.CXChildVisitResult_CXChildVisit_Continue
     }
     return unsupported.value
 }
@@ -785,10 +738,8 @@ func fieldContainsUnsupportedRecord(ty: clang.Type): Bool {
     if (kind == clang.CXTypeKind_CXType_Record) {
         return recordHasUnsupportedValueLayoutInner(canonical, true)
     }
-    if (kind == clang.CXTypeKind_CXType_ConstantArray ||
-        kind == clang.CXTypeKind_CXType_IncompleteArray ||
-        kind == clang.CXTypeKind_CXType_VariableArray ||
-        kind == clang.CXTypeKind_CXType_DependentSizedArray) {
+    if (kind == clang.CXTypeKind_CXType_ConstantArray || kind == clang.CXTypeKind_CXType_IncompleteArray || kind == clang
+        .CXTypeKind_CXType_VariableArray || kind == clang.CXTypeKind_CXType_DependentSizedArray) {
         if (let Some(element) <- canonical.elemType()) {
             return fieldContainsUnsupportedRecord(element)
         }
@@ -840,11 +791,10 @@ public enum ClangAbi {
     public func isCFuncCompatibleForTarget(targetInfo: clang.TargetInfo): Bool {
         return match (this) {
             case Known(Abi.C) => true
-            case Known(Abi.Win64) => targetInfo.pointerWidth == 64 &&
-                (targetInfo.triple.contains("windows") || targetInfo.triple.contains("mingw") ||
-                targetInfo.triple.contains("win32"))
-            case Known(Abi.Aapcs) => (targetInfo.triple.startsWith("arm") ||
-                targetInfo.triple.startsWith("thumb")) && !targetInfo.triple.contains("eabihf")
+            case Known(Abi.Win64) => targetInfo.pointerWidth == 64 && (targetInfo.triple.contains("windows") ||
+                targetInfo.triple.contains("mingw") || targetInfo.triple.contains("win32"))
+            case Known(Abi.Aapcs) => (targetInfo.triple.startsWith("arm") || targetInfo.triple.startsWith("thumb")) &&
+                !targetInfo.triple.contains("eabihf")
             case _ => false
         }
     }
@@ -871,7 +821,8 @@ func getAbi(cc: clang.CXCallingConv): ClangAbi {
     if (cc == clang.CXCallingConv_CXCallingConv_X86ThisCall) {
         return Known(Abi.ThisCall)
     }
-    if (cc == clang.CXCallingConv_CXCallingConv_X86VectorCall || cc == clang.CXCallingConv_CXCallingConv_AArch64VectorCall) {
+    if (cc == clang.CXCallingConv_CXCallingConv_X86VectorCall || cc == clang
+        .CXCallingConv_CXCallingConv_AArch64VectorCall) {
         return Known(Abi.Vectorcall)
     }
     if (cc == clang.CXCallingConv_CXCallingConv_AAPCS) {
@@ -972,31 +923,30 @@ public class FunctionSig <: Trace<Tracer, Unit> {
             ty.declaration()
         }
 
-        let argsWithoutReceiver = if (kind == clang.CXCursorKind_CXCursor_FunctionDecl ||
-            kind == clang.CXCursorKind_CXCursor_Constructor ||
-            kind == clang.CXCursorKind_CXCursor_Destructor ||
-            kind == clang.CXCursorKind_CXCursor_CXXMethod) {
+        let argsWithoutReceiver = if (kind == clang.CXCursorKind_CXCursor_FunctionDecl || kind == clang
+            .CXCursorKind_CXCursor_Constructor || kind == clang.CXCursorKind_CXCursor_Destructor || kind == clang
+            .CXCursorKind_CXCursor_CXXMethod) {
             argsFromTyAndCursor(ty, cursor, ctx)
         } else {
             let targs: ArrayList<(?String, TypeId)> = ArrayList()
             cursor.visit {
                 c =>
-                if (c.kind() == clang.CXCursorKind_CXCursor_ParmDecl) {
-                    let tty = Item.fromTyOrRef(
-                        c.curType(),
-                        c,
-                        None,
-                        ctx
-                    )
-                    let _spelling = c.spelling()
-                    let _name: ?String = if (!_spelling.isEmpty()) {
-                        Some(_spelling)
-                    } else {
-                        None
+                    if (c.kind() == clang.CXCursorKind_CXCursor_ParmDecl) {
+                        let tty = Item.fromTyOrRef(
+                            c.curType(),
+                            c,
+                            None,
+                            ctx
+                        )
+                        let _spelling = c.spelling()
+                        let _name: ?String = if (!_spelling.isEmpty()) {
+                            Some(_spelling)
+                        } else {
+                            None
+                        }
+                        targs.add((_name, tty))
                     }
-                    targs.add((_name, tty))
-                }
-                return clang.CXChildVisitResult_CXChildVisit_Continue
+                    return clang.CXChildVisitResult_CXChildVisit_Continue
             }
 
             if (targs.isEmpty()) {
@@ -1030,7 +980,7 @@ public class FunctionSig <: Trace<Tracer, Unit> {
             argsWithoutReceiver
         }
 
-        let tyRetType = match(ty.retType()) {
+        let tyRetType = match (ty.retType()) {
             case Some(v) => v
             case None => return Err(ParseError.Continue)
         }
@@ -1047,18 +997,20 @@ public class FunctionSig <: Trace<Tracer, Unit> {
 
         let curAbi = getAbi(callConv)
 
-        return Result.Ok(FunctionSig(
-            spelling,
-            ret,
-            args.toArray(),
-            ty.isVariadic(),
-            curAbi,
-            valueAbiUnsupported: hasUnsupportedValueAbi(
-                ty,
-                UIntNative(ctx.pointerWidth()),
-                usesCxxLanguage(ctx.options)
+        return Result.Ok(
+            FunctionSig(
+                spelling,
+                ret,
+                args.toArray(),
+                ty.isVariadic(),
+                curAbi,
+                valueAbiUnsupported: hasUnsupportedValueAbi(
+                    ty,
+                    UIntNative(ctx.pointerWidth()),
+                    usesCxxLanguage(ctx.options)
+                )
             )
-        ))
+        )
     }
     // cjlint-ignore -end
 

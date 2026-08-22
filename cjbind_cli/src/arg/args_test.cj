@@ -10,12 +10,16 @@ public class StringListFlagTest {
         let flag = StringListFlag(None, "allowlist-type", "allowlist-type", "", "REGEX")
         let parser = ArgsParser(flag)
 
-        let (headers, clangArgs) = parser.parse([
-            "cjbind",
-            "--allowlist-type", "^First$",
-            "--allowlist-type", "^Second$",
-            "input.hpp"
-        ])
+        let (headers, clangArgs) = parser.parse(
+            [
+                "cjbind",
+                "--allowlist-type",
+                "^First$",
+                "--allowlist-type",
+                "^Second$",
+                "input.hpp"
+            ]
+        )
 
         @Expect(flag.values.size, 2)
         @Expect(flag.values[0], "^First$")

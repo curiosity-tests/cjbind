@@ -1,10 +1,10 @@
 package cjbind.ir
 
 public enum ItemKind <: ToString {
-    KindModule(Module) |
-    KindType(Type) |
-    KindFunction(Function) |
-    KindVar(Var)
+    KindModule(Module)
+    | KindType(Type)
+    | KindFunction(Function)
+    | KindVar(Var)
 
     public func asType(): ?Type {
         match (this) {

@@ -38,7 +38,6 @@ public class Enum {
         this.variants = variants
     }
 
-
     // cjlint-ignore -start !G.FUN.01
     public static func fromTy(
         ty: clang.Type,
@@ -61,18 +60,16 @@ public class Enum {
             t => t.isBool()
         }.getOrDefault({=> false})
 
-        let isSigned = variantTy
-            .flatMap {
-                tty => match (tty.kind) {
-                    case TypeKindInt(ik) => ik.isSigned()
-                    case _ => Some(true)
-                }
+        let isSigned = variantTy.flatMap {
+            tty => match (tty.kind) {
+                case TypeKindInt(ik) => ik.isSigned()
+                case _ => Some(true)
             }
-            .getOrDefault {=> true}
+        }.getOrDefault {=> true}
 
-        let definition = declaration.definition().getOrDefault{=>declaration}
+        let definition = declaration.definition().getOrDefault {=> declaration}
         definition.visit {
-            cursor => 
+            cursor =>
                 if (cursor.kind() == clang.CXCursorKind_CXCursor_EnumConstantDecl) {
                     let value = if (isBool) {
                         cursor.enumValBoolean().flatMap {

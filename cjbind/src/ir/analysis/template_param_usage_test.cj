@@ -81,28 +81,35 @@ func addCrtpUsageGraph(
         ctx,
         ctx.rootModule,
         "DerivedU",
-        TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-            derivedDefinition,
-            [derivedParameter]
-        ))
+        TypeKind.TypeKindTemplateInstantiation(
+            TemplateInstantiation(
+                derivedDefinition,
+                [derivedParameter]
+            )
+        )
     )
     let baseInstantiation = addUsageType(
         ctx,
         ctx.rootModule,
         "BaseDerivedU",
-        TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-            baseDefinition,
-            [selfInstantiation]
-        ))
+        TypeKind.TypeKindTemplateInstantiation(
+            TemplateInstantiation(
+                baseDefinition,
+                [selfInstantiation]
+            )
+        )
     )
-    let fields = if (derivedUsesParameter) { [derivedParameter] } else { [integer] }
+    let fields = if (derivedUsesParameter) {
+        [derivedParameter]
+    } else {
+        [integer]
+    }
     let derivedComp = analysisTestRecord(fields)
     derivedComp.templateParams.add(derivedParameter)
     derivedComp.baseMembers.add(Base(baseInstantiation, BaseKind.Normal, "base", true))
     addUsageTypeAt(ctx, derivedDefinition, ctx.rootModule, "Derived", TypeKind.TypeKindComp(derivedComp))
 
-    return (
-        [
+    return ([
             integer,
             baseParameter,
             baseDefinition,
@@ -110,10 +117,7 @@ func addCrtpUsageGraph(
             selfInstantiation,
             baseInstantiation,
             derivedDefinition
-        ],
-        derivedDefinition,
-        derivedParameter
-    )
+        ], derivedDefinition, derivedParameter)
 }
 
 @Test
@@ -126,10 +130,12 @@ public class UsedTemplateParameterBranchTest {
             let parameter = addUsageType(ctx, record, "T", TypeKind.TypeKindTypeParam)
             let comp = analysisTestRecord([parameter])
             comp.templateParams.add(parameter)
-            let annotations = parseAnnotationAttributes([
-                clang.CommentAttribute("cjbind", ""),
-                clang.CommentAttribute("opaque", "")
-            ]).getOrThrow()
+            let annotations = parseAnnotationAttributes(
+                [
+                    clang.CommentAttribute("cjbind", ""),
+                    clang.CommentAttribute("opaque", "")
+                ]
+            ).getOrThrow()
             ctx.addItem(
                 Item(
                     record,

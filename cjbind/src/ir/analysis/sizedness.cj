@@ -11,9 +11,7 @@ enum SizednessResult <: Equatable<SizednessResult> {
 
     public operator func ==(rhs: SizednessResult): Bool {
         return match ((this, rhs)) {
-            case (ZeroSized, ZeroSized) |
-                (DependsOnTypeParam, DependsOnTypeParam) |
-                (NonZeroSized, NonZeroSized) => true
+            case (ZeroSized, ZeroSized) | (DependsOnTypeParam, DependsOnTypeParam) | (NonZeroSized, NonZeroSized) => true
             case _ => false
         }
     }
@@ -92,10 +90,7 @@ class SizednessAnalysis <: MonotoneFramework<ItemId, HashMap<ItemId, SizednessRe
     }
 
     func hasVtablePointer(id: ItemId): Bool {
-        return this.haveVtable
-            .get(id)
-            .map({result => result == HasVtableResult.SelfHasVtable})
-            .getOrDefault {=> false}
+        return this.haveVtable.get(id).map({result => result == HasVtableResult.SelfHasVtable}).getOrDefault {=> false}
     }
 
     func insert(id: ItemId, result: SizednessResult): ConstrainResult {
@@ -132,15 +127,13 @@ class SizednessAnalysis <: MonotoneFramework<ItemId, HashMap<ItemId, SizednessRe
         }
 
         if (item.isOpaque(this.ctx, ())) {
-            let result = analysisLayout(ty, this.ctx)
-                .map {
-                    layout => if (layout.size == 0) {
-                        SizednessResult.ZeroSized
-                    } else {
-                        SizednessResult.NonZeroSized
-                    }
+            let result = analysisLayout(ty, this.ctx).map {
+                layout => if (layout.size == 0) {
+                    SizednessResult.ZeroSized
+                } else {
+                    SizednessResult.NonZeroSized
                 }
-                .getOrDefault {=> SizednessResult.ZeroSized}
+            }.getOrDefault {=> SizednessResult.ZeroSized}
             return this.insert(id, result)
         }
 
@@ -152,17 +145,10 @@ class SizednessAnalysis <: MonotoneFramework<ItemId, HashMap<ItemId, SizednessRe
             case TypeKind.TypeKindVoid => this.insert(id, SizednessResult.ZeroSized)
             case TypeKind.TypeKindTypeParam => this.insert(id, SizednessResult.DependsOnTypeParam)
 
-            case TypeKind.TypeKindInt(_) |
-                TypeKind.TypeKindFloat(_) |
-                TypeKind.TypeKindComplex(_) |
-                TypeKind.TypeKindFunction(_) |
-                TypeKind.TypeKindEnum(_) |
-                TypeKind.TypeKindReference(_) |
-                TypeKind.TypeKindNullPtr |
-                TypeKind.TypeKindObjCInterface(_) |
-                TypeKind.TypeKindObjCId |
-                TypeKind.TypeKindObjCSel |
-                TypeKind.TypeKindPointer(_) => this.insert(id, SizednessResult.NonZeroSized)
+            case TypeKind.TypeKindInt(_) | TypeKind.TypeKindFloat(_) | TypeKind.TypeKindComplex(_)
+                | TypeKind.TypeKindFunction(_) | TypeKind.TypeKindEnum(_) | TypeKind.TypeKindReference(_)
+                | TypeKind.TypeKindNullPtr | TypeKind.TypeKindObjCInterface(_) | TypeKind.TypeKindObjCId
+                | TypeKind.TypeKindObjCSel | TypeKind.TypeKindPointer(_) => this.insert(id, SizednessResult.NonZeroSized)
 
             case TypeKind.TypeKindAlias(inner) => this.forward(inner, id)
             case TypeKind.TypeKindTemplateAlias(inner, _) => this.forward(inner, id)
@@ -191,10 +177,9 @@ class SizednessAnalysis <: MonotoneFramework<ItemId, HashMap<ItemId, SizednessRe
                 }
                 this.insert(id, result)
 
-            case TypeKind.TypeKindOpaque =>
-                throw Exception("opaque type was not handled before sizedness dispatch")
-            case TypeKind.UnresolvedTypeRef(_, _, _) =>
-                throw Exception("type references must be resolved before sizedness analysis")
+            case TypeKind.TypeKindOpaque => throw Exception("opaque type was not handled before sizedness dispatch")
+            case TypeKind.UnresolvedTypeRef(_, _, _) => throw Exception(
+                "type references must be resolved before sizedness analysis")
         }
     }
 
@@ -205,12 +190,8 @@ class SizednessAnalysis <: MonotoneFramework<ItemId, HashMap<ItemId, SizednessRe
 
 func considerSizednessEdge(kind: EdgeKind): Bool {
     return match (kind) {
-        case EdgeKind.TemplateArgumentEdge |
-            EdgeKind.TemplateDeclarationEdge |
-            EdgeKind.TemplateParameterDefinitionEdge |
-            EdgeKind.TypeReferenceEdge |
-            EdgeKind.BaseMemberEdge |
-            EdgeKind.FieldEdge => true
+        case EdgeKind.TemplateArgumentEdge | EdgeKind.TemplateDeclarationEdge | EdgeKind.TemplateParameterDefinitionEdge
+            | EdgeKind.TypeReferenceEdge | EdgeKind.BaseMemberEdge | EdgeKind.FieldEdge => true
         case _ => false
     }
 }
@@ -220,9 +201,7 @@ func computeSizedness(
     items: ItemSet,
     haveVtable: HashMap<ItemId, HasVtableResult>
 ): HashMap<ItemId, SizednessResult> {
-    return analyze<ItemId, HashMap<ItemId, SizednessResult>>(
-        SizednessAnalysis(ctx, items, haveVtable)
-    )
+    return analyze<ItemId, HashMap<ItemId, SizednessResult>>(SizednessAnalysis(ctx, items, haveVtable))
 }
 
 func analysisLayout(ty: Type, ctx: CjbindContext): ?Layout {
@@ -234,8 +213,7 @@ func analysisLayout(ty: Type, ctx: CjbindContext): ?Layout {
         case TypeKind.TypeKindComp(comp) => analysisCompLayout(comp, ctx)
         case TypeKind.TypeKindArray(inner, length) =>
             if (length == 0) {
-                analysisLayout(ctx.resolveType(inner), ctx)
-                    .map({layout => Layout(0, layout.align)})
+                analysisLayout(ctx.resolveType(inner), ctx).map({layout => Layout(0, layout.align)})
             } else {
                 None
             }
@@ -269,24 +247,22 @@ func analysisCompLayout(comp: CompInfo, ctx: CjbindContext): ?Layout {
     var maxAlign = Int32(1)
     match (comp.fields) {
         case CompFields.CompFieldsError => ()
-        case CompFields.CompFieldsBefore(fields) =>
-            for (field in fields) {
-                if (let Some(layout) <- analysisLayout(ctx.resolveType(field.ty), ctx)) {
-                    maxSize = max(maxSize, layout.size)
-                    maxAlign = max(maxAlign, layout.align)
-                }
+        case CompFields.CompFieldsBefore(fields) => for (field in fields) {
+            if (let Some(layout) <- analysisLayout(ctx.resolveType(field.ty), ctx)) {
+                maxSize = max(maxSize, layout.size)
+                maxAlign = max(maxAlign, layout.align)
             }
-        case CompFields.CompFieldsAfter(value) =>
-            for (field in value.fields) {
-                let layout = match (field) {
-                    case Field.DataMember(data) => analysisLayout(ctx.resolveType(data.ty), ctx)
-                    case Field.Bitfields(unit) => Some(unit.layout)
-                }
-                if (let Some(known) <- layout) {
-                    maxSize = max(maxSize, known.size)
-                    maxAlign = max(maxAlign, known.align)
-                }
+        }
+        case CompFields.CompFieldsAfter(value) => for (field in value.fields) {
+            let layout = match (field) {
+                case Field.DataMember(data) => analysisLayout(ctx.resolveType(data.ty), ctx)
+                case Field.Bitfields(unit) => Some(unit.layout)
             }
+            if (let Some(known) <- layout) {
+                maxSize = max(maxSize, known.size)
+                maxAlign = max(maxAlign, known.align)
+            }
+        }
     }
     return Some(Layout(maxSize, maxAlign))
 }

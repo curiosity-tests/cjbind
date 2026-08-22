@@ -1,6 +1,5 @@
 package cjbind.result
 
-
 // cjlint-ignore -start !G.OTH.03 license
 
 // https://gitcode.com/OpenCangjieCommunity/result4cj/blob/develop/LICENSE
@@ -255,11 +254,12 @@ public enum Result<T, E> {
 
     public static func transpose<T>(v: Result<Option<T>, E>): Option<Result<T, E>> {
         match (v) {
-            case Ok(o) => if (let Some(ov) <- o) {
-                Ok(ov)
-            } else {
-                None
-            }
+            case Ok(o) =>
+                if (let Some(ov) <- o) {
+                    Ok(ov)
+                } else {
+                    None
+                }
 
             case Err(e) => Err(e)
         }

@@ -86,23 +86,32 @@ func formatTokens(tokens: ArrayList<TokenTree>): String {
         let skipSpace = first || prevJoint || prevLiteralEndsWhitespace
         match (tt) {
             case Ident(s) =>
-                if (!skipSpace) { parts.add(" ") }
+                if (!skipSpace) {
+                    parts.add(" ")
+                }
                 parts.add(s)
                 prevJoint = false
                 prevLiteralEndsWhitespace = false
             case Literal(s) =>
-                let literalStartsWhitespace = !s.isEmpty() && (s.startsWith(" ") || s.startsWith("\n") || s.startsWith("\t"))
-                if (!skipSpace && !literalStartsWhitespace) { parts.add(" ") }
+                let literalStartsWhitespace = !s.isEmpty() && (s.startsWith(" ") || s.startsWith("\n") || s.startsWith(
+                    "\t"))
+                if (!skipSpace && !literalStartsWhitespace) {
+                    parts.add(" ")
+                }
                 parts.add(s)
                 prevJoint = false
                 prevLiteralEndsWhitespace = !s.isEmpty() && (s.endsWith(" ") || s.endsWith("\n") || s.endsWith("\t"))
             case Punct(ch, spacing) =>
-                if (!skipSpace) { parts.add(" ") }
+                if (!skipSpace) {
+                    parts.add(" ")
+                }
                 parts.add("${ch}")
                 prevJoint = (spacing == Spacing.Joint)
                 prevLiteralEndsWhitespace = false
             case Group(delim, stream) =>
-                if (!skipSpace) { parts.add(" ") }
+                if (!skipSpace) {
+                    parts.add(" ")
+                }
                 match (delim) {
                     case Delimiter.Invisible =>
                         let col = currentColumn(parts)
@@ -163,7 +172,9 @@ func currentColumn(parts: ArrayList<String>): Int64 {
 }
 
 func makeSpaces(n: Int64): String {
-    if (n <= 0) { return "" }
+    if (n <= 0) {
+        return ""
+    }
     let arr = Array<String>(Int64(n), repeat: " ")
     return String.join(arr, delimiter: "")
 }
@@ -254,7 +265,11 @@ extend Float64 <: ToTokens {
 
 extend Bool <: ToTokens {
     public func appendToStream(tokens: TokenStream): Unit {
-        tokens.append(TokenTree.Ident(if (this) { "true" } else { "false" }))
+        tokens.append(TokenTree.Ident(if (this) {
+            "true"
+        } else {
+            "false"
+        }))
     }
 }
 

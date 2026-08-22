@@ -74,9 +74,8 @@ func supportedAliasStyle(
     }
     let targetType = target.kind.expectType().canonicalType(ctx)
     match (targetType.kind) {
-        case TypeKind.TypeKindVoid | TypeKind.TypeKindArray(_, _) |
-            TypeKind.TypeKindFunction(_) =>
-            return DefaultAliasStyle.TypeAlias
+        case TypeKind.TypeKindVoid | TypeKind.TypeKindArray(_, _) | TypeKind.TypeKindFunction(_) => return DefaultAliasStyle
+            .TypeAlias
         case TypeKind.TypeKindComp(comp) =>
             if (comp.isCxxRecord) {
                 return DefaultAliasStyle.TypeAlias
@@ -87,8 +86,7 @@ func supportedAliasStyle(
         case Some(value) => value
         case None => return DefaultAliasStyle.TypeAlias
     }
-    if (targetLayout.align > ctx.pointerWidth() ||
-        Layout.knownCjTypeForSize(targetLayout.align).isNone()) {
+    if (targetLayout.align > ctx.pointerWidth() || Layout.knownCjTypeForSize(targetLayout.align).isNone()) {
         return DefaultAliasStyle.TypeAlias
     }
     return style
@@ -109,47 +107,33 @@ func effectiveAliasStyle(
     let name = item.canonicalName(ctx)
     if (hasGenericParameters) {
         eprintln(
-            "Warning: generating alias '${name}' as a regular type alias because @C structs cannot have generic parameters"
-        )
+            "Warning: generating alias '${name}' as a regular type alias because @C structs cannot have generic parameters")
     } else if (item.isOpaque(ctx, ()) || target.isOpaque(ctx, ())) {
         eprintln(
-            "Warning: generating alias '${name}' as a regular type alias because an opaque alias cannot be safely unwrapped at an FFI value boundary"
-        )
+            "Warning: generating alias '${name}' as a regular type alias because an opaque alias cannot be safely unwrapped at an FFI value boundary")
     } else {
         let targetType = target.kind.expectType().canonicalType(ctx)
         match (targetType.kind) {
-            case TypeKind.TypeKindVoid =>
-                eprintln(
-                    "Warning: generating alias '${name}' as a regular type alias because Unit cannot be an @C struct field"
-                )
-            case TypeKind.TypeKindArray(_, _) =>
-                eprintln(
-                    "Warning: generating alias '${name}' as a regular type alias because C array parameters decay to pointers"
-                )
-            case TypeKind.TypeKindFunction(_) =>
-                eprintln(
-                    "Warning: generating alias '${name}' as a regular type alias because a bare function type is not a C object type"
-                )
+            case TypeKind.TypeKindVoid => eprintln(
+                "Warning: generating alias '${name}' as a regular type alias because Unit cannot be an @C struct field")
+            case TypeKind.TypeKindArray(_, _) => eprintln(
+                "Warning: generating alias '${name}' as a regular type alias because C array parameters decay to pointers")
+            case TypeKind.TypeKindFunction(_) => eprintln(
+                "Warning: generating alias '${name}' as a regular type alias because a bare function type is not a C object type")
             case TypeKind.TypeKindComp(comp) =>
                 if (comp.isCxxRecord) {
                     eprintln(
-                        "Warning: generating alias '${name}' as a regular type alias because a Cangjie newtype cannot preserve C++ record copy and lifetime semantics"
-                    )
+                        "Warning: generating alias '${name}' as a regular type alias because a Cangjie newtype cannot preserve C++ record copy and lifetime semantics")
                 }
-            case _ =>
-                match (targetType.getLayout(ctx)) {
-                    case None =>
+            case _ => match (targetType.getLayout(ctx)) {
+                case None => eprintln(
+                    "Warning: generating alias '${name}' as a regular type alias because its target has no complete object layout")
+                case Some(layout) =>
+                    if (layout.align > ctx.pointerWidth() || Layout.knownCjTypeForSize(layout.align).isNone()) {
                         eprintln(
-                            "Warning: generating alias '${name}' as a regular type alias because its target has no complete object layout"
-                        )
-                    case Some(layout) =>
-                        if (layout.align > ctx.pointerWidth() ||
-                            Layout.knownCjTypeForSize(layout.align).isNone()) {
-                            eprintln(
-                                "Warning: generating alias '${name}' as a regular type alias because its alignment cannot be represented by a Cangjie @C newtype; use values obtained from C only through pointers"
-                            )
-                        }
-                }
+                            "Warning: generating alias '${name}' as a regular type alias because its alignment cannot be represented by a Cangjie @C newtype; use values obtained from C only through pointers")
+                    }
+            }
         }
     }
     return supported
@@ -188,11 +172,7 @@ func aliasStyleForUse(
     } else {
         !ctx.usedTemplateParams(item.id).isEmpty()
     }
-    let target = inner
-        .intoResolver()
-        .throughTypeRefs()
-        .throughTypeAliases()
-        .resolve(ctx)
+    let target = inner.intoResolver().throughTypeRefs().throughTypeAliases().resolve(ctx)
     return supportedAliasStyle(ctx, item, target, hasGenericParameters)
 }
 

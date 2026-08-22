@@ -145,7 +145,7 @@ public class CjbindOptionsDefaultsTest {
         opts.generatePureVirtualFunctions = true
         opts.generatePrivateFunctions = true
         opts.vtableGeneration = true
-        opts.fieldNameCallback = { info: FieldInfo => Some("renamed_${info.fieldName}") }
+        opts.fieldNameCallback = {info: FieldInfo => Some("renamed_${info.fieldName}")}
 
         @Expect(opts.packageName, "my_package")
         @Expect(opts.noEnumPrefix, true)
@@ -252,5 +252,4 @@ public class CjbindOptionsDefaultsTest {
 
         @Expect(opts.aliasStyle("Overlap") == DefaultAliasStyle.TypeAlias, true)
     }
-
 }

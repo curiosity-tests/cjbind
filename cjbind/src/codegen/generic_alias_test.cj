@@ -10,9 +10,14 @@ import std.unittest.testmacro.*
 
 func genericAliasTestContext(): CjbindContext {
     let options = CjbindOptions()
-    options.clangArgs.add(all: [
-        "-x", "c++", "-std=c++14", "cjbind_test/testdata/headers/support/ir/analysis_test_input.hpp"
-    ])
+    options.clangArgs.add(
+        all: [
+            "-x",
+            "c++",
+            "-std=c++14",
+            "cjbind_test/testdata/headers/support/ir/analysis_test_input.hpp"
+        ]
+    )
     return CjbindContext(options)
 }
 
@@ -125,13 +130,15 @@ public class GenericAliasRenderingTest {
             let function = addGenericAliasTestType(
                 ctx,
                 "Function",
-                TypeKind.TypeKindFunction(FunctionSig(
-                    "callback",
-                    returnParameter,
-                    [(None, argumentParameter)],
-                    false,
-                    ClangAbi.Known(Abi.C)
-                ))
+                TypeKind.TypeKindFunction(
+                    FunctionSig(
+                        "callback",
+                        returnParameter,
+                        [(None, argumentParameter)],
+                        false,
+                        ClangAbi.Known(Abi.C)
+                    )
+                )
             )
             let functionPointer = addGenericAliasTestType(
                 ctx,
@@ -264,13 +271,15 @@ public class GenericAliasRenderingTest {
             let function = addGenericAliasTestType(
                 ctx,
                 "CallbackFunction",
-                TypeKind.TypeKindFunction(FunctionSig(
-                    "callback",
-                    innerParameter,
-                    [(None, innerParameter)],
-                    false,
-                    ClangAbi.Known(Abi.C)
-                ))
+                TypeKind.TypeKindFunction(
+                    FunctionSig(
+                        "callback",
+                        innerParameter,
+                        [(None, innerParameter)],
+                        false,
+                        ClangAbi.Known(Abi.C)
+                    )
+                )
             )
             let pointer = addGenericAliasTestType(
                 ctx,
@@ -285,10 +294,12 @@ public class GenericAliasRenderingTest {
             let instance = addGenericAliasTestType(
                 ctx,
                 "CallbackU",
-                TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-                    definition,
-                    [outerParameter]
-                ))
+                TypeKind.TypeKindTemplateInstantiation(
+                    TemplateInstantiation(
+                        definition,
+                        [outerParameter]
+                    )
+                )
             )
             let outerAlias = addGenericAliasTestType(
                 ctx,
@@ -330,13 +341,15 @@ public class GenericAliasRenderingTest {
             let function = addGenericAliasTestType(
                 ctx,
                 "Function",
-                TypeKind.TypeKindFunction(FunctionSig(
-                    "callback",
-                    parameter,
-                    [(None, parameter)],
-                    false,
-                    ClangAbi.Known(Abi.C)
-                ))
+                TypeKind.TypeKindFunction(
+                    FunctionSig(
+                        "callback",
+                        parameter,
+                        [(None, parameter)],
+                        false,
+                        ClangAbi.Known(Abi.C)
+                    )
+                )
             )
             let pointer = addGenericAliasTestType(
                 ctx,
@@ -351,10 +364,12 @@ public class GenericAliasRenderingTest {
             let instance = addGenericAliasTestType(
                 ctx,
                 "IntCallback",
-                TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-                    definition,
-                    [integer]
-                ))
+                TypeKind.TypeKindTemplateInstantiation(
+                    TemplateInstantiation(
+                        definition,
+                        [integer]
+                    )
+                )
             )
             let usage = HashMap<ItemId, ItemSet>()
             markGenericAliasUsage(usage, parameter, [parameter])
@@ -399,13 +414,15 @@ public class GenericAliasRenderingTest {
             let function = addGenericAliasTestType(
                 ctx,
                 "Function",
-                TypeKind.TypeKindFunction(FunctionSig(
-                    "callback",
-                    floatAlias,
-                    [(Some("value"), floatAlias), (Some("data"), parameterPointer)],
-                    false,
-                    ClangAbi.Known(Abi.C)
-                ))
+                TypeKind.TypeKindFunction(
+                    FunctionSig(
+                        "callback",
+                        floatAlias,
+                        [(Some("value"), floatAlias), (Some("data"), parameterPointer)],
+                        false,
+                        ClangAbi.Known(Abi.C)
+                    )
+                )
             )
             let functionPointer = addGenericAliasTestType(
                 ctx,
@@ -455,13 +472,15 @@ public class GenericAliasRenderingTest {
             let function = addGenericAliasTestType(
                 ctx,
                 "Function",
-                TypeKind.TypeKindFunction(FunctionSig(
-                    "callback",
-                    parameter,
-                    [(None, parameter)],
-                    false,
-                    ClangAbi.Known(Abi.C)
-                ))
+                TypeKind.TypeKindFunction(
+                    FunctionSig(
+                        "callback",
+                        parameter,
+                        [(None, parameter)],
+                        false,
+                        ClangAbi.Known(Abi.C)
+                    )
+                )
             )
             let functionPointer = addGenericAliasTestType(
                 ctx,
@@ -476,10 +495,12 @@ public class GenericAliasRenderingTest {
             let instance = addGenericAliasTestType(
                 ctx,
                 "FloatCallback",
-                TypeKind.TypeKindTemplateInstantiation(TemplateInstantiation(
-                    definition,
-                    [floatAlias]
-                ))
+                TypeKind.TypeKindTemplateInstantiation(
+                    TemplateInstantiation(
+                        definition,
+                        [floatAlias]
+                    )
+                )
             )
             let usage = HashMap<ItemId, ItemSet>()
             markGenericAliasUsage(usage, floatType, Array<TypeId>())
