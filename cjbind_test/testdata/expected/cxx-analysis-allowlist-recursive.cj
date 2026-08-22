@@ -1,5 +1,6 @@
 package cjbind_ffi
 
+// cjbind-options: --allowlist-function ^selected_api$ -- -x c++ -std=c++14
 @C
 public struct SelectedDependency {
     public var value: Int32

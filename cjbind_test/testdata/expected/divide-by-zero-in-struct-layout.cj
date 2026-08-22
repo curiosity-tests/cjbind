@@ -65,6 +65,11 @@ func __cjbind_bitfield_uint64_to_int64(value: UInt64): Int64 {
     return unsafe { CPointer<Int64>(CPointer<UInt64>(inout copy)).read() }
 }
 
+//
+// Unfortunately, we aren't translating the third struct correctly yet. But we
+// definitely shouldn't divide-by-zero when we see it...
+//
+// Once we fix #981 we should remove the `--no-layout-tests`.
 @C
 public struct WithBitfield {
     var _bitfield_1: VArray<UInt8, $4> = unsafe { zeroValue<VArray<UInt8, $4>>() }

@@ -14,6 +14,7 @@ public struct VirtualArgument__cjbind_vtable {
     }
 }
 
+// cjbind-options: --vtable-generation -- -x c++ -std=c++14
 @C
 public struct VirtualArgument {
     public let vtable_: CPointer<VirtualArgument__cjbind_vtable>

@@ -65,6 +65,9 @@ let _ = {
 
 @C
 public struct zoidberg_ContainsOpaqueInstantiation {
+    // We should not generate a layout test for this instantiation, and it
+    // should appear as an opaque blob of bytes in
+    // `ContainsOpaqueInstantiation`'s type definition.
     public let opaque: UInt32
     private init(opaque: UInt32) {
         this.opaque = opaque

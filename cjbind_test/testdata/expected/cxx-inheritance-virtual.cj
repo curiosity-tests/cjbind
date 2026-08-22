@@ -12,6 +12,7 @@ public unsafe func Base_Base_destructor(this_: CPointer<Base>): Unit {
     return _ZN4BaseD1Ev(this_)
 }
 
+// cjbind-options: --vtable-generation --generate-pure-virtual-functions --use-specific-virtual-function-receiver -- -x c++ -std=c++14
 @C
 public struct Base {
     public let vtable_: CPointer<Unit>

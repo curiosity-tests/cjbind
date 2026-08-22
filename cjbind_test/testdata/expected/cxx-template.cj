@@ -79,6 +79,7 @@ public unsafe func consume(value: Box_open0_int_close0): Unit {
     return _Z7consume3BoxIiE(value)
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct Box_open0_int_close0 {
     public var value: Int32
@@ -272,6 +273,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct Box_open0_double_close0 {
     public var value: Float64

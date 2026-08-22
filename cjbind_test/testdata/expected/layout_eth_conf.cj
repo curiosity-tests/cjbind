@@ -255,6 +255,7 @@ public type rte_eth_tx_mq_mode = UInt32
 public struct rte_eth_txmode {
     // TX multi-queues mode.
     public var mq_mode: rte_eth_tx_mq_mode = unsafe { zeroValue<rte_eth_tx_mq_mode>() }
+    // For i40e specifically
     public var pvid: UInt16 = unsafe { zeroValue<UInt16>() }
     var _bitfield_1: VArray<UInt8, $2> = unsafe { zeroValue<VArray<UInt8, $2>>() }
     public mut prop hw_vlan_reject_tagged: UInt8 {
@@ -442,6 +443,7 @@ let _ = {
         }
 }
 
+// This structure may be extended in future.
 @C
 public struct rte_eth_dcb_rx_conf {
     // Possible DCB TCs, 4 or 8 TCs

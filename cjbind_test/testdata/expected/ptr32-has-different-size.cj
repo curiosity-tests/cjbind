@@ -1,5 +1,6 @@
 package cjbind_ffi
 
+// cjbind-options: -- -fms-extensions
 @C
 public struct TEST_STRUCT {
     public var ptr_32bit: UInt32
@@ -21,4 +22,5 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -fms-extensions
 public type TEST = TEST_STRUCT

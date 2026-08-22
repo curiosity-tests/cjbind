@@ -111,6 +111,7 @@ public struct malloc_heap {
     }
 }
 
+// first element
 @C
 public struct malloc_elem {
     let _cjbind_empty: UInt8

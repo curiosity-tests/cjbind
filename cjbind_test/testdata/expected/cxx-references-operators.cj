@@ -36,6 +36,7 @@ public unsafe func Number_value1(this_: CPointer<Number>): CPointer<Int32> {
     return _ZNK6Number5valueEv(this_)
 }
 
+// cjbind-options: --represent-cxx-operators -- -x c++ -std=c++14
 @C
 public struct Number {
     let _cjbind_empty: UInt8

@@ -4,6 +4,7 @@ public type DoesNotUse_Aliased<T> = T
 
 public type DoesNotUse_Typedefed<U> = U
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct DoesNotUse {
     let _cjbind_empty: UInt8

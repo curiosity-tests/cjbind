@@ -1,5 +1,6 @@
 package cjbind_ffi
 
+// cjbind-options: --opaque-type OpaqueTemplate
 @C
 public struct OpaqueTemplate {
     let _cjbind_empty: UInt8

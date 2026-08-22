@@ -628,6 +628,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct DirectUse_open0_int_close0 {
     public var value: Int32

@@ -1,5 +1,6 @@
 package cjbind_ffi
 
+// cjbind-options: --generate types -- -x c++ -std=c++14
 @C
 public struct SelectedType {
     public var value: Int32

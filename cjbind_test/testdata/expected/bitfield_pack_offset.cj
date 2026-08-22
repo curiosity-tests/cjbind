@@ -136,6 +136,7 @@ public struct A {
             unsafe { __cjbind_bitfield_write(CPointer<UInt8>(inout this._bitfield_2), 4, 4, UInt64(value)) }
         }
     }
+    // XXX 4 bytes hole, try to pack
     // 16     8
     public var description1: CPointer<UInt8> = unsafe { zeroValue<CPointer<UInt8>>() }
     let _cjbind_bitfield_alignment_marker: VArray<UInt64, $0> = unsafe { zeroValue<VArray<UInt64, $0>>() }

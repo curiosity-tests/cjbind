@@ -11,6 +11,7 @@ func __cjbind_write_Int32_from_UInt32(storage: UInt32, val: Int32): UInt32 {
     return s
 }
 
+// cjbind-options: --generate types,destructors -- -x c++ -std=c++14
 @C
 public struct TrivialValue {
     public var value: Int32

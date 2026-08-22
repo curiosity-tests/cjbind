@@ -125,6 +125,8 @@ public const RTE_CACHE_LINE_SIZE: Int64 = 64
 
 public type phys_addr_t = UInt64
 
+// define a set of marker types that can be used to refer to set points in the
+// mbuf
 public type MARKER = VArray<CPointer<Unit>, $0>
 
 public type MARKER8 = VArray<UInt8, $0>
@@ -270,6 +272,11 @@ let _ = {
         }
 }
 
+// The packet type, which is the combination of outer/inner L2, L3, L4
+// and tunnel types. The packet_type is about data really present in the
+// mbuf. Example: if vlan stripping is enabled, a received vlan packet
+// would have RTE_PTYPE_L2_ETHER and not RTE_PTYPE_L2_VLAN because the
+// vlan is stripped from the data.
 @C
 public struct rte_mbuf__cjbind_ty_2 {
     var _storage: UInt32 = unsafe { zeroValue<UInt32>() }
@@ -541,6 +548,7 @@ let _ = {
         }
 }
 
+// fields to support TX offloads
 @C
 public struct rte_mbuf__cjbind_ty_5 {
     var _storage: UInt64 = unsafe { zeroValue<UInt64>() }

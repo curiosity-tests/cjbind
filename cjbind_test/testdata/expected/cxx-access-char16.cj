@@ -3,6 +3,7 @@ package cjbind_ffi
 public const Color_Red: Color = 1
 public const Color_Blue: Color = 2
 
+// cjbind-options: --respect-cxx-access-specs -- -x c++ -std=c++14
 public type Color = UInt16
 
 public const Access_Answer: Int32 = 42

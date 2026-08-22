@@ -96,6 +96,7 @@ public struct __CjbindComplexFloat64 {
 // ABI-only opaque pointer for a C variadic callback. The generic arguments document the source signature; this alias is not callable from Cangjie.
 public type __CjbindVariadicFunction1<R, A0> = CPointer<Unit>
 
+// cjbind-options: --allowlist-type ^SupportHolder$ --no-recursive-allowlist
 @C
 public struct SupportHolder {
     public var value: __CjbindComplexFloat64

@@ -65,6 +65,7 @@ func __cjbind_bitfield_uint64_to_int64(value: UInt64): Int64 {
     return unsafe { CPointer<Int64>(CPointer<UInt64>(inout copy)).read() }
 }
 
+// cjbind-parse-callbacks: struct-field-rename
 @C
 public struct RenameMe {
     public var plain: Int32 = unsafe { zeroValue<Int32>() }

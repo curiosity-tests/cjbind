@@ -1,5 +1,6 @@
 package cjbind_ffi
 
+// cjbind-options: -- -x c++ -std=c++20
 @C
 public struct Wide {
     let _cjbind_opaque_blob: VArray<UInt8, $16>

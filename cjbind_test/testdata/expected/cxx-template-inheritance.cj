@@ -92,6 +92,7 @@ let _ = {
         }
 }
 
+// cjbind-options: --vtable-generation -- -x c++ -std=c++14
 @C
 public struct BaseWithVtable_open0_ptr_char_close0 {
     let _cjbind_opaque_blob: VArray<UInt64, $2>

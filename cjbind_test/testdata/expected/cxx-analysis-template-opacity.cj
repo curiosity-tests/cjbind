@@ -94,6 +94,7 @@ let _ = {
         }
 }
 
+// cjbind-options: --opaque-type ^SelectiveOpaque<int>$ -- -x c++ -std=c++14
 @C
 public struct PackedTemplate_open0_int_close0 {
     let _cjbind_opaque_blob: VArray<UInt8, $5>

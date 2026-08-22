@@ -65,6 +65,7 @@ func __cjbind_bitfield_uint64_to_int64(value: UInt64): Int64 {
     return unsafe { CPointer<Int64>(CPointer<UInt64>(inout copy)).read() }
 }
 
+// cjbind-options: --default-alias-style new_type --type-alias ^(PlainAlias|AliasCallback|AliasModeCallback)$ --new-type-alias ^StrongAlias$ --new-type-alias-deref ^AccessibleAlias$ --default-enum-style newtype
 @C
 public struct DefaultStrongAlias {
     public var rawValue: Int32

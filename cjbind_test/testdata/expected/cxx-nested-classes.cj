@@ -27,6 +27,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct Outer {
     public var value: Int32

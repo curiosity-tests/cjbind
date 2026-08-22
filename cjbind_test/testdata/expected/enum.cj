@@ -5,6 +5,8 @@ public const FOO_B: foo__cjbind_ty_1 = 1
 
 public type foo__cjbind_ty_1 = UInt32
 
+// A few tests for enum-related issues that should be tested with all the enum
+// representations.
 @C
 public struct foo {
     public var member: foo__cjbind_ty_1

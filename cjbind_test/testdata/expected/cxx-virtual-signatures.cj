@@ -63,6 +63,7 @@ public unsafe func RecursiveDerived_update1(this_: CPointer<RecursiveDerived>, v
     return _ZN16RecursiveDerived6updateEi(this_, value)
 }
 
+// cjbind-options: --vtable-generation --generate-pure-virtual-functions --use-specific-virtual-function-receiver -- -x c++ -std=c++14
 @C
 public struct RecursiveDerived {
     public let _base: RecursiveBase

@@ -1,7 +1,9 @@
 package cjbind_ffi
 
+// cjbind-options: --auto-cstring -- -x c++ -std=c++14
 foreign func _Z10passStringPc(value: CString): CString
 
+// cjbind-options: --auto-cstring -- -x c++ -std=c++14
 public unsafe func passString(value: CString): CString {
     return _Z10passStringPc(value)
 }

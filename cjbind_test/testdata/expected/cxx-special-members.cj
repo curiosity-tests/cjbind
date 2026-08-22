@@ -24,6 +24,7 @@ public unsafe func OverloadedCtor_value(this_: CPointer<OverloadedCtor>): Int32 
     return _ZNK14OverloadedCtor5valueEv(this_)
 }
 
+// cjbind-options: --respect-cxx-access-specs -- -x c++ -std=c++14
 @C
 public struct OverloadedCtor {
     private var stored: Int32

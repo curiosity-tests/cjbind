@@ -36,6 +36,7 @@ public unsafe func Widget_twice(input: Int32): Int32 {
     return _ZN6Widget5twiceEi(input)
 }
 
+// cjbind-options: --respect-cxx-access-specs -- -x c++ -std=c++14
 @C
 public struct Widget {
     private var value: Int32

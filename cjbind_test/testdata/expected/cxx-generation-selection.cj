@@ -12,6 +12,7 @@ public unsafe func Selection_scale(value: Int32): Int32 {
     return _ZN9Selection5scaleEi(value)
 }
 
+// cjbind-options: --generate types,methods -- -x c++ -std=c++14
 @C
 public struct Selection {
     public var stored: Int32

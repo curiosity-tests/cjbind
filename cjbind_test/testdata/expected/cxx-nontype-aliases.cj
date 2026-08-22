@@ -1,5 +1,6 @@
 package cjbind_ffi
 
+// cjbind-options: -- -x c++ -std=c++14
 public type FixedInts = FixedArray_open0_int_4_close0
 
 @C
@@ -53,6 +54,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct FixedArray_open0_bool_8_close0 {
     public let values: VArray<Bool, $8>
@@ -74,6 +76,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct FixedArray_open0_char_16_close0 {
     public let values: VArray<UInt8, $16>
@@ -95,6 +98,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct FixedArray_open0_int_4_close0 {
     public let values: VArray<Int32, $4>

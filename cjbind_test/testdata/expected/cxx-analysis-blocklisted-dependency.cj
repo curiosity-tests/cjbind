@@ -1,5 +1,6 @@
 package cjbind_ffi
 
+// cjbind-options: --allowlist-type ^PublicRecord$ --blocklist-type ^InternalRecord$ -- -x c++ -std=c++14
 public type InternalAlias = InternalRecord
 
 @C

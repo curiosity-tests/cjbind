@@ -1,5 +1,6 @@
 package cjbind_ffi
 
+// cjbind-options: --vtable-generation -- -x c++ -std=c++14
 @C
 public struct Empty {
     let _cjbind_empty: UInt8

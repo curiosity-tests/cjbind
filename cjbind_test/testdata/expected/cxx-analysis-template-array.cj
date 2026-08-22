@@ -160,6 +160,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct ArrayOfParameter_open0_unsigned_int_6_close0 {
     public let values: VArray<UInt32, $6>
@@ -203,6 +204,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct ArrayOfParameter_open0_short_3_close0 {
     public let values: VArray<Int16, $3>
@@ -245,6 +247,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct ArrayOfParameter_open0_int_3_close0 {
     public let values: VArray<Int32, $3>
@@ -287,6 +290,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct ArrayOfParameter_open0_long_long_3_close0 {
     public let values: VArray<Int64, $3>
@@ -435,6 +439,7 @@ let _ = {
         }
 }
 
+// cjbind-options: -- -x c++ -std=c++14
 @C
 public struct ArrayOfParameter_open0_int_4_close0 {
     public let values: VArray<Int32, $4>

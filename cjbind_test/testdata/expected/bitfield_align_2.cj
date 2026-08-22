@@ -70,6 +70,7 @@ public const MyEnum_TWO: MyEnum = 1
 public const MyEnum_THREE: MyEnum = 2
 public const MyEnum_FOUR: MyEnum = 3
 
+// cjbind-options: -- --target=x86_64-unknown-linux-gnu
 public type MyEnum = UInt32
 
 @C

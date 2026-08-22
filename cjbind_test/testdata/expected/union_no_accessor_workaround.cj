@@ -16,6 +16,7 @@ func __cjbind_write_UInt16_from_UInt32(ptr: CPointer<UInt8>, val: UInt16): Unit 
     unsafe { CPointer<UInt16>(ptr).write(val) }
 }
 
+// cjbind-options: --no-union-accessor-workaround
 @C
 public struct simple_union {
     var _storage: UInt32 = unsafe { zeroValue<UInt32>() }
@@ -53,4 +54,5 @@ let _ = {
         }
 }
 
+// cjbind-options: --no-union-accessor-workaround
 public type simple_union_t = simple_union
