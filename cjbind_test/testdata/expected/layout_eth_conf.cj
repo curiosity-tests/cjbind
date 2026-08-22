@@ -98,42 +98,42 @@ public const RTE_ETH_FLOW_GENEVE: Int64 = 20
 public const RTE_ETH_FLOW_NVGRE: Int64 = 21
 public const RTE_ETH_FLOW_MAX: Int64 = 22
 
-// None of DCB,RSS or VMDQ mode *
+// None of DCB,RSS or VMDQ mode
 public const rte_eth_rx_mq_mode_ETH_MQ_RX_NONE: rte_eth_rx_mq_mode = 0
 
-// For RX side, only RSS is on *
+// For RX side, only RSS is on
 public const rte_eth_rx_mq_mode_ETH_MQ_RX_RSS: rte_eth_rx_mq_mode = 1
 
-// For RX side,only DCB is on. *
+// For RX side,only DCB is on.
 public const rte_eth_rx_mq_mode_ETH_MQ_RX_DCB: rte_eth_rx_mq_mode = 2
 
-// Both DCB and RSS enable *
+// Both DCB and RSS enable
 public const rte_eth_rx_mq_mode_ETH_MQ_RX_DCB_RSS: rte_eth_rx_mq_mode = 3
 
-// Only VMDQ, no RSS nor DCB *
+// Only VMDQ, no RSS nor DCB
 public const rte_eth_rx_mq_mode_ETH_MQ_RX_VMDQ_ONLY: rte_eth_rx_mq_mode = 4
 
-// RSS mode with VMDQ *
+// RSS mode with VMDQ
 public const rte_eth_rx_mq_mode_ETH_MQ_RX_VMDQ_RSS: rte_eth_rx_mq_mode = 5
 
-// Use VMDQ+DCB to route traffic to queues *
+// Use VMDQ+DCB to route traffic to queues
 public const rte_eth_rx_mq_mode_ETH_MQ_RX_VMDQ_DCB: rte_eth_rx_mq_mode = 6
 
-// Enable both VMDQ and DCB in VMDq *
+// Enable both VMDQ and DCB in VMDq
 public const rte_eth_rx_mq_mode_ETH_MQ_RX_VMDQ_DCB_RSS: rte_eth_rx_mq_mode = 7
 
-//  A set of values to identify what method is to be used to route
-//  packets to multiple queues.
+// A set of values to identify what method is to be used to route
+// packets to multiple queues.
 public type rte_eth_rx_mq_mode = UInt32
 
 // A structure used to configure the RX features of an Ethernet port.
 @C
 public struct rte_eth_rxmode {
-    // The multi-queue packet distribution mode to be used, e.g. RSS. *
+    // The multi-queue packet distribution mode to be used, e.g. RSS.
     public var mq_mode: rte_eth_rx_mq_mode = unsafe { zeroValue<rte_eth_rx_mq_mode>() }
-    //< Only used if jumbo_frame enabled. *
+    // Only used if jumbo_frame enabled.
     public var max_rx_pkt_len: UInt32 = unsafe { zeroValue<UInt32>() }
-    //< hdr buf size (header_split enabled).*
+    // hdr buf size (header_split enabled).
     public var split_hdr_size: UInt16 = unsafe { zeroValue<UInt16>() }
     var _bitfield_1: UInt16 = unsafe { zeroValue<UInt16>() }
     public mut prop header_split: UInt16 {
@@ -234,16 +234,16 @@ let _ = {
         }
 }
 
-//< It is in neither DCB nor VT mode. *
+// It is in neither DCB nor VT mode.
 public const rte_eth_tx_mq_mode_ETH_MQ_TX_NONE: rte_eth_tx_mq_mode = 0
 
-//< For TX side,only DCB is on. *
+// For TX side,only DCB is on.
 public const rte_eth_tx_mq_mode_ETH_MQ_TX_DCB: rte_eth_tx_mq_mode = 1
 
-//< For TX side,both DCB and VT is on. *
+// For TX side,both DCB and VT is on.
 public const rte_eth_tx_mq_mode_ETH_MQ_TX_VMDQ_DCB: rte_eth_tx_mq_mode = 2
 
-//< Only VT on, no DCB *
+// Only VT on, no DCB
 public const rte_eth_tx_mq_mode_ETH_MQ_TX_VMDQ_ONLY: rte_eth_tx_mq_mode = 3
 
 // A set of values to identify what method is to be used to transmit
@@ -253,7 +253,7 @@ public type rte_eth_tx_mq_mode = UInt32
 // A structure used to configure the TX features of an Ethernet port.
 @C
 public struct rte_eth_txmode {
-    //< TX multi-queues mode. *
+    // TX multi-queues mode.
     public var mq_mode: rte_eth_tx_mq_mode = unsafe { zeroValue<rte_eth_tx_mq_mode>() }
     public var pvid: UInt16 = unsafe { zeroValue<UInt16>() }
     var _bitfield_1: VArray<UInt8, $2> = unsafe { zeroValue<VArray<UInt8, $2>>() }
@@ -318,11 +318,11 @@ let _ = {
 // Supplying an *rss_hf* equal to zero disables the RSS feature.
 @C
 public struct rte_eth_rss_conf {
-    //< If not NULL, 40-byte hash key. *
+    // If not NULL, 40-byte hash key.
     public var rss_key: CPointer<UInt8>
-    //< hash key length in bytes. *
+    // hash key length in bytes.
     public var rss_key_len: UInt8
-    //< Hash functions to apply - see below. *
+    // Hash functions to apply - see below.
     public var rss_hf: UInt64
     public init(rss_key: CPointer<UInt8>, rss_key_len: UInt8, rss_hf: UInt64) {
         this.rss_key = rss_key
@@ -344,26 +344,26 @@ let _ = {
         }
 }
 
-//< 4 TCs with DCB. *
+// 4 TCs with DCB.
 public const rte_eth_nb_tcs_ETH_4_TCS: rte_eth_nb_tcs = 4
 
-//< 8 TCs with DCB. *
+// 8 TCs with DCB.
 public const rte_eth_nb_tcs_ETH_8_TCS: rte_eth_nb_tcs = 8
 
 // This enum indicates the possible number of traffic classes
 // in DCB configratioins
 public type rte_eth_nb_tcs = UInt32
 
-//< 8 VMDq pools. *
+// 8 VMDq pools.
 public const rte_eth_nb_pools_ETH_8_POOLS: rte_eth_nb_pools = 8
 
-//< 16 VMDq pools. *
+// 16 VMDq pools.
 public const rte_eth_nb_pools_ETH_16_POOLS: rte_eth_nb_pools = 16
 
-//< 32 VMDq pools. *
+// 32 VMDq pools.
 public const rte_eth_nb_pools_ETH_32_POOLS: rte_eth_nb_pools = 32
 
-//< 64 VMDq pools. *
+// 64 VMDq pools.
 public const rte_eth_nb_pools_ETH_64_POOLS: rte_eth_nb_pools = 64
 
 // This enum indicates the possible number of queue pools
@@ -372,9 +372,9 @@ public type rte_eth_nb_pools = UInt32
 
 @C
 public struct rte_eth_vmdq_dcb_conf__cjbind_ty_1 {
-    //< The vlan ID of the received frame *
+    // The vlan ID of the received frame
     public var vlan_id: UInt16
-    //< Bitmask of pools for packet rx *
+    // Bitmask of pools for packet rx
     public var pools: UInt64
     public init(vlan_id: UInt16, pools: UInt64) {
         this.vlan_id = vlan_id
@@ -406,16 +406,17 @@ let _ = {
 // does not match the vlan filter rules.
 @C
 public struct rte_eth_vmdq_dcb_conf {
-    //< With DCB, 16 or 32 pools *
+    // With DCB, 16 or 32 pools
     public var nb_queue_pools: rte_eth_nb_pools
-    //< If non-zero, use a default pool *
+    // If non-zero, use a default pool
     public var enable_default_pool: UInt8
-    //< The default pool, if applicable *
+    // The default pool, if applicable
     public var default_pool: UInt8
-    //< We can have up to 64 filters/mappings *
+    // We can have up to 64 filters/mappings
     public var nb_pool_maps: UInt8
-    //< VMDq vlan pool maps. *
+    // VMDq vlan pool maps.
     public let pool_map: VArray<rte_eth_vmdq_dcb_conf__cjbind_ty_1, $64>
+    // Selects a queue in a pool
     public let dcb_tc: VArray<UInt8, $8>
     public init(nb_queue_pools: rte_eth_nb_pools, enable_default_pool: UInt8, default_pool: UInt8, nb_pool_maps: UInt8,
         pool_map: VArray<rte_eth_vmdq_dcb_conf__cjbind_ty_1, $64>, dcb_tc: VArray<UInt8, $8>) {
@@ -443,9 +444,9 @@ let _ = {
 
 @C
 public struct rte_eth_dcb_rx_conf {
-    //< Possible DCB TCs, 4 or 8 TCs *
+    // Possible DCB TCs, 4 or 8 TCs
     public var nb_tcs: rte_eth_nb_tcs
-    // Traffic class each UP mapped to. *
+    // Traffic class each UP mapped to.
     public let dcb_tc: VArray<UInt8, $8>
     public init(nb_tcs: rte_eth_nb_tcs, dcb_tc: VArray<UInt8, $8>) {
         this.nb_tcs = nb_tcs
@@ -468,9 +469,9 @@ let _ = {
 
 @C
 public struct rte_eth_vmdq_dcb_tx_conf {
-    //< With DCB, 16 or 32 pools. *
+    // With DCB, 16 or 32 pools.
     public var nb_queue_pools: rte_eth_nb_pools
-    // Traffic class each UP mapped to. *
+    // Traffic class each UP mapped to.
     public let dcb_tc: VArray<UInt8, $8>
     public init(nb_queue_pools: rte_eth_nb_pools, dcb_tc: VArray<UInt8, $8>) {
         this.nb_queue_pools = nb_queue_pools
@@ -493,9 +494,9 @@ let _ = {
 
 @C
 public struct rte_eth_dcb_tx_conf {
-    //< Possible DCB TCs, 4 or 8 TCs. *
+    // Possible DCB TCs, 4 or 8 TCs.
     public var nb_tcs: rte_eth_nb_tcs
-    // Traffic class each UP mapped to. *
+    // Traffic class each UP mapped to.
     public let dcb_tc: VArray<UInt8, $8>
     public init(nb_tcs: rte_eth_nb_tcs, dcb_tc: VArray<UInt8, $8>) {
         this.nb_tcs = nb_tcs
@@ -518,7 +519,7 @@ let _ = {
 
 @C
 public struct rte_eth_vmdq_tx_conf {
-    //< VMDq mode, 64 pools. *
+    // VMDq mode, 64 pools.
     public var nb_queue_pools: rte_eth_nb_pools
     public init(nb_queue_pools: rte_eth_nb_pools) {
         this.nb_queue_pools = nb_queue_pools
@@ -540,9 +541,9 @@ let _ = {
 
 @C
 public struct rte_eth_vmdq_rx_conf__cjbind_ty_1 {
-    //< The vlan ID of the received frame *
+    // The vlan ID of the received frame
     public var vlan_id: UInt16
-    //< Bitmask of pools for packet rx *
+    // Bitmask of pools for packet rx
     public var pools: UInt64
     public init(vlan_id: UInt16, pools: UInt64) {
         this.vlan_id = vlan_id
@@ -565,19 +566,19 @@ let _ = {
 
 @C
 public struct rte_eth_vmdq_rx_conf {
-    //< VMDq only mode, 8 or 64 pools *
+    // VMDq only mode, 8 or 64 pools
     public var nb_queue_pools: rte_eth_nb_pools
-    //< If non-zero, use a default pool *
+    // If non-zero, use a default pool
     public var enable_default_pool: UInt8
-    //< The default pool, if applicable *
+    // The default pool, if applicable
     public var default_pool: UInt8
-    //< Enable VT loop back *
+    // Enable VT loop back
     public var enable_loop_back: UInt8
-    //< We can have up to 64 filters/mappings *
+    // We can have up to 64 filters/mappings
     public var nb_pool_maps: UInt8
-    //< Flags from ETH_VMDQ_ACCEPT_* *
+    // Flags from ETH_VMDQ_ACCEPT_*
     public var rx_mode: UInt32
-    //< VMDq vlan pool maps. *
+    // VMDq vlan pool maps.
     public let pool_map: VArray<rte_eth_vmdq_rx_conf__cjbind_ty_1, $64>
     public init(nb_queue_pools: rte_eth_nb_pools, enable_default_pool: UInt8, default_pool: UInt8,
         enable_loop_back: UInt8, nb_pool_maps: UInt8, rx_mode: UInt32,
@@ -605,61 +606,61 @@ let _ = {
         }
 }
 
-//< Disable FDIR support. *
+// Disable FDIR support.
 public const rte_fdir_mode_RTE_FDIR_MODE_NONE: rte_fdir_mode = 0
 
-//< Enable FDIR signature filter mode. *
+// Enable FDIR signature filter mode.
 public const rte_fdir_mode_RTE_FDIR_MODE_SIGNATURE: rte_fdir_mode = 1
 
-//< Enable FDIR perfect filter mode. *
+// Enable FDIR perfect filter mode.
 public const rte_fdir_mode_RTE_FDIR_MODE_PERFECT: rte_fdir_mode = 2
 
-//< Enable FDIR filter mode - MAC VLAN. *
+// Enable FDIR filter mode - MAC VLAN.
 public const rte_fdir_mode_RTE_FDIR_MODE_PERFECT_MAC_VLAN: rte_fdir_mode = 3
 
-//< Enable FDIR filter mode - tunnel. *
+// Enable FDIR filter mode - tunnel.
 public const rte_fdir_mode_RTE_FDIR_MODE_PERFECT_TUNNEL: rte_fdir_mode = 4
 
-//  Flow Director setting modes: none, signature or perfect.
+// Flow Director setting modes: none, signature or perfect.
 public type rte_fdir_mode = UInt32
 
-//< 64k. *
+// 64k.
 public const rte_fdir_pballoc_type_RTE_FDIR_PBALLOC_64K: rte_fdir_pballoc_type = 0
 
-//< 128k. *
+// 128k.
 public const rte_fdir_pballoc_type_RTE_FDIR_PBALLOC_128K: rte_fdir_pballoc_type = 1
 
-//< 256k. *
+// 256k.
 public const rte_fdir_pballoc_type_RTE_FDIR_PBALLOC_256K: rte_fdir_pballoc_type = 2
 
-//  Memory space that can be configured to store Flow Director filters
-//  in the board memory.
+// Memory space that can be configured to store Flow Director filters
+// in the board memory.
 public type rte_fdir_pballoc_type = UInt32
 
-//< Never report FDIR hash. *
+// Never report FDIR hash.
 public const rte_fdir_status_mode_RTE_FDIR_NO_REPORT_STATUS: rte_fdir_status_mode = 0
 
-//< Only report FDIR hash for matching pkts. *
+// Only report FDIR hash for matching pkts.
 public const rte_fdir_status_mode_RTE_FDIR_REPORT_STATUS: rte_fdir_status_mode = 1
 
-//< Always report FDIR hash. *
+// Always report FDIR hash.
 public const rte_fdir_status_mode_RTE_FDIR_REPORT_STATUS_ALWAYS: rte_fdir_status_mode = 2
 
-//  Select report mode of FDIR hash information in RX descriptors.
+// Select report mode of FDIR hash information in RX descriptors.
 public type rte_fdir_status_mode = UInt32
 
 // A structure used to define the input for IPV4 flow
 @C
 public struct rte_eth_ipv4_flow {
-    //< IPv4 source address in big endian. *
+    // IPv4 source address in big endian.
     public var src_ip: UInt32
-    //< IPv4 destination address in big endian. *
+    // IPv4 destination address in big endian.
     public var dst_ip: UInt32
-    //< Type of service to match. *
+    // Type of service to match.
     public var tos: UInt8
-    //< Time to live to match. *
+    // Time to live to match.
     public var ttl: UInt8
-    //< Protocol, next header in big endian. *
+    // Protocol, next header in big endian.
     public var proto: UInt8
     public init(src_ip: UInt32, dst_ip: UInt32, tos: UInt8, ttl: UInt8, proto: UInt8) {
         this.src_ip = src_ip
@@ -686,15 +687,15 @@ let _ = {
 // A structure used to define the input for IPV6 flow
 @C
 public struct rte_eth_ipv6_flow {
-    //< IPv6 source address in big endian. *
+    // IPv6 source address in big endian.
     public let src_ip: VArray<UInt32, $4>
-    //< IPv6 destination address in big endian. *
+    // IPv6 destination address in big endian.
     public let dst_ip: VArray<UInt32, $4>
-    //< Traffic class to match. *
+    // Traffic class to match.
     public var tc: UInt8
-    //< Protocol, next header to match. *
+    // Protocol, next header to match.
     public var proto: UInt8
-    //< Hop limits to match. *
+    // Hop limits to match.
     public var hop_limits: UInt8
     public init(src_ip: VArray<UInt32, $4>, dst_ip: VArray<UInt32, $4>, tc: UInt8, proto: UInt8, hop_limits: UInt8) {
         this.src_ip = src_ip
@@ -718,27 +719,27 @@ let _ = {
         }
 }
 
-//  A structure used to configure FDIR masks that are used by the device
-//  to match the various fields of RX packet headers.
+// A structure used to configure FDIR masks that are used by the device
+// to match the various fields of RX packet headers.
 @C
 public struct rte_eth_fdir_masks {
-    //< Bit mask for vlan_tci in big endian *
+    // Bit mask for vlan_tci in big endian
     public var vlan_tci_mask: UInt16
-    // Bit mask for ipv4 flow in big endian. *
+    // Bit mask for ipv4 flow in big endian.
     public let ipv4_mask: rte_eth_ipv4_flow
-    // Bit maks for ipv6 flow in big endian. *
+    // Bit maks for ipv6 flow in big endian.
     public let ipv6_mask: rte_eth_ipv6_flow
-    // Bit mask for L4 source port in big endian. *
+    // Bit mask for L4 source port in big endian.
     public var src_port_mask: UInt16
-    // Bit mask for L4 destination port in big endian. *
+    // Bit mask for L4 destination port in big endian.
     public var dst_port_mask: UInt16
     // 6 bit mask for proper 6 bytes of Mac address, bit 0 matches the
-    //first byte on the wire *
+    // first byte on the wire
     public var mac_addr_byte_mask: UInt8
-    // Bit mask for tunnel ID in big endian. *
+    // Bit mask for tunnel ID in big endian.
     public var tunnel_id_mask: UInt32
-    //< 1 - Match tunnel type,
-    //0 - Ignore tunnel type. *
+    // 1 - Match tunnel type,
+    // 0 - Ignore tunnel type.
     public var tunnel_type_mask: UInt8
     public init(vlan_tci_mask: UInt16, ipv4_mask: rte_eth_ipv4_flow, ipv6_mask: rte_eth_ipv6_flow,
         src_port_mask: UInt16, dst_port_mask: UInt16, mac_addr_byte_mask: UInt8, tunnel_id_mask: UInt32,
@@ -781,8 +782,12 @@ public type rte_eth_payload_type = UInt32
 // flexible payload for filter
 @C
 public struct rte_eth_flex_payload_cfg {
-    //< Payload type *
+    // Payload type
     public var type_: rte_eth_payload_type
+    // Offset in bytes from the beginning of packet's payload
+    // src_offset[i] indicates the flexbyte i's offset in original
+    // packet payload. This value should be less than
+    // flex_payload_limit in struct rte_eth_fdir_info.
     public let src_offset: VArray<UInt16, $16>
     public init(type_: rte_eth_payload_type, src_offset: VArray<UInt16, $16>) {
         this.type_ = type_
@@ -808,6 +813,7 @@ let _ = {
 @C
 public struct rte_eth_fdir_flex_mask {
     public var flow_type: UInt16
+    // Mask for the whole flexible payload
     public let mask: VArray<UInt8, $16>
     public init(flow_type: UInt16, mask: VArray<UInt8, $16>) {
         this.flow_type = flow_type
@@ -832,11 +838,13 @@ let _ = {
 // include flex payload and flex mask
 @C
 public struct rte_eth_fdir_flex_conf {
-    //< The number of following payload cfg *
+    // The number of following payload cfg
     public var nb_payloads: UInt16
-    //< The number of following mask *
+    // The number of following mask
     public var nb_flexmasks: UInt16
+    // Flex payload configuration for each payload type
     public let flex_set: VArray<rte_eth_flex_payload_cfg, $8>
+    // Flex mask configuration for each flow type
     public let flex_mask: VArray<rte_eth_fdir_flex_mask, $22>
     public init(nb_payloads: UInt16, nb_flexmasks: UInt16, flex_set: VArray<rte_eth_flex_payload_cfg, $8>,
         flex_mask: VArray<rte_eth_fdir_flex_mask, $22>) {
@@ -866,15 +874,16 @@ let _ = {
 // If mode is RTE_FDIR_DISABLE, the pballoc value is ignored.
 @C
 public struct rte_fdir_conf {
-    //< Flow Director mode. *
+    // Flow Director mode.
     public var mode: rte_fdir_mode
-    //< Space for FDIR filters. *
+    // Space for FDIR filters.
     public var pballoc: rte_fdir_pballoc_type
-    //< How to report FDIR hash. *
+    // How to report FDIR hash.
     public var status: rte_fdir_status_mode
-    // RX queue of packets matching a "drop" filter in perfect mode. *
+    // RX queue of packets matching a "drop" filter in perfect mode.
     public var drop_queue: UInt8
     public let mask: rte_eth_fdir_masks
+    // Flex payload configuration.
     public let flex_conf: rte_eth_fdir_flex_conf
     public init(mode: rte_fdir_mode, pballoc: rte_fdir_pballoc_type, status: rte_fdir_status_mode, drop_queue: UInt8,
         mask: rte_eth_fdir_masks, flex_conf: rte_eth_fdir_flex_conf) {
@@ -903,9 +912,9 @@ let _ = {
 // A structure used to enable/disable specific device interrupts.
 @C
 public struct rte_intr_conf {
-    // enable/disable lsc interrupt. 0 (default) - disable, 1 enable *
+    // enable/disable lsc interrupt. 0 (default) - disable, 1 enable
     public var lsc: UInt16
-    // enable/disable rxq interrupt. 0 (default) - disable, 1 enable *
+    // enable/disable rxq interrupt. 0 (default) - disable, 1 enable
     public var rxq: UInt16
     public init(lsc: UInt16, rxq: UInt16) {
         this.lsc = lsc
@@ -928,10 +937,13 @@ let _ = {
 
 @C
 public struct rte_eth_conf__cjbind_ty_1 {
-    //< Port RSS configuration *
+    // Port RSS configuration
     public let rss_conf: rte_eth_rss_conf
+    // Port vmdq+dcb configuration.
     public let vmdq_dcb_conf: rte_eth_vmdq_dcb_conf
+    // Port dcb RX configuration.
     public let dcb_rx_conf: rte_eth_dcb_rx_conf
+    // Port vmdq RX configuration.
     public let vmdq_rx_conf: rte_eth_vmdq_rx_conf
     public init(rss_conf: rte_eth_rss_conf, vmdq_dcb_conf: rte_eth_vmdq_dcb_conf, dcb_rx_conf: rte_eth_dcb_rx_conf,
         vmdq_rx_conf: rte_eth_vmdq_rx_conf) {
@@ -979,34 +991,34 @@ let _ = {
 // configuration settings may be needed.
 @C
 public struct rte_eth_conf {
-    //< bitmap of ETH_LINK_SPEED_XXX of speeds to be
-    //used. ETH_LINK_SPEED_FIXED disables link
-    //autonegotiation, and a unique speed shall be
-    //set. Otherwise, the bitmap defines the set of
-    //speeds to be advertised. If the special value
-    //ETH_LINK_SPEED_AUTONEG (0) is used, all speeds
-    //supported are advertised. *
+    // bitmap of ETH_LINK_SPEED_XXX of speeds to be
+    // used. ETH_LINK_SPEED_FIXED disables link
+    // autonegotiation, and a unique speed shall be
+    // set. Otherwise, the bitmap defines the set of
+    // speeds to be advertised. If the special value
+    // ETH_LINK_SPEED_AUTONEG (0) is used, all speeds
+    // supported are advertised.
     public var link_speeds: UInt32
-    //< Port RX configuration. *
+    // Port RX configuration.
     public let rxmode: rte_eth_rxmode
-    //< Port TX configuration. *
+    // Port TX configuration.
     public let txmode: rte_eth_txmode
-    //< Loopback operation mode. By default the value
-    //is 0, meaning the loopback mode is disabled.
-    //Read the datasheet of given ethernet controller
-    //for details. The possible values of this field
-    //are defined in implementation of each driver. *
+    // Loopback operation mode. By default the value
+    // is 0, meaning the loopback mode is disabled.
+    // Read the datasheet of given ethernet controller
+    // for details. The possible values of this field
+    // are defined in implementation of each driver.
     public var lpbk_mode: UInt32
-    //< Port RX filtering configuration (union). *
+    // Port RX filtering configuration (union).
     public let rx_adv_conf: rte_eth_conf__cjbind_ty_1
-    //< Port TX DCB configuration (union). *
+    // Port TX DCB configuration (union).
     public let tx_adv_conf: rte_eth_conf__cjbind_ty_2
     // Currently,Priority Flow Control(PFC) are supported,if DCB with PFC
-    //is needed,and the variable must be set ETH_DCB_PFC_SUPPORT. *
+    // is needed,and the variable must be set ETH_DCB_PFC_SUPPORT.
     public var dcb_capability_en: UInt32
-    //< FDIR configuration. *
+    // FDIR configuration.
     public let fdir_conf: rte_fdir_conf
-    //< Interrupt mode configuration. *
+    // Interrupt mode configuration.
     public let intr_conf: rte_intr_conf
     public init(link_speeds: UInt32, rxmode: rte_eth_rxmode, txmode: rte_eth_txmode, lpbk_mode: UInt32,
         rx_adv_conf: rte_eth_conf__cjbind_ty_1, tx_adv_conf: rte_eth_conf__cjbind_ty_2, dcb_capability_en: UInt32,

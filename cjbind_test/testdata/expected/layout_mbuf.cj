@@ -134,7 +134,7 @@ public type MARKER64 = VArray<UInt64, $0>
 // The atomic counter structure.
 @C
 public struct rte_atomic16_t {
-    //< An internal counter value. *
+    // An internal counter value.
     public var cnt: Int16
     public init(cnt: Int16) {
         this.cnt = cnt
@@ -352,6 +352,8 @@ let _ = {
 @C
 public struct rte_mbuf__cjbind_ty_3__cjbind_ty_1 {
     public let __cjbind_anon_1: rte_mbuf__cjbind_ty_3__cjbind_ty_1__cjbind_ty_1
+    // First 4 flexible bytes or FD ID, dependent on
+    // PKT_RX_FDIR_* flag in ol_flags.
     public var hi: UInt32
     public init(__cjbind_anon_1: rte_mbuf__cjbind_ty_3__cjbind_ty_1__cjbind_ty_1, hi: UInt32) {
         this.__cjbind_anon_1 = __cjbind_anon_1
@@ -575,7 +577,7 @@ public struct rte_mbuf {
     }
 }
 
-//< Pool from which mbuf was allocated. *
+// Pool from which mbuf was allocated.
 @C
 public struct rte_mempool {
     let _cjbind_empty: UInt8

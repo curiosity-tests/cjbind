@@ -308,6 +308,16 @@ public class Cursor <: ToString & Hashable & Equatable<Cursor> {
         }
     }
 
+    public func sourceRange(): ?SourceRange {
+        let range = this.extent()
+        unsafe {
+            if (clang_Range_isNull(range) != 0) {
+                return None
+            }
+        }
+        return Some(SourceRange(range))
+    }
+
     public func rawComment(): Option<String> {
         let s = unsafe {
             cxstringToString(clang_Cursor_getRawCommentText(x))
@@ -1451,6 +1461,26 @@ public class SourceLocation {
     }
 }
 
+public class SourceRange {
+    let x: CXSourceRange
+
+    init(x: CXSourceRange) {
+        this.x = x
+    }
+
+    public func startLocation(): SourceLocation {
+        unsafe {
+            return SourceLocation(clang_getRangeStart(x))
+        }
+    }
+
+    public func endLocation(): SourceLocation {
+        unsafe {
+            return SourceLocation(clang_getRangeEnd(x))
+        }
+    }
+}
+
 public class File {
     let x: CXFile
     init(x: CXFile) {
@@ -1912,6 +1942,10 @@ public class ClangToken {
 
     public func spelling(): String {
         return _spelling
+    }
+
+    public func sourceRange(): SourceRange {
+        return SourceRange(extent)
     }
 }
 

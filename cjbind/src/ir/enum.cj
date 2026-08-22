@@ -68,6 +68,7 @@ public class Enum {
         }.getOrDefault {=> true}
 
         let definition = declaration.definition().getOrDefault {=> declaration}
+        let comments = MemberComments(definition, clang.CXCursorKind_CXCursor_EnumConstantDecl)
         definition.visit {
             cursor =>
                 if (cursor.kind() == clang.CXCursorKind_CXCursor_EnumConstantDecl) {
@@ -86,12 +87,16 @@ public class Enum {
                     }
 
                     if (let Some(val) <- value) {
-                        let annotations = parseAnnotations(cursor.comment())
+                        let annotations: ?Annotations = if (comments.preservesParsedComment(cursor)) {
+                            parseAnnotations(cursor.comment())
+                        } else {
+                            None
+                        }
                         if (annotations.map({value => value.hide()}).getOrDefault({=> false})) {
                             return clang.CXChildVisitResult_CXChildVisit_Continue
                         }
                         let vname = cursor.spelling()
-                        let comment = cursor.rawComment()
+                        let comment = comments.comment(cursor)
                         variants.add(EnumVariant(vname, comment, val))
                     } else {
                         eprintln("Warning: failed to get value for enum variant ${cursor.spelling()}")

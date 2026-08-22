@@ -5,7 +5,7 @@ public const SourceAnnotationVariantHide_SourceAnnotationFollowingVariant: Sourc
 
 public type SourceAnnotationVariantHide = UInt32
 
-// <div cjbind opaque>Opaque record documentation.</div> *
+// <div cjbind opaque>Opaque record documentation.</div>
 @C
 public struct SourceAnnotationOpaqueRecord {
     let _cjbind_opaque_blob: UInt32

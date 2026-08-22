@@ -67,6 +67,7 @@ func __cjbind_bitfield_uint64_to_int64(value: UInt64): Int64 {
 
 @C
 public struct A {
+    // 0     7
     public let name: VArray<UInt8, $7> = unsafe { zeroValue<VArray<UInt8, $7>>() }
     var _bitfield_1: VArray<UInt8, $3> = unsafe { zeroValue<VArray<UInt8, $3>>() }
     public mut prop firmness: UInt8 {
@@ -114,6 +115,7 @@ public struct A {
             unsafe { __cjbind_bitfield_write(CPointer<UInt8>(inout this._bitfield_1), 14, 10, UInt64(value)) }
         }
     }
+    // 10     1
     public var maxYield: UInt8 = unsafe { zeroValue<UInt8>() }
     var _bitfield_2: VArray<UInt8, $5> = unsafe { zeroValue<VArray<UInt8, $5>>() }
     public mut prop minYield: UInt8 {
@@ -134,6 +136,7 @@ public struct A {
             unsafe { __cjbind_bitfield_write(CPointer<UInt8>(inout this._bitfield_2), 4, 4, UInt64(value)) }
         }
     }
+    // 16     8
     public var description1: CPointer<UInt8> = unsafe { zeroValue<CPointer<UInt8>>() }
     let _cjbind_bitfield_alignment_marker: VArray<UInt64, $0> = unsafe { zeroValue<VArray<UInt64, $0>>() }
     public init() {}

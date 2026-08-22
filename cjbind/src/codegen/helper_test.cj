@@ -16,6 +16,12 @@ public class AttributesDocTest {
     }
 
     @TestCase
+    func insertsASeparatorForNormalizedComments(): Unit {
+        let ts = Attributes.doc("hello world")
+        @Expect(ts.toString(), "// hello world")
+    }
+
+    @TestCase
     func multiLine(): Unit {
         let ts = Attributes.doc(" line1\n line2\n line3")
         let result = ts.toString()

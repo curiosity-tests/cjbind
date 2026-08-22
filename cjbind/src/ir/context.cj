@@ -737,6 +737,8 @@ public class CjbindContext <: Resource {
         if (comp.hasFields()) {
             return
         }
+        let declaration = ty.declaration().definition().getOrDefault({=> ty.declaration()})
+        let comments = MemberComments(declaration, clang.CXCursorKind_CXCursor_FieldDecl)
         ty.visitFields {
             field =>
                 let bitWidth: ?UInt32 = if (field.isBitField()) {
@@ -776,7 +778,7 @@ public class CjbindContext <: Resource {
                             Some(spelling)
                         },
                         fieldType,
-                        field.rawComment(),
+                        comments.comment(field),
                         bitWidth,
                         field.offsetOfField().ok(),
                         isPublic: field.isPublic()

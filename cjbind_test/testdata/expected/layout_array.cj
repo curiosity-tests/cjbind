@@ -34,7 +34,7 @@ public type rte_mempool_dequeue_t = CFunc<(mp: CPointer<rte_mempool>, obj_table:
 // Return the number of available objects in the external pool.
 public type rte_mempool_get_count = CFunc<(mp: CPointer<rte_mempool>) -> UInt32>
 
-// Structure defining mempool operations structure *
+// Structure defining mempool operations structure
 @C
 public struct rte_mempool_ops {
     let _cjbind_opaque_blob: VArray<UInt8, $128>
@@ -46,7 +46,7 @@ public struct rte_mempool_ops {
 // The rte_spinlock_t type.
 @C
 public struct rte_spinlock_t {
-    //< lock status 0 = unlocked, 1 = locked *
+    // lock status 0 = unlocked, 1 = locked
     public var locked: Int32
     public init(locked: Int32) {
         this.locked = locked

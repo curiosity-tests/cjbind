@@ -3,26 +3,28 @@ package cjbind_ffi
 public const RTE_CACHE_LINE_SIZE: Int64 = 64
 public const RTE_LIBRTE_IP_FRAG_MAX_FRAG: Int64 = 4
 
-//< index of last fragment *
+// index of last fragment
 public const IP_LAST_FRAG_IDX: _cjbind_ty_1 = 0
 
-//< index of first fragment *
+// index of first fragment
 public const IP_FIRST_FRAG_IDX: _cjbind_ty_1 = 1
 
-//< minimum number of fragments *
+// minimum number of fragments
 public const IP_MIN_FRAG_NUM: _cjbind_ty_1 = 2
+
+// maximum number of fragments per packet
 public const IP_MAX_FRAG_NUM: _cjbind_ty_1 = 4
 
 public type _cjbind_ty_1 = UInt32
 
-// @internal fragmented mbuf *
+// @internal fragmented mbuf
 @C
 public struct ip_frag {
-    //< offset into the packet *
+    // offset into the packet
     public var ofs: UInt16
-    //< length of fragment *
+    // length of fragment
     public var len: UInt16
-    //< fragment mbuf *
+    // fragment mbuf
     public var mb: CPointer<rte_mbuf>
     public init(ofs: UInt16, len: UInt16, mb: CPointer<rte_mbuf>) {
         this.ofs = ofs
@@ -44,14 +46,14 @@ let _ = {
         }
 }
 
-// @internal <src addr, dst_addr, id> to uniquely indetify fragmented datagram. *
+// @internal <src addr, dst_addr, id> to uniquely indetify fragmented datagram.
 @C
 public struct ip_frag_key {
-    //< src address, first 8 bytes used for IPv4 *
+    // src address, first 8 bytes used for IPv4
     public let src_dst: VArray<UInt64, $4>
-    //< dst address *
+    // dst address
     public var id: UInt32
-    //< src/dst key length *
+    // src/dst key length
     public var key_len: UInt32
     public init(src_dst: VArray<UInt64, $4>, id: UInt32, key_len: UInt32) {
         this.src_dst = src_dst
@@ -129,7 +131,7 @@ let _ = {
         }
 }
 
-// fragmentation table statistics *
+// fragmentation table statistics
 @C
 public struct ip_frag_tbl_stat {
     let _cjbind_opaque_blob: VArray<UInt8, $64>
@@ -138,7 +140,7 @@ public struct ip_frag_tbl_stat {
     }
 }
 
-// fragmentation table *
+// fragmentation table
 @C
 public struct rte_ip_frag_tbl {
     let _cjbind_opaque_blob: VArray<UInt8, $128>
@@ -147,7 +149,7 @@ public struct rte_ip_frag_tbl {
     }
 }
 
-//< fragment mbuf *
+// fragment mbuf
 @C
 public struct rte_mbuf {
     let _cjbind_empty: UInt8

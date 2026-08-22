@@ -48,15 +48,15 @@ public type cmdline_parse_token_hdr_t = cmdline_token_hdr
 // -1 on error and 0 on success.
 @C
 public struct cmdline_token_ops {
-    // parse(token ptr, buf, res pts, buf len) *
+    // parse(token ptr, buf, res pts, buf len)
     public var parse: CFunc<(arg1: CPointer<cmdline_parse_token_hdr_t>, arg2: CPointer<UInt8>, arg3: CPointer<Unit>,
         arg4: UInt32) -> Int32>
-    // return the num of possible choices for this token *
+    // return the num of possible choices for this token
     public var complete_get_nb: CFunc<(arg1: CPointer<cmdline_parse_token_hdr_t>) -> Int32>
-    // return the elt x for this token (token, idx, dstbuf, size) *
+    // return the elt x for this token (token, idx, dstbuf, size)
     public var complete_get_elt: CFunc<(arg1: CPointer<cmdline_parse_token_hdr_t>, arg2: Int32, arg3: CPointer<UInt8>,
         arg4: UInt32) -> Int32>
-    // get help for this token (token, dstbuf, size) *
+    // get help for this token (token, dstbuf, size)
     public var get_help: CFunc<(arg1: CPointer<cmdline_parse_token_hdr_t>, arg2: CPointer<UInt8>, arg3: UInt32) -> Int32>
     public init(
         parse: CFunc<(arg1: CPointer<cmdline_parse_token_hdr_t>, arg2: CPointer<UInt8>, arg3: CPointer<Unit>,

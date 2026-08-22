@@ -217,6 +217,7 @@ public class CompInfo <: IsOpaque<Option<Layout>> & Trace<Tracer, Item> {
         }.getOrDefault({=> true})
 
         let maybeAnonymousStructField: Box<?(TypeId, clang.Type, ?UIntNative)> = Box(None)
+        let comments = MemberComments(cursor.value, clang.CXCursorKind_CXCursor_FieldDecl)
         cursor.value.visit {
             cur =>
                 let k = cur.kind()
@@ -274,7 +275,7 @@ public class CompInfo <: IsOpaque<Option<Layout>> & Trace<Tracer, Item> {
                         ctx
                     )
 
-                    let comment = cur.rawComment()
+                    let comment = comments.comment(cur)
                     let spell = cur.spelling()
                     let offset = cur.offsetOfField().ok()
 

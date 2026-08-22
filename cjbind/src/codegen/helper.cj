@@ -19,7 +19,12 @@ public class Attributes {
         let ret = TokenStream()
 
         for ((idx, line) in lines.iterator().enumerate()) {
-            ret.appendLiteral("//${line}")
+            let prefix = if (line.isEmpty() || line.startsWith(" ")) {
+                "//"
+            } else {
+                "// "
+            }
+            ret.appendLiteral("${prefix}${line}")
             if (idx != lines.size - 1) {
                 ret.appendLiteral("\n")
             }

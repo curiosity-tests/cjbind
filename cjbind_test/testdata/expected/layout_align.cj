@@ -145,15 +145,15 @@ func __cjbind_bitfield_uint64_to_int64(value: UInt64): Int64 {
 
 @C
 public struct rte_kni_fifo {
-    //< Next position to be written*
+    // Next position to be written
     public var write: UInt32
-    //< Next position to be read *
+    // Next position to be read
     public var read: UInt32
-    //< Circular buffer length *
+    // Circular buffer length
     public var len: UInt32
-    //< Pointer size - for 32/64 bit OS *
+    // Pointer size - for 32/64 bit OS
     public var elem_size: UInt32
-    //< The buffer contains mbuf pointers *
+    // The buffer contains mbuf pointers
     public let buffer: VArray<CPointer<Unit>, $0> = unsafe { zeroValue<VArray<CPointer<Unit>, $0>>() }
     public init(write: UInt32, read: UInt32, len: UInt32, elem_size: UInt32) {
         this.write = write
@@ -186,7 +186,7 @@ let _ = {
 
 @C
 public struct rte_eth_link {
-    //< ETH_SPEED_NUM_ *
+    // ETH_SPEED_NUM_
     public var link_speed: UInt32 = unsafe { zeroValue<UInt32>() }
     var _bitfield_1: VArray<UInt16, $2> = unsafe { zeroValue<VArray<UInt16, $2>>() }
     public mut prop link_duplex: UInt16 {
