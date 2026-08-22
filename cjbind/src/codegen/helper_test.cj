@@ -11,7 +11,7 @@ import cjbind.ir.*
 public class AttributesDocTest {
     @TestCase
     func singleLine(): Unit {
-        let ts = Attributes.doc(" hello world")
+        let ts = Attributes.doc("hello world")
         @Expect(ts.toString(), "// hello world")
     }
 
@@ -23,7 +23,7 @@ public class AttributesDocTest {
 
     @TestCase
     func multiLine(): Unit {
-        let ts = Attributes.doc(" line1\n line2\n line3")
+        let ts = Attributes.doc("line1\nline2\nline3")
         let result = ts.toString()
         @Expect(result.contains("// line1"), true)
         @Expect(result.contains("// line2"), true)
@@ -39,13 +39,19 @@ public class AttributesDocTest {
 
     @TestCase
     func preservesWhitespace(): Unit {
-        let ts = Attributes.doc("   indented")
+        let ts = Attributes.doc("  indented")
         @Expect(ts.toString(), "//   indented")
     }
 
     @TestCase
+    func addsASeparatorBeforeSemanticIndentation(): Unit {
+        let ts = Attributes.doc("- item\n  continuation\n     example")
+        @Expect(ts.toString(), "// - item\n//   continuation\n//      example")
+    }
+
+    @TestCase
     func trailingNewline(): Unit {
-        let ts = Attributes.doc(" a\n b")
+        let ts = Attributes.doc("a\nb")
         let result = ts.toString()
         // Should have newline between lines but not trailing
         @Expect(result.contains("\n"), true)

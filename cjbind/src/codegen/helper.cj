@@ -19,7 +19,7 @@ public class Attributes {
         let ret = TokenStream()
 
         for ((idx, line) in lines.iterator().enumerate()) {
-            let prefix = if (line.isEmpty() || line.startsWith(" ")) {
+            let prefix = if (line.isEmpty()) {
                 "//"
             } else {
                 "// "

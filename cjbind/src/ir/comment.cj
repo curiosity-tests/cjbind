@@ -1,6 +1,7 @@
 package cjbind.ir
 
 import std.collection.{ArrayList, collectArray}
+import std.unicode.*
 import cjbind.clang
 
 public enum CommentKind {
@@ -51,11 +52,111 @@ public func preprocessSingleLines(comment: String): String {
     return String.join(lines, delimiter: "\n")
 }
 
+func stripCommentSeparator(content: String): String {
+    if (content.startsWith(" ") || content.startsWith("\t")) {
+        return content[1..]
+    }
+    return content
+}
+
+func commonBlockIndent(lines: Array<String>): Int64 {
+    var commonIndent: Int64 = -1
+    for (line in lines) {
+        let withoutTrailing = line.trimEnd()
+        if (withoutTrailing.trimAscii().isEmpty()) {
+            continue
+        }
+        let withoutLeading = withoutTrailing.trimStart()
+        let indent = withoutTrailing.size - withoutLeading.size
+        if (commonIndent < 0 || indent < commonIndent) {
+            commonIndent = indent
+        }
+    }
+    return if (commonIndent < 0) {
+        0
+    } else {
+        commonIndent
+    }
+}
+
+func isStarDecorationLine(line: String): Bool {
+    let withoutTrailing = line.trimEnd()
+    if (withoutTrailing.trimAscii().isEmpty()) {
+        return false
+    }
+    let withoutLeading = withoutTrailing.trimStart()
+    let afterStars = withoutLeading.trimStart([r'*'])
+    return afterStars.size < withoutLeading.size && (afterStars.isEmpty() || afterStars.startsWith(" ") ||
+        afterStars.startsWith("\t"))
+}
+
+func usesColumnZeroStarDecoration(lines: Array<String>, startsInline: Bool): Bool {
+    var contentLines = 0
+    var starLines = 0
+    for (line in lines) {
+        if (line.trimAscii().isEmpty()) {
+            continue
+        }
+        contentLines++
+        if (isStarDecorationLine(line)) {
+            starLines++
+        }
+    }
+    return starLines > 0 && (starLines == contentLines || (startsInline && starLines + 1 == contentLines))
+}
+
+// Strip the block's source-code margin and optional leading star while keeping
+// indentation inside the comment body. The remaining indentation carries
+// Markdown list, code-block, table, and ASCII-art structure.
+func preprocessBlockLine(line: String, commonIndent: Int64, stripLeading: Bool, stripColumnZeroStars: Bool): String {
+    let withoutTrailing = line.trimEnd()
+    if (withoutTrailing.trimAscii().isEmpty()) {
+        return ""
+    }
+
+    let withoutLeading = withoutTrailing.trimStart()
+    let indent = withoutTrailing.size - withoutLeading.size
+    if (indent > 0 || stripColumnZeroStars) {
+        let afterStars = withoutLeading.trimStart([r'*'])
+        if (afterStars.size < withoutLeading.size && (afterStars.isEmpty() || afterStars.startsWith(" ") ||
+            afterStars.startsWith("\t"))) {
+            return stripCommentSeparator(afterStars)
+        }
+    }
+
+    if (stripLeading) {
+        return withoutLeading
+    }
+    if (commonIndent > 0 && indent >= commonIndent) {
+        return withoutTrailing[commonIndent..]
+    }
+    return withoutTrailing
+}
+
+func dedentBlockLines(lines: Array<String>): Array<String> {
+    let commonIndent = commonBlockIndent(lines)
+    return lines.map {
+        line =>
+            let withoutTrailing = line.trimEnd()
+            if (withoutTrailing.trimAscii().isEmpty()) {
+                ""
+            } else {
+                let withoutLeading = withoutTrailing.trimStart()
+                let indent = withoutTrailing.size - withoutLeading.size
+                if (commonIndent > 0 && indent >= commonIndent) {
+                    withoutTrailing[commonIndent..]
+                } else {
+                    withoutTrailing
+                }
+            }
+    } |> collectArray
+}
+
 public func preprocessMultiLines(comment: String): String {
     let trimmed = comment.trimAscii()
     let markerSize = if (trimmed.startsWith("/**<") || trimmed.startsWith("/*!<")) {
         4
-    } else if (trimmed.startsWith("/**") || trimmed.startsWith("/*!")) {
+    } else if (trimmed.startsWith("/**") || trimmed.startsWith("/*!") || trimmed.startsWith("/*-")) {
         3
     } else if (trimmed.startsWith("/*")) {
         2
@@ -68,9 +169,14 @@ public func preprocessMultiLines(comment: String): String {
     }
 
     let body = trimmed[markerSize..end]
-    let lines = body.lines().map {
-        line => line.trimAscii().trimStart([r'*']).trimAscii()
+    let rawLines = body.lines() |> collectArray
+    let sourceIndent = commonBlockIndent(rawLines)
+    let startsInline = !body.startsWith("\n") && !body.startsWith("\r\n")
+    let stripColumnZeroStars = usesColumnZeroStarDecoration(rawLines, startsInline)
+    let undecoratedLines = rawLines.map {
+        line: String => preprocessBlockLine(line, sourceIndent, startsInline, stripColumnZeroStars)
     } |> collectArray
+    let lines = dedentBlockLines(undecoratedLines)
 
     var first = 0
     var last = lines.size
