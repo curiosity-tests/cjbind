@@ -156,6 +156,9 @@ public func generate(opts: CjbindOptions): String {
 
     // Clone clangArgs so we do not mutate the caller's options object
     let localArgs = ArrayList<String>(opts.clangArgs)
+    if (!localArgs.any({arg => arg == "-fparse-all-comments"})) {
+        localArgs.add("-fparse-all-comments")
+    }
 
     if (opts.objc) {
         localArgs.add("-x")

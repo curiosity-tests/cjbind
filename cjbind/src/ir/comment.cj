@@ -298,10 +298,8 @@ class MemberComments {
                     }
                 }
 
-                if (isDocumentationComment(rawComment)) {
-                    if (let Some(child) <- next && child.kind == memberKind) {
-                        this.add(child.key, comment)
-                    }
+                if (let Some(child) <- next && child.kind == memberKind) {
+                    this.add(child.key, comment)
                 }
             }
         } finally {
@@ -408,10 +406,4 @@ func isExplicitTrailingComment(comment: String): Bool {
     let trimmed = comment.trimAscii()
     return trimmed.startsWith("///<") || trimmed.startsWith("//!<") || trimmed.startsWith("/**<") || trimmed
         .startsWith("/*!<")
-}
-
-func isDocumentationComment(comment: String): Bool {
-    let trimmed = comment.trimAscii()
-    return trimmed.startsWith("///") || trimmed.startsWith("//!") || trimmed.startsWith("/**") || trimmed.startsWith(
-        "/*!")
 }

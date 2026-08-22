@@ -88,7 +88,7 @@ public class Enum {
 
                     if (let Some(val) <- value) {
                         let annotations: ?Annotations = if (comments.preservesParsedComment(cursor)) {
-                            parseAnnotations(cursor.comment())
+                            parseAnnotations(cursor)
                         } else {
                             None
                         }

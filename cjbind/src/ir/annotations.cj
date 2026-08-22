@@ -59,6 +59,17 @@ func parseAnnotations(comment: clang.Comment): ?Annotations {
     return None
 }
 
+func parseAnnotations(cursor: clang.Cursor): ?Annotations {
+    let raw = match (cursor.rawComment()) {
+        case Some(value) => value
+        case None => return None
+    }
+    if (!raw.contains("<div") || !raw.contains("cjbind")) {
+        return None
+    }
+    return parseAnnotations(cursor.comment())
+}
+
 func parseAnnotationAttributes(attributes: Array<clang.CommentAttribute>): ?Annotations {
     if (!isAnnotationElement(attributes)) {
         return None

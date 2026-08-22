@@ -457,7 +457,7 @@ public class Item <: Trace<Tracer, Unit> & IsOpaque<Unit> {
         }
 
         let comment = cursor.rawComment()
-        let annotations = parseAnnotations(cursor.comment()).getOrDefault({=> Annotations()})
+        let annotations = parseAnnotations(cursor).getOrDefault({=> Annotations()})
         let relevantParentId = parentId ?? ctx.currentModule
 
         match (Function.parse(cursor, ctx)) {
@@ -752,9 +752,9 @@ public class Item <: Trace<Tracer, Unit> & IsOpaque<Unit> {
             case Some(value) => Some(value)
             case None => decl.rawComment()
         }
-        let annotations = match (parseAnnotations(decl.comment())) {
+        let annotations = match (parseAnnotations(decl)) {
             case Some(value) => value
-            case None => parseAnnotations(location.comment()).getOrDefault({=> Annotations()})
+            case None => parseAnnotations(location).getOrDefault({=> Annotations()})
         }
         if (let Some(rty) <- ctx.builtinOrResolvedTy(id, parentId, ty, location)) {
             return Ok(rty)
