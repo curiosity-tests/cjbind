@@ -1,7 +1,7 @@
 package cjbind.utils
 
 import std.env
-import std.process.executeWithOutput
+import std.process.{launch, ProcessRedirect}
 import std.fs.{Directory, File, remove}
 
 public func formatString(f: String): String {
@@ -12,7 +12,14 @@ public func formatString(f: String): String {
         File.writeTo(temp, f.toArray())
 
         try {
-            let (code, _, _) = executeWithOutput("cjfmt", ["-f", temp.toString()])
+            let process = launch(
+                "cjfmt",
+                ["-f", temp.toString()],
+                stdIn: ProcessRedirect.Discard,
+                stdOut: ProcessRedirect.Discard,
+                stdErr: ProcessRedirect.Discard
+            )
+            let code = process.wait()
             if (code != 0) {
                 throw Exception("cjfmt 失败")
             }
