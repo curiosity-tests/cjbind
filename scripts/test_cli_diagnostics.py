@@ -77,6 +77,50 @@ def invoke(cli: Path, *, no_record_matches: bool) -> str:
         return diagnostics
 
 
+def assert_large_header_formats(cli: Path) -> None:
+    with tempfile.TemporaryDirectory(prefix="cjbind-large-format-") as temp:
+        temp_dir = Path(temp)
+        header = temp_dir / "large.h"
+        output = temp_dir / "bindings.cj"
+        declarations = [
+            f"int cjbind_large_function_{index}(int value);"
+            for index in range(3000)
+        ]
+        header.write_text("\n".join(declarations), encoding="utf-8")
+
+        result = subprocess.run(
+            [
+                str(cli),
+                str(header),
+                "-o",
+                str(output),
+                "--package",
+                "cjbind_large_format",
+                "--no-layout-test",
+                "--no-detect-include-path",
+                "--",
+                "-x",
+                "c",
+            ],
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        diagnostics = result.stdout + result.stderr
+        if result.returncode != 0:
+            raise AssertionError(
+                f"CLI failed to format a large generated binding with "
+                f"{result.returncode}:\n{diagnostics}"
+            )
+        generated = output.read_text(encoding="utf-8")
+        if "cjbind_large_function_2999" not in generated:
+            raise AssertionError("large generated binding is incomplete")
+
+
 def assert_recorded_diagnostics(diagnostics: str) -> None:
     expected = [
         f"Warning: {flag} pattern '{pattern}' did not match any item"
@@ -169,6 +213,7 @@ def main() -> None:
 
     assert_recorded_diagnostics(invoke(cli, no_record_matches=False))
     assert_suppressed_diagnostics(invoke(cli, no_record_matches=True))
+    assert_large_header_formats(cli)
     assert_diagnostic(
         invoke_unsupported_abi(cli, FASTCALL_FIXTURE, "i686-pc-win32"),
         "calling convention 'fastcall' cannot be represented by the current Cangjie FFI",
